@@ -1,0 +1,200 @@
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
+  src:
+    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot?#iefix')
+      format('embedded-opentype'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2')
+      format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff')
+      format('woff'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.ttf')
+      format('truetype');
+  font-display: swap;
+}
+
+// font family + weight
+@mixin BOLD {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
+}
+
+@mixin MEDIUM {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 500;
+}
+
+@mixin REGULAR {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+}
+
+// Typography
+@mixin T24B {
+  @include BOLD;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+@mixin T20B {
+  @include BOLD;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -2%;
+}
+
+@mixin T18B {
+  @include BOLD;
+  font-size: 18px;
+  line-height: 25.2px;
+  letter-spacing: -2%;
+}
+
+@mixin T16B {
+  @include BOLD;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -2%;
+}
+
+@mixin T14B {
+  @include BOLD;
+  font-size: 14px;
+  line-height: 23.8px;
+  letter-spacing: -2%;
+}
+
+@mixin B24M {
+  @include MEDIUM;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+@mixin B20M {
+  @include MEDIUM;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -2%;
+}
+
+@mixin B18M {
+  @include MEDIUM;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -2%;
+}
+
+@mixin B16M {
+  @include MEDIUM;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -2%;
+}
+
+@mixin B14M {
+  @include MEDIUM;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: -2%;
+}
+
+@mixin B24R {
+  @include REGULAR;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: -2%;
+}
+
+@mixin B20R {
+  @include REGULAR;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -2%;
+}
+
+@mixin B18R {
+  @include REGULAR;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -2%;
+}
+
+@mixin B14R {
+  @include REGULAR;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+@mixin C12B {
+  @include BOLD;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -2%;
+}
+
+@mixin C12M {
+  @include MEDIUM;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -2%;
+}
+
+@mixin C12R {
+  @include REGULAR;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -2%;
+}
+
+@mixin C10B {
+  @include BOLD;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: -2%;
+}
+
+@mixin C10M {
+  @include MEDIUM;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: -2%;
+}
+
+@mixin C10R {
+  @include REGULAR;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: -2%;
+}
+
+// Color
+$blue5: #f2f7fe;
+$blue10: #e4efff;
+$blue20: #c2d9fc;
+$blue30: #a7c7fb;
+$blue40: #95bdfa;
+$blue50: #75abff;
+$blue60: #4a8ef5;
+
+$green5: #f7fcf5;
+$green10: #e5f5e1;
+$green20: #d8f0d2;
+$green30: #c7e9be;
+$green40: #bce5b1;
+$green50: #abde9e;
+$green60: #8ccc7d;
+
+$gray5: #f9f9fa;
+$gray10: #f6f7f9;
+$gray20: #f1f2f4;
+$gray30: #d2d6db;
+$gray40: #bdc1c5;
+$gray50: #9ea1a4;
+$gray60: #7e8083;
+$gray70: #6a6d71;
+$gray80: #45484d;
+$gray90: #212121;
+
+$white: #ffffff;
