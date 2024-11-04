@@ -4,30 +4,30 @@ import Image from 'next/image';
 
 interface IconComponentProps {
   name: keyof typeof ICONS;
-  size?: 'l' | 'm' | 's' | 'fixed';
+  size?: 'l' | 'm' | 's' | 'custom';
   alt?: string;
   width?: number;
   height?: number;
 }
 
-const DEFAULT_SIZES = { l: 24, m: 20, s: 16, fixed: 24 };
+const DEFAULT_SIZES = { l: 24, m: 20, s: 16, custom: 24 };
 
 export default function IconComponent({
   name,
-  size = 'fixed',
+  size = 'custom',
   alt = '',
   width,
   height,
 }: IconComponentProps) {
   const iconSrc = ICONS[name];
 
-  if (typeof iconSrc === 'string' && size === 'fixed') {
+  if (typeof iconSrc === 'string' && size === 'custom') {
     return (
       <Image
         src={iconSrc}
         alt={alt}
-        width={width || DEFAULT_SIZES.fixed}
-        height={height || DEFAULT_SIZES.fixed}
+        width={width || DEFAULT_SIZES.custom}
+        height={height || DEFAULT_SIZES.custom}
       />
     );
   }

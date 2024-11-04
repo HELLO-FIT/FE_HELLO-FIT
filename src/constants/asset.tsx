@@ -104,10 +104,10 @@ export const ICONS = {
     m: '/icon/m/icon-x.svg',
     s: '/icon/s/icon-x.svg',
   },
-  // 고정 크기 아이콘
-  blueHeartBlank: '/icon/fixed/icon-blue-heart-blank.svg',
-  blueHeartFull: '/icon/fixed/icon-blue-heart-full.svg',
-  kakao: '/icon/fixed/icon-kakao.svg',
+  // 커스텀 아이콘
+  blueHeartBlank: '/icon/custom/icon-blue-heart-blank.svg',
+  blueHeartFull: '/icon/custom/icon-blue-heart-full.svg',
+  kakao: '/icon/custom/icon-kakao.svg',
 };
 
 // export const IMAGES = {
