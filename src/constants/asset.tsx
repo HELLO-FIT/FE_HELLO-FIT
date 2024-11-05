@@ -111,6 +111,7 @@ export const ICONS = {
   landingDumbbell: '/icon/custom/icon-landing-dumbbell.svg',
   logo: '/icon/custom/logo.svg',
   logoBlue: '/icon/custom/logo-blue.svg',
+  logoGreen: '/icon/custom/logo-green.svg',
   landingKakao: '/icon/custom/icon-landing-kakao.svg',
 };
 

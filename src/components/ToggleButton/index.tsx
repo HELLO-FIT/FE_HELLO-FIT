@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import styles from './ToggleButton.module.scss';
 
-export default function ToggleButton() {
+interface ToggleButtonProps {
+  onButtonClick?: (buttonType: 'general' | 'special') => void;
+}
+
+export default function ToggleButton({ onButtonClick }: ToggleButtonProps) {
   const [activeButton, setActiveButton] = useState<'general' | 'special'>(
     'general'
   );
 
   const handleClick = (buttonType: 'general' | 'special') => {
     setActiveButton(buttonType);
+    if (onButtonClick) {
+      onButtonClick(buttonType);
+    }
   };
 
   return (
@@ -19,7 +26,7 @@ export default function ToggleButton() {
         일반
       </button>
       <button
-        className={`${styles.toggleOption} ${activeButton === 'special' ? styles.active + ' ' + styles.specialActive : ''}`}
+        className={`${styles.toggleOption} ${activeButton === 'special' ? `${styles.active} ${styles.specialActive}` : ''}`}
         onClick={() => handleClick('special')}
       >
         특수
