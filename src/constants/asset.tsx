@@ -108,6 +108,9 @@ export const ICONS = {
   blueHeartBlank: '/icon/custom/icon-blue-heart-blank.svg',
   blueHeartFull: '/icon/custom/icon-blue-heart-full.svg',
   kakao: '/icon/custom/icon-kakao.svg',
+  landingDumbbell: '/icon/custom/icon-landing-dumbbell.svg',
+  logo: '/icon/custom/logo.svg',
+  landingKakao: '/icon/custom/icon-landing-kakao.svg',
 };
 
 // export const IMAGES = {
