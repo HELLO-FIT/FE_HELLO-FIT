@@ -1,0 +1,24 @@
+$padding: 20px;
+$title-font-size: 1.5rem;
+$title-margin-bottom: 10px;
+$icon-gap: 10px;
+$section-margin: 20px;
+
+.container {
+  padding: $padding;
+}
+
+.title {
+  font-size: $title-font-size;
+  margin-bottom: $title-margin-bottom;
+}
+
+.iconGroup {
+  display: flex;
+  gap: $icon-gap;
+  align-items: center;
+}
+
+.section {
+  margin: $section-margin 0;
+}
