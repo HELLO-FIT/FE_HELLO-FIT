@@ -198,3 +198,30 @@ $gray80: #45484d;
 $gray90: #212121;
 
 $white: #ffffff;
+
+$mobile: 768px;
+
+.body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  background-color: $white;
+}
+
+.appContainer {
+  width: 600px;
+  min-width: 345px;
+  min-height: 100vh;
+  background-color: $white;
+  border-left: 1px solid $gray20;
+  border-right: 1px solid $gray20;
+  overflow: hidden;
+
+  @media (max-width: $mobile) {
+    width: 100vw;
+    border: none;
+  }
+}
