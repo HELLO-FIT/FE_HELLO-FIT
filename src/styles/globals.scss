@@ -1,33 +1,24 @@
 @font-face {
-  font-family: 'Pretendard';
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
   font-weight: 400;
   font-style: normal;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
-  src:
-    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot?#iefix')
-      format('embedded-opentype'),
-    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff2')
-      format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.woff')
-      format('woff'),
-    url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.ttf')
-      format('truetype');
-  font-display: swap;
 }
 
 // font family + weight
 @mixin BOLD {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard-Regular', sans-serif;
   font-weight: 600;
 }
 
 @mixin MEDIUM {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard-Regular', sans-serif;
   font-weight: 500;
 }
 
 @mixin REGULAR {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard-Regular', sans-serif;
   font-weight: 400;
 }
 
@@ -42,28 +33,28 @@
   @include BOLD;
   font-size: 20px;
   line-height: 24px;
-  letter-spacing: -2%;
+  letter-spacing: -0.4px;
 }
 
 @mixin T18B {
   @include BOLD;
   font-size: 18px;
   line-height: 25.2px;
-  letter-spacing: -2%;
+  letter-spacing: -0.36px;
 }
 
 @mixin T16B {
   @include BOLD;
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: -2%;
+  letter-spacing: -0.32px;
 }
 
 @mixin T14B {
   @include BOLD;
   font-size: 14px;
   line-height: 23.8px;
-  letter-spacing: -2%;
+  letter-spacing: -0.28px;
 }
 
 @mixin B24M {
@@ -76,49 +67,49 @@
   @include MEDIUM;
   font-size: 20px;
   line-height: 24px;
-  letter-spacing: -2%;
+  letter-spacing: -0.4px;
 }
 
 @mixin B18M {
   @include MEDIUM;
   font-size: 18px;
   line-height: 24px;
-  letter-spacing: -2%;
+  letter-spacing: -0.36px;
 }
 
 @mixin B16M {
   @include MEDIUM;
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: -2%;
+  letter-spacing: -0.36px;
 }
 
 @mixin B14M {
   @include MEDIUM;
   font-size: 14px;
   line-height: 24px;
-  letter-spacing: -2%;
+  letter-spacing: -0.28px;
 }
 
 @mixin B24R {
   @include REGULAR;
   font-size: 24px;
   line-height: 24px;
-  letter-spacing: -2%;
+  letter-spacing: -0.48px;
 }
 
 @mixin B20R {
   @include REGULAR;
   font-size: 20px;
   line-height: 24px;
-  letter-spacing: -2%;
+  letter-spacing: -0.4px;
 }
 
 @mixin B18R {
   @include REGULAR;
   font-size: 18px;
   line-height: 24px;
-  letter-spacing: -2%;
+  letter-spacing: -0.36px;
 }
 
 @mixin B14R {
@@ -131,42 +122,42 @@
   @include BOLD;
   font-size: 12px;
   line-height: 16px;
-  letter-spacing: -2%;
+  letter-spacing: -0.24px;
 }
 
 @mixin C12M {
   @include MEDIUM;
   font-size: 12px;
   line-height: 16px;
-  letter-spacing: -2%;
+  letter-spacing: -0.24px;
 }
 
 @mixin C12R {
   @include REGULAR;
   font-size: 12px;
   line-height: 16px;
-  letter-spacing: -2%;
+  letter-spacing: -0.24px;
 }
 
 @mixin C10B {
   @include BOLD;
   font-size: 10px;
   line-height: 16px;
-  letter-spacing: -2%;
+  letter-spacing: -0.2px;
 }
 
 @mixin C10M {
   @include MEDIUM;
   font-size: 10px;
   line-height: 16px;
-  letter-spacing: -2%;
+  letter-spacing: -0.2px;
 }
 
 @mixin C10R {
   @include REGULAR;
   font-size: 10px;
   line-height: 16px;
-  letter-spacing: -2%;
+  letter-spacing: -0.2px;
 }
 
 // Color
@@ -198,3 +189,30 @@ $gray80: #45484d;
 $gray90: #212121;
 
 $white: #ffffff;
+
+$mobile: 768px;
+
+.body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  background-color: $white;
+}
+
+.appContainer {
+  width: 600px;
+  min-width: 345px;
+  min-height: 100vh;
+  background-color: $white;
+  border-left: 1px solid $gray20;
+  border-right: 1px solid $gray20;
+  overflow: hidden;
+
+  @media (max-width: $mobile) {
+    width: 100vw;
+    border: none;
+  }
+}
