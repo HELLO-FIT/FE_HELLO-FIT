@@ -104,6 +104,15 @@ export const ICONS = {
     m: '/icon/m/icon-x.svg',
     s: '/icon/s/icon-x.svg',
   },
+  // GNB 아이콘
+  bellEmpty: '/icon/custom/GNB/bell-empty.svg',
+  bellFull: '/icon/custom/GNB/bell-full.svg',
+  gridEmpty: '/icon/custom/GNB/grid-empty.svg',
+  gridFull: '/icon/custom/GNB/grid-full.svg',
+  heartEmpty: '/icon/custom/GNB/heart-empty.svg',
+  heartFull: '/icon/custom/GNB/heart-full.svg',
+  markerEmpty: '/icon/custom/GNB/marker-empty.svg',
+  markerFull: '/icon/custom/GNB/marker-full.svg',
   // 커스텀 아이콘
   blueHeartBlank: '/icon/custom/icon-blue-heart-blank.svg',
   blueHeartFull: '/icon/custom/icon-blue-heart-full.svg',
