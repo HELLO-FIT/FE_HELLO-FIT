@@ -122,6 +122,7 @@ export const ICONS = {
   logoBlue: '/icon/custom/logo-blue.svg',
   logoGreen: '/icon/custom/logo-green.svg',
   landingKakao: '/icon/custom/icon-landing-kakao.svg',
+  scheduleEllipse: '/icon/custom/schedule-ellipse.svg',
 };
 
 // export const IMAGES = {

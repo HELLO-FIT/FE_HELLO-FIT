@@ -1,7 +1,8 @@
 import React from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/ToggleButton';
-import Header from '@/components/Header';
+import Schedule from '@/components/Schedule';
+import Notification from '@/components/Noti/Notification/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
 import ButtonContainer from '@/components/ButtonContainer';
@@ -11,12 +12,12 @@ import styles from './preview.module.scss';
 
 export default function Preview() {
   return (
-    <div className={styles.container}>
+    <div className={styles.previewPage}>
       <h1 className={styles.mainTitle}>Component Preview</h1>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Icon Preview</h2>
-        <p>Sizes: Small, Medium, Large</p>
+        <p className={styles.description}>Sizes: Small, Medium, Large</p>
         <div className={styles.iconGroup}>
           <IconComponent name="search" size="s" />
           <IconComponent name="search" size="m" />
@@ -38,8 +39,24 @@ export default function Preview() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Header</h2>
-        <Header />
+        <h2 className={styles.sectionTitle}>Schedule</h2>
+        <Schedule />
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Notification</h2>
+        <Notification
+          key={1}
+          isRead={false}
+          onClick={() => null}
+          notification={{
+            id: 1,
+            title: '삼성라이온즈 우승',
+            content: '“게시글 내용 첫줄 15글자”',
+            time: '1시간 전',
+            isRead: false,
+          }}
+        />
       </section>
 
       <section className={styles.section}>
