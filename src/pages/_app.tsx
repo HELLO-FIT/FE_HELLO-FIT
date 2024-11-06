@@ -7,8 +7,8 @@ import GNB from '@/components/Layout/GNB';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const hideGNB = ['/', '/login'].includes(router.pathname);
-  const hideHeader = ['/', '/login'].includes(router.pathname);
+  const hideGNB = ['/', '/login', '/noti'].includes(router.pathname);
+  const hideHeader = ['/', '/login', '/noti'].includes(router.pathname);
 
   return (
     <div className="body">
