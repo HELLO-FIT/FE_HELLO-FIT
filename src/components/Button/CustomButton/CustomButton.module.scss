@@ -5,22 +5,24 @@
   color: $white;
   padding: 10px 20px;
   border: none;
-  border-radius: 8px;
-  @include B16M; 
+  border-radius: 12px;
+  @include B16M;
   cursor: pointer;
   text-align: center;
   display: inline-block;
-  transition: background-color 0.2s, box-shadow 0.2s;
-  
-  width: 100%; 
-  max-width: 350px; 
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+
+  width: 100%;
+  max-width: 350px;
   max-height: 52px;
 
   &:hover {
-    background-color: darken($blue60, 10%); 
+    background-color: darken($blue60, 10%);
   }
 
   &:active {
-    background-color: darken($blue60, 20%); 
+    background-color: darken($blue60, 20%);
   }
 }

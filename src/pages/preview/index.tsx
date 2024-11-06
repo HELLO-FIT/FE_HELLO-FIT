@@ -3,6 +3,7 @@ import ToggleButton from '@/components/ToggleButton';
 import Header from '@/components/Header';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
+import ButtonContainer from '@/components/ButtonContainer';
 
 export default function Preview() {
   return (
@@ -44,7 +45,7 @@ export default function Preview() {
       <div>
         <p>CustomButton</p>
         <br />
-        <CustomButton label={'신청하러 가기'} />
+        <CustomButton label={'텍스트를 자유롭게 써주세요.'} />
       </div>
       <hr />
       <div>
@@ -52,6 +53,7 @@ export default function Preview() {
         <br />
         <LikeButton />
       </div>
+      <ButtonContainer />
     </div>
   );
 }
