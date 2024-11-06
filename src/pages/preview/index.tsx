@@ -2,6 +2,7 @@ import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/ToggleButton';
 import Header from '@/components/Header';
 import CustomButton from '@/components/Button/CustomButton';
+import LikeButton from '@/components/Button/LikeButton';
 
 export default function Preview() {
   return (
@@ -44,6 +45,12 @@ export default function Preview() {
         <p>CustomButton</p>
         <br />
         <CustomButton label={'신청하러 가기'} />
+      </div>
+      <hr />
+      <div>
+        <p>LikeButton</p>
+        <br />
+        <LikeButton />
       </div>
     </div>
   );
