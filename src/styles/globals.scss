@@ -210,6 +210,7 @@ $mobile: 768px;
   border-left: 1px solid $gray20;
   border-right: 1px solid $gray20;
   overflow: hidden;
+  padding-bottom: 65px;
 
   @media (max-width: $mobile) {
     width: 100vw;
