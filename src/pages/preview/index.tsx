@@ -1,10 +1,13 @@
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/ToggleButton';
-import Header from '@/components/Layout/Header';
+import Schedule from '@/components/Schedule';
+import Notification from '@/components/Noti/Notification/Notification';
 
 export default function Preview() {
   return (
-    <div>
+    <div
+      style={{ backgroundColor: '#F6F7F9', height: '100vh', padding: '0 24px' }}
+    >
       <h2>Icon Preview</h2>
 
       <div>
@@ -32,8 +35,24 @@ export default function Preview() {
       </div>
 
       <div>
-        <p>Header</p>
-        <Header />
+        <p>Schedule</p>
+        <Schedule />
+      </div>
+
+      <div>
+        <p>Notification</p>
+        <Notification
+          key={1}
+          isRead={false}
+          onClick={() => null}
+          notification={{
+            id: 1,
+            title: '삼성라이온즈 우승',
+            content: '“게시글 내용 첫줄 15글자”',
+            time: '1시간 전',
+            isRead: false,
+          }}
+        />
       </div>
     </div>
   );

@@ -1,16 +1,21 @@
 import type { AppProps } from 'next/app';
 import '@/styles/globals.scss';
 import '@/styles/reset.css';
-import GNB from '@/components/GNB';
+import Header from '@/components/Layout/Header';
 import { useRouter } from 'next/router';
+import GNB from '@/components/Layout/GNB';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const hideGNB = ['/', '/login'].includes(router.pathname);
+  const hideGNB = ['/', '/login', '/noti'].includes(router.pathname);
+  const hideHeader = ['/', '/login', '/noti'].includes(router.pathname);
 
   return (
     <div className="body">
-      <div className="appContainer">
+      <div
+        className={`appContainer ${!hideHeader ? 'withHeader' : ''} ${!hideGNB ? 'withGNB' : ''}`}
+      >
+        {!hideHeader && <Header />}
         <Component {...pageProps} />
         {!hideGNB && <GNB />}
       </div>

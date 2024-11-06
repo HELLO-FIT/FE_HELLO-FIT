@@ -1,0 +1,25 @@
+@import '@/styles/globals.scss';
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0 20px;
+  background-color: $gray10;
+}
+
+.header {
+  width: 100%;
+  padding: 12px 0;
+  @include C12M;
+  color: $gray50;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+}
+
+.notiWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
