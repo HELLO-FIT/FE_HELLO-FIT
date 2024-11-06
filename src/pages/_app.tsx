@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import '@/styles/globals.scss';
 import '@/styles/reset.css';
-import Header from '@/components/Layout/Header';
+import Header from '@/components/Header';
 import { useRouter } from 'next/router';
 import GNB from '@/components/Layout/GNB';
 
