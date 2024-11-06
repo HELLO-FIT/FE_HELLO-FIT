@@ -10,8 +10,9 @@
   height: 60px;
   background-color: $white;
   border-bottom: 1px solid $gray20;
-  position: sticky;
+  position: fixed;
   top: 0;
+  z-index: 10;
 
   @media (max-width: $mobile) {
     max-width: 100%;

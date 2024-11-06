@@ -12,7 +12,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className="body">
-      <div className="appContainer">
+      <div
+        className={`appContainer ${!hideHeader ? 'withHeader' : ''} ${!hideGNB ? 'withGNB' : ''}`}
+      >
         {!hideHeader && <Header />}
         <Component {...pageProps} />
         {!hideGNB && <GNB />}

@@ -210,6 +210,15 @@ $mobile: 768px;
   border-left: 1px solid $gray20;
   border-right: 1px solid $gray20;
   overflow: hidden;
+  position: relative;
+
+  &.withHeader {
+    padding-top: 60px;
+  }
+
+  &.withGNB {
+    padding-bottom: 60px;
+  }
 
   @media (max-width: $mobile) {
     width: 100vw;
