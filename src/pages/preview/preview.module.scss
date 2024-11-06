@@ -1,0 +1,40 @@
+@import '@/styles/globals.scss';
+
+.previewPage {
+  background-color: $gray10;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+.mainTitle {
+  @include T24B;
+  margin-bottom: 24px;
+  color: $gray90;
+  text-align: center;
+}
+
+.section {
+  background-color: $white;
+  padding: 20px;
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.sectionTitle {
+  @include T20B;
+  color: $gray80;
+  margin-bottom: 12px;
+}
+
+.description {
+  @include B16M;
+  color: $gray60;
+  margin-bottom: 16px;
+}
+
+.iconGroup {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
