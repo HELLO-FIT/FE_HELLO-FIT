@@ -1,6 +1,6 @@
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/ToggleButton';
-import Header from '@/components/Layout/Header';
+import Schedule from '@/components/Schedule';
 
 export default function Preview() {
   return (
@@ -31,6 +31,11 @@ export default function Preview() {
       <div>
         <p>Toggle Button</p>
         <ToggleButton />
+      </div>
+
+      <div>
+        <p>Schedule</p>
+        <Schedule />
       </div>
     </div>
   );
