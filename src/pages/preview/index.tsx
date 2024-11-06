@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
 import ButtonContainer from '@/components/ButtonContainer';
+import SportButton from '@/components/Button/SportButton';
 
 export default function Preview() {
   return (
@@ -54,6 +55,7 @@ export default function Preview() {
         <LikeButton />
       </div>
       <ButtonContainer />
+      <SportButton icon={'/icon/custom/logo-blue.svg'} label={'테스트'} />
     </div>
   );
 }
