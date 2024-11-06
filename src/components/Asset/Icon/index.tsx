@@ -36,5 +36,5 @@ export default function IconComponent({
     typeof iconSrc !== 'string' ? iconSrc[size as 'l' | 'm' | 's'] : iconSrc;
   const imgSize = width || height || DEFAULT_SIZES[size];
 
-  return <img src={iconSizeSrc} alt={alt} width={imgSize} height={imgSize} />;
+  return <Image src={iconSizeSrc} alt={alt} width={imgSize} height={imgSize} />;
 }

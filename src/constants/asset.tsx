@@ -110,9 +110,10 @@ export const ICONS = {
   kakao: '/icon/custom/icon-kakao.svg',
   landingDumbbell: '/icon/custom/icon-landing-dumbbell.svg',
   logo: '/icon/custom/logo.svg',
+  logoBlue: '/icon/custom/logo-blue.svg',
+  logoGreen: '/icon/custom/logo-green.svg',
   landingKakao: '/icon/custom/icon-landing-kakao.svg',
 };
 
 // export const IMAGES = {
-// // 이미지 有 경우 추가
 // };

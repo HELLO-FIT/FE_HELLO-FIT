@@ -1,0 +1,27 @@
+@import '@/styles/globals';
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  width: 100%;
+  max-width: 600px; 
+  height: 60px; 
+  background-color: $white;
+  border-bottom: 1px solid $gray20; 
+
+  @media (max-width: $mobile) {
+    max-width: 100%; 
+  }
+}
+
+.favicon {
+  width: 24px;
+  height: 24px;
+}
+
+.toggle-button-container {
+  display: flex;
+  align-items: center;
+}

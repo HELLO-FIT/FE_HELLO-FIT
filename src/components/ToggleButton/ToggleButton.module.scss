@@ -1,0 +1,33 @@
+@import '@/styles/globals.scss';
+
+.toggle {
+  display: flex;
+  align-items: center;
+  background-color: $gray10;
+  border-radius: 20px;
+  padding: 4px;
+  width: fit-content;
+}
+
+.toggleOption {
+  @include C12B;
+  color: $gray50;
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+
+  &.active {
+    background-color: $white;
+    color: $blue50;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &.specialActive {
+    color: $green60;
+  }
+}
