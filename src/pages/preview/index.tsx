@@ -10,6 +10,7 @@ import SportButton from '@/components/Button/SportButton';
 import SportButtonList from '@/components/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
+import SearchBar from '@/components/SearchBar/SearchBar';
 
 export default function Preview() {
   return (
@@ -88,6 +89,11 @@ export default function Preview() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>CheckBox</h2>
         <Checkbox />
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>SearchBar</h2>
+        <SearchBar />
       </section>
     </div>
   );
