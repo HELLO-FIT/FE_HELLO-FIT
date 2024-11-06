@@ -4,7 +4,9 @@ import Header from '@/components/Layout/Header';
 
 export default function Preview() {
   return (
-    <div>
+    <div
+      style={{ backgroundColor: '#F6F7F9', height: '100vh', padding: '0 24px' }}
+    >
       <h2>Icon Preview</h2>
 
       <div>
@@ -29,11 +31,6 @@ export default function Preview() {
       <div>
         <p>Toggle Button</p>
         <ToggleButton />
-      </div>
-
-      <div>
-        <p>Header</p>
-        <Header />
       </div>
     </div>
   );

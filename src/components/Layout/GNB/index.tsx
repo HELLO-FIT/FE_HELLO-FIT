@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from './GNB.module.scss';
-import IconComponent from '../Asset/Icon';
 import { ICONS } from '@/constants/asset';
+import IconComponent from '@/components/Asset/Icon';
 
 export default function GNB() {
   const router = useRouter();
