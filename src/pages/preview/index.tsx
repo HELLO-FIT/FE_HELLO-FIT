@@ -1,13 +1,14 @@
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/ToggleButton';
-import Header from '@/components/Layout/Header';
+import Header from '@/components/Header';
+import CustomButton from '@/components/Button/CustomButton';
 
 export default function Preview() {
   return (
     <div>
-      <h2>Icon Preview</h2>
-
+      <h1>Icon Preview</h1>
       <div>
+        <br />
         <p>Sizes: Small, Medium, Large</p>
         <div>
           <IconComponent name="search" size="s" />
@@ -21,19 +22,28 @@ export default function Preview() {
       <div>
         <p>Custom Sizes:</p>
         <div>
+          <br />
           <IconComponent name="blueHeartBlank" width={36} height={36} />
           <IconComponent name="kakao" alt="Kakao logo" width={48} height={48} />
         </div>
       </div>
-
+      <hr />
       <div>
         <p>Toggle Button</p>
+        <br />
         <ToggleButton />
       </div>
-
+      <hr />
       <div>
+        <br />
         <p>Header</p>
         <Header />
+      </div>
+      <hr />
+      <div>
+        <p>CustomButton</p>
+        <br />
+        <CustomButton label={'신청하러 가기'} />
       </div>
     </div>
   );
