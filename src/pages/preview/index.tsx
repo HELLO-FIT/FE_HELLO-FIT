@@ -9,6 +9,7 @@ import ButtonContainer from '@/components/ButtonContainer';
 import SportButton from '@/components/Button/SportButton';
 import SportButtonList from '@/components/SportButtonList';
 import styles from './preview.module.scss';
+import Checkbox from '@/components/Checkbox/Checkbox';
 
 export default function Preview() {
   return (
@@ -82,6 +83,11 @@ export default function Preview() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
         <SportButtonList />
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>CheckBox</h2>
+        <Checkbox />
       </section>
     </div>
   );
