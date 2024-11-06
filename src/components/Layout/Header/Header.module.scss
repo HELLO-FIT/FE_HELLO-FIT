@@ -10,7 +10,7 @@
   height: 60px;
   background-color: $white;
   border-bottom: 1px solid $gray20;
-  position: fixed;
+  position: sticky;
   top: 0;
 
   @media (max-width: $mobile) {
