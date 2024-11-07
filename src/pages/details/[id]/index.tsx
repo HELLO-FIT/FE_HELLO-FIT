@@ -4,7 +4,7 @@ import Subheader from '@/components/Layout/Subheader';
 import data from '@/components/Schedule/temp.json';
 import { useRouter } from 'next/router';
 
-export default function details() {
+export default function Details() {
   const router = useRouter();
   const { id } = router.query;
 

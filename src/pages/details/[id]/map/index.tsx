@@ -4,7 +4,7 @@ import Subheader from '@/components/Layout/Subheader';
 import LargeMap from '@/components/CourseDetails/LargeMap';
 import ButtonContainer from '@/components/ButtonContainer';
 
-export default function map() {
+export default function Map() {
   const router = useRouter();
   const { id } = router.query;
 

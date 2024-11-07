@@ -4,7 +4,6 @@ import '@/styles/reset.css';
 import Header from '@/components/Layout/Header';
 import { useRouter } from 'next/router';
 import GNB from '@/components/Layout/GNB';
-import { useEffect } from 'react';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
