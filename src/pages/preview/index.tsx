@@ -13,6 +13,7 @@ import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/SearchBar/SearchBar';
 import Chips from '@/components/Button/Chips';
 import DropDown from '@/components/DropDown';
+import LoadingSpinner from '@/components/LoadingSpinner'; // LoadingSpinner 추가
 
 export default function Preview() {
   return (
@@ -98,16 +99,21 @@ export default function Preview() {
         <SearchBar />
       </section>
 
-      <section className={styles.sectionBlue}>
+      <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Chips</h2>
         <Chips text="장애인 화장실" chipState="label" />
         <Chips text="장애인 화장실" chipState="checked" />
         <Chips text="장애인 화장실" chipState="unchecked" />
       </section>
 
-      <section className={styles.sectionBlue}>
+      <section className={styles.section}>
         <h2 className={styles.sectionTitle}>DropDown</h2>
         <DropDown />
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Loading Spinner</h2>
+        <LoadingSpinner />
       </section>
     </div>
   );

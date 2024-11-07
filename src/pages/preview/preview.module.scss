@@ -12,7 +12,7 @@
   color: $gray90;
   text-align: center;
 }
-
+// 요소 색상에 맞춰 가시성이 더 높은 색상을 선택하여 사용하기
 .section {
   background-color: $white;
   padding: 20px;
@@ -21,13 +21,13 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-.sectionBlue {
-  background-color: $blue10;
-  padding: 20px;
-  margin-bottom: 24px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
+// .sectionBlue {
+//   background-color: $blue10;
+//   padding: 20px;
+//   margin-bottom: 24px;
+//   border-radius: 8px;
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+// }
 
 .sectionTitle {
   @include T20B;
