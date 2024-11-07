@@ -11,6 +11,7 @@ import SportButtonList from '@/components/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/SearchBar/SearchBar';
+import Chips from '@/components/Button/Chips/Chips';
 
 export default function Preview() {
   return (
@@ -94,6 +95,12 @@ export default function Preview() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>SearchBar</h2>
         <SearchBar />
+      </section>
+
+      <section className={styles.sectionBlue}>
+        <h2 className={styles.sectionTitle}>Chips</h2>
+        <Chips text="장애인 화장실" />
+        <Chips text="시각" />
       </section>
     </div>
   );

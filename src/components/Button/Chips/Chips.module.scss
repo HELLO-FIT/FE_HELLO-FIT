@@ -1,0 +1,14 @@
+@import '@/styles/globals.scss';
+
+.container {
+  width: fit-content;
+  display: flex;
+  padding: 6px 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px;
+  background-color: $white;
+  @include C12M;
+  text-align: center;
+  color: $blue60;
+}
