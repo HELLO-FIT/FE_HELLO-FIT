@@ -34,10 +34,12 @@ export const ICONS = {
     m: '/icon/m/icon-circle-x.svg',
     s: '/icon/s/icon-circle-x.svg',
   },
+  up: {
+    m: '/icon/m/icon-up.svg',
+  },
   down: {
     l: '/icon/l/icon-down.svg',
     m: '/icon/m/icon-down.svg',
-    s: '/icon/s/icon-down.svg',
   },
   image: {
     l: '/icon/l/icon-image.svg',
