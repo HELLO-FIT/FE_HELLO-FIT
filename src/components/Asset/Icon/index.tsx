@@ -2,7 +2,7 @@ import React from 'react';
 import { ICONS } from '@/constants/asset';
 import Image from 'next/image';
 
-interface IconComponentProps {
+export interface IconComponentProps {
   name: keyof typeof ICONS;
   size?: 'l' | 'm' | 's' | 'custom';
   alt?: string;

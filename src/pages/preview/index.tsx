@@ -1,6 +1,6 @@
 import React from 'react';
 import IconComponent from '@/components/Asset/Icon';
-import ToggleButton from '@/components/ToggleButton';
+import ToggleButton from '@/components/Button/ToggleButton';
 import Schedule from '@/components/Schedule';
 import Notification from '@/components/Noti/Notification/Notification';
 import CustomButton from '@/components/Button/CustomButton';
@@ -76,7 +76,7 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button</h2>
-        <SportButton icon={'/icon/custom/logo-blue.svg'} label="테스트" />
+        <SportButton iconName={'logoBlue'} label={'Sport Button Test'} />
       </section>
 
       <section className={styles.section}>

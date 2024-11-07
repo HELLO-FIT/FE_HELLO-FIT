@@ -123,6 +123,10 @@ export const ICONS = {
   logoGreen: '/icon/custom/logo-green.svg',
   landingKakao: '/icon/custom/icon-landing-kakao.svg',
   scheduleEllipse: '/icon/custom/schedule-ellipse.svg',
+  boxing: '/icon/custom/icon-boxing.svg',
+  hapkido: '/icon/custom/icon-hapkido.svg',
+  health: '/icon/custom/icon-health.svg',
+  pilates: '/icon/custom/icon-pilates.svg',
 };
 
 // export const IMAGES = {
