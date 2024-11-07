@@ -113,7 +113,9 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Loading Spinner</h2>
-        <LoadingSpinner />
+        <div className={styles.spinnerContainer}>
+          <LoadingSpinner />
+        </div>
       </section>
     </div>
   );
