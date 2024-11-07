@@ -3,7 +3,10 @@ import IconComponent from '@/components/Asset/Icon';
 import { SubheaderProps } from './Subheader.types';
 import styles from './Subheader.module.scss';
 
-export default function Subheader({ subheaderText }: SubheaderProps) {
+export default function Subheader({
+  subheaderText,
+  isGray = true,
+}: SubheaderProps) {
   const router = useRouter();
 
   const handleBackClick = () => {
@@ -11,7 +14,7 @@ export default function Subheader({ subheaderText }: SubheaderProps) {
   };
 
   return (
-    <header className={styles.container}>
+    <header className={`${styles.container} ${!isGray ? styles.whiteBG : ''}`}>
       <div className={styles.backBtn} onClick={handleBackClick}>
         <IconComponent name="left" size="l" />
       </div>
