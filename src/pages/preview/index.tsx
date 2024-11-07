@@ -2,7 +2,7 @@ import React from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/ToggleButton';
 import Schedule from '@/components/Schedule';
-import Notification from '@/components/Noti/Notification/Notification';
+import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
 import ButtonContainer from '@/components/ButtonContainer';
@@ -11,7 +11,7 @@ import SportButtonList from '@/components/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/SearchBar/SearchBar';
-import Chips from '@/components/Button/Chips/Chips';
+import Chips from '@/components/Button/Chips';
 
 export default function Preview() {
   return (
