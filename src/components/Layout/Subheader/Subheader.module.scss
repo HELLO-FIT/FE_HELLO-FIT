@@ -2,6 +2,7 @@
 
 .container {
   width: 100%;
+  max-width: 600px;
   height: 48px;
   display: flex;
   justify-content: space-between;
@@ -9,6 +10,9 @@
   flex-shrink: 0;
   padding: 0 20px;
   background-color: $gray10;
+  position: fixed;
+  top: 0;
+  z-index: 10;
 }
 
 .title {

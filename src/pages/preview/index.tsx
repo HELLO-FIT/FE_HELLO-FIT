@@ -43,7 +43,7 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Schedule</h2>
-        <Schedule />
+        <Schedule id={1} />
       </section>
 
       <section className={styles.section}>

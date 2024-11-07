@@ -1,0 +1,34 @@
+@import '@/styles/globals';
+
+.container {
+  width: 100%;
+  min-height: calc(100vh - 113px);
+  background-color: $gray10;
+  padding: 0 20px;
+  margin-top: 48px;
+  padding-bottom: 20px;
+}
+
+.headerContainer {
+  width: 100%;
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  .title {
+    @include T16B;
+    color: $gray90;
+  }
+
+  .counter {
+    @include T16B;
+    color: $blue50;
+  }
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
