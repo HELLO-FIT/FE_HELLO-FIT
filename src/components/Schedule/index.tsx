@@ -2,7 +2,8 @@ import data from './temp.json';
 import styles from './Schedule.module.scss';
 import { getWeekdays } from '@/utils/getWeekdays';
 import IconComponent from '../Asset/Icon';
-import { ScheduleItem, ScheduleProps } from './Schedule.types';
+import { ScheduleProps } from './Schedule.types';
+import { ScheduleItem } from '@/types/types';
 
 export default function Schedule({ id }: ScheduleProps) {
   const item: ScheduleItem | undefined = data.find(d => d.id === id);

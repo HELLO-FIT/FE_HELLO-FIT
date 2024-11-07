@@ -4,10 +4,17 @@ import '@/styles/reset.css';
 import Header from '@/components/Layout/Header';
 import { useRouter } from 'next/router';
 import GNB from '@/components/Layout/GNB';
+import { useEffect } from 'react';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const hideGNB = ['/', '/login', '/noti'].includes(router.pathname);
+  const hideGNB = [
+    '/',
+    '/login',
+    '/noti',
+    '/details/[id]',
+    '/details/[id]/map',
+  ].includes(router.pathname);
   const hideHeader = [
     '/',
     '/login',
@@ -15,6 +22,8 @@ export default function App({ Component, pageProps }: AppProps) {
     '/likelist',
     '/lesson',
     '/map',
+    '/details/[id]',
+    '/details/[id]/map',
   ].includes(router.pathname);
   const withoutHeader = ['/', '/login'].includes(router.pathname);
 
