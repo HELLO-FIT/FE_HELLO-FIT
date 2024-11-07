@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from './DropDown.module.scss';
 import IconComponent from '@/components/Asset/Icon';
 
-export default function DropDown() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("서울 종로구");
+interface DropDownProps {
+  placeholder: string;
+  options: string[];
+  onSelect: (option: string) => void;
+}
 
-  // 목업 데이터 
-  const options = [
-    "서울 종로구", "서울 중구", "서울 용산구", "서울 성동구", "서울 광진구", 
-    "서울 동대문구", "서울 중랑구", "서울 성북구", "서울 강북구", "서울 도봉구", 
-    "서울 노원구", "서울 은평구", "서울 서대문구", "서울 마포구", "서울 양천구", 
-    "서울 강서구", "서울 구로구", "서울 금천구", "서울 영등포구", "서울 동작구", 
-    "서울 관악구", "서울 서초구", "서울 강남구", "서울 송파구", "서울 강동구"
-  ];
+export default function DropDown({
+  placeholder,
+  options,
+  onSelect,
+}: DropDownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+  const dropDownRef = useRef<HTMLDivElement | null>(null);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -21,15 +24,38 @@ export default function DropDown() {
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
+    onSelect(option);
     setIsOpen(false);
-    console.log('Selected Region:', option);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropDownRef.current &&
+        !dropDownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={styles.dropDownContainer}>
+    <div className={styles.dropDownContainer} ref={dropDownRef}>
       <button className={styles.dropDownButton} onClick={handleToggle}>
-        <span className={styles.label}>{selectedOption}</span>
-        <IconComponent name={isOpen ? "up" : "down"} size="m" alt="DropDown Icon" />
+        <span className={styles.label}>
+          {selectedOption || placeholder}{' '}
+          {/* 선택한 값이 없을 경우 placeholder 표시 */}
+        </span>
+        <IconComponent
+          name={isOpen ? 'up' : 'down'}
+          size="m"
+          alt="DropDown Icon"
+        />
       </button>
       {isOpen && (
         <div className={styles.dropDownMenu}>

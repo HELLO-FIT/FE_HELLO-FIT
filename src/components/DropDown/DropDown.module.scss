@@ -17,13 +17,13 @@
   align-items: center;
   gap: 4px;
 
-  @include B14M; 
+  @include B14M;
 }
 
 .label {
   font-family: 'Pretendard-Regular', sans-serif;
   color: $blue60;
-  @include T14B; 
+  @include T14B;
 }
 
 .dropDownMenu {
@@ -35,8 +35,9 @@
   border: 1px solid $blue20;
   border-radius: 8px;
   margin-top: 4px;
-  width: 100%;
+  min-width: 100%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: fit-content;
 }
 
 .dropDownItem {
@@ -44,7 +45,8 @@
   color: $blue60;
   font-family: 'Pretendard-Regular', sans-serif;
   cursor: pointer;
-  @include B14M; 
+  white-space: nowrap;
+  @include B14M;
 
   &:hover {
     background-color: $blue10;
