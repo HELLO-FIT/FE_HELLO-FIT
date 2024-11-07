@@ -89,7 +89,7 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>CheckBox</h2>
-        <Checkbox />
+        <Checkbox>체크박스</Checkbox>
       </section>
 
       <section className={styles.section}>

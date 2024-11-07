@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import IconComponent from '../Asset/Icon';
 import styles from './Checkbox.module.scss';
+import { CheckboxProps } from './Checkbox.types';
 
-export default function Checkbox() {
+export default function Checkbox({ children }: CheckboxProps) {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = () => {
@@ -35,7 +36,7 @@ export default function Checkbox() {
           />
         </div>
       </span>
-      커스텀 체크박스
+      {children}
     </label>
   );
 }
