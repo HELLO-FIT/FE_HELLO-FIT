@@ -211,9 +211,10 @@ $mobile: 768px;
   border-right: 1px solid $gray20;
   overflow: hidden;
   position: relative;
+  padding-top: 56px;
 
-  &.withHeader {
-    padding-top: 60px;
+  &.withoutHeader {
+    padding-top: 0px;
   }
 
   &.withGNB {
