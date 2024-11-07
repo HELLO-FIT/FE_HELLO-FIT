@@ -1,8 +1,11 @@
 import { useRouter } from 'next/router';
 import IconComponent from '@/components/Asset/Icon';
 import styles from './SubheaderWithLogo.module.scss';
+import { SubheaderWithLogoProps } from './SubheaderWithLogo.types';
 
-export default function SubheaderWithLogo() {
+export default function SubheaderWithLogo({
+  showMenu = true,
+}: SubheaderWithLogoProps) {
   const router = useRouter();
 
   const handleLogoClick = () => {
@@ -14,9 +17,11 @@ export default function SubheaderWithLogo() {
       <div className={styles.btnContainer} onClick={handleLogoClick}>
         <IconComponent name="logoBlue" width={60} height={34} />
       </div>
-      <div className={styles.btnContainer}>
-        <IconComponent name="menu" size="l" />
-      </div>
+      {showMenu && (
+        <div className={styles.btnContainer}>
+          <IconComponent name="menu" size="l" />
+        </div>
+      )}
     </header>
   );
 }
