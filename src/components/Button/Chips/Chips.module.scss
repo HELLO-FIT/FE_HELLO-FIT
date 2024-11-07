@@ -1,0 +1,33 @@
+@import '@/styles/globals.scss';
+
+.container {
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px;
+  text-align: center;
+}
+
+.checked {
+  padding: 7px 12px;
+  @include B14M;
+  color: $blue60;
+  border: 1px solid $blue60;
+  background-color: $blue5;
+}
+
+.unchecked {
+  padding: 7px 12px;
+  @include B14M;
+  color: $gray60;
+  border: 1px solid $gray20;
+  background-color: $white;
+}
+
+.label {
+  padding: 6px 10px;
+  color: $blue60;
+  background-color: $white;
+  @include C12M;
+}

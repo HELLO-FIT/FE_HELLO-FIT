@@ -100,9 +100,9 @@ export const ICONS = {
     s: '/icon/s/icon-upload.svg',
   },
   x: {
-    l: '/icon/l/icon-x.svg',
-    m: '/icon/m/icon-x.svg',
-    s: '/icon/s/icon-x.svg',
+    l: '/icon/l/icon-X.svg',
+    m: '/icon/m/icon-X.svg',
+    s: '/icon/s/icon-X.svg',
   },
   // GNB 아이콘
   bellEmpty: '/icon/custom/GNB/bell-empty.svg',
@@ -127,5 +127,6 @@ export const ICONS = {
   unchecked: '/icon/custom/icon-unchecked.svg',
 };
 
-// export const IMAGES = {
-// };
+export const IMAGES = {
+  popularImage: '/image/image-popular.svg',
+};

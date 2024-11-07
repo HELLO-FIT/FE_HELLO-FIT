@@ -15,15 +15,6 @@
   z-index: 10;
 }
 
-.title {
-  @include T16B;
-}
-
-.empty {
-  width: 24px;
-  height: 24px;
-}
-
-.backBtn {
+.btnContainer {
   cursor: pointer;
 }

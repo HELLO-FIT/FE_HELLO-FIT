@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ToggleButton from '@/components/ToggleButton';
 import styles from './Header.module.scss';
 import IconComponent from '@/components/Asset/Icon';
-import Tooltip from '../Tooltip/Tooltip';
+import Tooltip from '@/components/Tooltip/Tooltip';
 
 export default function Header() {
   const [logoName, setLogoName] = useState<'logoBlue' | 'logoGreen'>(

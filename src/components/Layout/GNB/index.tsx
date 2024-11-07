@@ -19,7 +19,7 @@ export default function GNB() {
       label: '강좌',
     },
     {
-      href: '/like',
+      href: '/likelist',
       icon: { active: 'heartFull', inactive: 'heartEmpty' },
       label: '찜',
     },
