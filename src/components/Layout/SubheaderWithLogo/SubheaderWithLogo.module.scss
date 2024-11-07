@@ -1,0 +1,20 @@
+@import '@/styles/globals';
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 20px;
+  background-color: $gray10;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
+
+.btnContainer {
+  cursor: pointer;
+}

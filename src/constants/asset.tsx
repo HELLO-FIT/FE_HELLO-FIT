@@ -100,9 +100,9 @@ export const ICONS = {
     s: '/icon/s/icon-upload.svg',
   },
   x: {
-    l: '/icon/l/icon-x.svg',
-    m: '/icon/m/icon-x.svg',
-    s: '/icon/s/icon-x.svg',
+    l: '/icon/l/icon-X.svg',
+    m: '/icon/m/icon-X.svg',
+    s: '/icon/s/icon-X.svg',
   },
   // GNB 아이콘
   bellEmpty: '/icon/custom/GNB/bell-empty.svg',
@@ -123,11 +123,14 @@ export const ICONS = {
   logoGreen: '/icon/custom/logo-green.svg',
   landingKakao: '/icon/custom/icon-landing-kakao.svg',
   scheduleEllipse: '/icon/custom/schedule-ellipse.svg',
+  checked: '/icon/custom/icon-checked.svg',
+  unchecked: '/icon/custom/icon-unchecked.svg',
   boxing: '/icon/custom/icon-boxing.svg',
   hapkido: '/icon/custom/icon-hapkido.svg',
   health: '/icon/custom/icon-health.svg',
   pilates: '/icon/custom/icon-pilates.svg',
 };
 
-// export const IMAGES = {
-// };
+export const IMAGES = {
+  popularImage: '/image/image-popular.svg',
+};

@@ -2,13 +2,16 @@ import React from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
 import Schedule from '@/components/Schedule';
-import Notification from '@/components/Noti/Notification/Notification';
+import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
 import ButtonContainer from '@/components/ButtonContainer';
 import SportButton from '@/components/Button/SportButton';
 import SportButtonList from '@/components/SportButtonList';
 import styles from './preview.module.scss';
+import Checkbox from '@/components/Checkbox/Checkbox';
+import SearchBar from '@/components/SearchBar/SearchBar';
+import Chips from '@/components/Button/Chips';
 
 export default function Preview() {
   return (
@@ -40,7 +43,7 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Schedule</h2>
-        <Schedule />
+        <Schedule id={1} />
       </section>
 
       <section className={styles.section}>
@@ -82,6 +85,23 @@ export default function Preview() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
         <SportButtonList />
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>CheckBox</h2>
+        <Checkbox>체크박스</Checkbox>
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>SearchBar</h2>
+        <SearchBar />
+      </section>
+
+      <section className={styles.sectionBlue}>
+        <h2 className={styles.sectionTitle}>Chips</h2>
+        <Chips text="장애인 화장실" chipState="label" />
+        <Chips text="장애인 화장실" chipState="checked" />
+        <Chips text="장애인 화장실" chipState="unchecked" />
       </section>
     </div>
   );

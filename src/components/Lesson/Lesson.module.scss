@@ -1,0 +1,68 @@
+@import '@/styles/globals.scss';
+
+.container {
+  width: 100%;
+  min-height: calc(100vh - 113px);
+  padding: 4px 20px 20px;
+  background-color: $gray10;
+}
+
+.popularBtn {
+  width: 100%;
+  padding: 16px 20px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 12px;
+  border: 1px solid $gray20;
+  background-color: $white;
+  cursor: pointer;
+
+  .leftContainer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .titleContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .buttonSubtitle {
+    @include C12M;
+    color: $gray50;
+  }
+
+  .buttonTitle {
+    @include T14B;
+    color: $gray90;
+  }
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0 16px;
+}
+
+.totalText {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  @include B14M;
+  color: $gray70;
+
+  .totalTextColor {
+    color: $blue60;
+  }
+}

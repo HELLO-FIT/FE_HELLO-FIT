@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Notification from './Notification/Notification';
+import Notification from './Notification';
 import styles from './Noti.module.scss';
 import { NotificationData } from './Noti.types';
 

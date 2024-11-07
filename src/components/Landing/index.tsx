@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import IconComponent from '../Asset/Icon';
 import styles from './Landing.module.scss';
 
@@ -28,9 +29,11 @@ export default function Landing() {
           </div>
           카카오로 계속하기
         </div>
-        <div className={styles.serviceBtn} role="button" tabIndex={0}>
-          서비스 둘러보기
-        </div>
+        <Link href="/map">
+          <div className={styles.serviceBtn} role="button" tabIndex={0}>
+            서비스 둘러보기
+          </div>
+        </Link>
       </div>
     </div>
   );
