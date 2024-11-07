@@ -127,5 +127,6 @@ export const ICONS = {
   unchecked: '/icon/custom/icon-unchecked.svg',
 };
 
-// export const IMAGES = {
-// };
+export const IMAGES = {
+  popularImage: '/image/image-popular.svg',
+};
