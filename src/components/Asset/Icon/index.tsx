@@ -1,8 +1,8 @@
 import React from 'react';
-import { ICONS } from '@/constants/asset';
 import Image from 'next/image';
+import { ICONS } from '@/constants/asset';
 
-export interface IconComponentProps {
+interface IconComponentProps {
   name: keyof typeof ICONS;
   size?: 'l' | 'm' | 's' | 'custom';
   alt?: string;
@@ -21,10 +21,11 @@ export default function IconComponent({
 }: IconComponentProps) {
   const iconSrc = ICONS[name];
 
-  if (typeof iconSrc === 'string' && size === 'custom') {
+  // `size`가 'custom'일 때 별도로 처리
+  if (typeof iconSrc === 'string' || size === 'custom') {
     return (
       <Image
-        src={iconSrc}
+        src={iconSrc as string}
         alt={alt}
         width={width || DEFAULT_SIZES.custom}
         height={height || DEFAULT_SIZES.custom}
@@ -32,8 +33,8 @@ export default function IconComponent({
     );
   }
 
-  const iconSizeSrc =
-    typeof iconSrc !== 'string' ? iconSrc[size as 'l' | 'm' | 's'] : iconSrc;
+  // 'l', 'm', 's' 크기에서만 `Record` 접근
+  const iconSizeSrc = (iconSrc as Record<'l' | 'm' | 's', string>)[size as 'l' | 'm' | 's'];
   const imgSize = width || height || DEFAULT_SIZES[size];
 
   return <Image src={iconSizeSrc} alt={alt} width={imgSize} height={imgSize} />;
