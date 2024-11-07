@@ -99,8 +99,9 @@ export default function Preview() {
 
       <section className={styles.sectionBlue}>
         <h2 className={styles.sectionTitle}>Chips</h2>
-        <Chips text="장애인 화장실" />
-        <Chips text="시각" />
+        <Chips text="장애인 화장실" chipState="label" />
+        <Chips text="장애인 화장실" chipState="checked" />
+        <Chips text="장애인 화장실" chipState="unchecked" />
       </section>
     </div>
   );
