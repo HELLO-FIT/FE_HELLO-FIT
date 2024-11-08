@@ -5,13 +5,13 @@ import Schedule from '@/components/Schedule';
 import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
-import ButtonContainer from '@/components/ButtonContainer';
 import SportButton from '@/components/Button/SportButton';
 import SportButtonList from '@/components/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/SearchBar/SearchBar';
 import Chips from '@/components/Button/Chips';
+import SpecialInfoCard from '@/components/CourseDetails/SpecialInfoCard';
 import DropDown from '@/components/DropDown';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
@@ -59,6 +59,13 @@ const sportsOptions = [
 ];
 
 export default function Preview() {
+  const data = {
+    coach: 2,
+    vehicle: true,
+    specialType: ['지체', '시각', '언어'],
+    amenities: ['장애인 화장실', '장애인 주차구역', '휠체어 경사로'],
+  };
+
   return (
     <div className={styles.previewPage}>
       <h1 className={styles.mainTitle}>Component Preview</h1>
@@ -118,11 +125,6 @@ export default function Preview() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Button Container</h2>
-        <ButtonContainer />
-      </section>
-
-      <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button</h2>
         <SportButton iconName={'logoBlue'} label={'Sport Button Test'} />
       </section>
@@ -148,6 +150,16 @@ export default function Preview() {
         <Chips text="장애인 화장실" chipState="checked" />
         <Chips text="장애인 화장실" chipState="unchecked" />
         <Chips text="복싱" chipState="sports" />
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>SpecialInfoCard</h2>
+        <SpecialInfoCard
+          coach={data.coach}
+          vehicle={data.vehicle}
+          specialType={data.specialType}
+          amenities={data.amenities}
+        />
       </section>
 
       <section className={styles.section}>
