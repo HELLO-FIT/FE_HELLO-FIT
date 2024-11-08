@@ -39,7 +39,7 @@ export default function Map() {
 
     const initializeMap = () => {
       window.kakao.maps.load(() => {
-        const mapContainer = document.getElementById('map');
+        const mapContainer = document.getElementById('map') as HTMLElement;
         const mapOption = {
           center: new window.kakao.maps.LatLng(37.5665, 126.978), // 서울 중심 좌표
           level: 3,
@@ -65,7 +65,6 @@ export default function Map() {
               });
 
               // 마커 클릭 시 선택한 마커의 이미지 변경 및 시설 정보 표시
-              // 이미지 변경까지만 되므로 수정중
               window.kakao.maps.event.addListener(marker, 'click', () => {
                 marker.setImage(
                   new window.kakao.maps.MarkerImage(
