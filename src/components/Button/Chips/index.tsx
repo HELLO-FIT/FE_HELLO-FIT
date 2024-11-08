@@ -8,6 +8,8 @@ export default function Chips({ chipState, text }: ChipsProps) {
         return styles.checked; // 체크된 칩
       case 'unchecked':
         return styles.unchecked; // 체크되지 않은 칩
+      case 'sports':
+        return styles.sports; // 운동 종목 칩
       case 'label':
       default:
         return styles.label; // 기본 라벨 칩

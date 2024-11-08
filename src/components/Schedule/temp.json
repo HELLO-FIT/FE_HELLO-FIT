@@ -4,7 +4,7 @@
     "name": "TF 복싱짐TF 복싱짐TF 복싱짐TF 복싱짐TF 복싱짐",
     "item_nm": "복싱",
     "location": "경주",
-    "address": "경상북도 경주시 원물로5번길 149 3층 TF복싱장",
+    "address": "경북 경주시 건천읍 경주역로 80",
     "start_tm": "10:00",
     "close_tm": "22:00",
     "lectr_weekday_val": "1111100",
@@ -15,17 +15,17 @@
   },
   {
     "id": 2,
-    "name": "강성 체육관 킥복싱 무에타이",
+    "name": "조혜진 킥복싱",
     "item_nm": "킥복싱",
-    "location": "경주",
-    "address": "경상북도 경주시 원물로5번길 149 3층 TF복싱장",
+    "location": "아산",
+    "address": "충남 아산시 배방읍 희망로 100",
     "start_tm": "10:00",
     "close_tm": "22:00",
     "lectr_weekday_val": "1111100",
-    "lectr_nm": "이준희",
+    "lectr_nm": "조혜진",
     "phone": "054-774-9768",
     "settl_amt": "150000",
-    "course_nm": "복싱트레이닝"
+    "course_nm": "킥복싱"
   },
   {
     "id": 3,
