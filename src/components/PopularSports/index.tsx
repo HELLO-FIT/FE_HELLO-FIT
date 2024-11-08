@@ -36,7 +36,7 @@ export default function PopularSports() {
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
-  const maxDragDistance = +140;
+  const maxDragDistance = 140;
 
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
@@ -51,9 +51,9 @@ export default function PopularSports() {
       'touches' in event ? event.touches[0].clientY : event.clientY;
     const delta = currentY - initialY.current;
 
-    setPosition(prevPosition => {
+    setPosition((prevPosition) => {
       const newPosition = prevPosition + delta;
-      return Math.max(Math.min(newPosition, 0), maxDragDistance);
+      return Math.max(Math.min(newPosition, maxDragDistance), 0);
     });
 
     initialY.current = currentY;
@@ -61,41 +61,42 @@ export default function PopularSports() {
 
   const handleDragEnd = () => {
     setIsDragging(false);
-
-    setPosition(prevPosition =>
+    setPosition((prevPosition) =>
       prevPosition < maxDragDistance / 2 ? maxDragDistance : 0
     );
   };
 
   return (
-    <div
-      className={styles.popularSportsContainer}
-      style={{ transform: `translate(-50%, ${position}px)` }}
-      onMouseDown={e => handleDragStart(e as React.MouseEvent)}
-      onMouseMove={
-        isDragging ? e => handleDragMove(e as React.MouseEvent) : undefined
-      }
-      onMouseUp={handleDragEnd}
-      onTouchStart={e => handleDragStart(e as React.TouchEvent)}
-      onTouchMove={
-        isDragging ? e => handleDragMove(e as React.TouchEvent) : undefined
-      }
-      onTouchEnd={handleDragEnd}
-    >
-      <div className={styles.indicatorContainer}>
-        <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
+    <div className={styles.popularSportsContainerWrapper}>
+      <div
+        className={styles.popularSportsContainer}
+        style={{ transform: `translateY(${position}px)` }}
+        onMouseDown={(e) => handleDragStart(e as React.MouseEvent)}
+        onMouseMove={
+          isDragging ? (e) => handleDragMove(e as React.MouseEvent) : undefined
+        }
+        onMouseUp={handleDragEnd}
+        onTouchStart={(e) => handleDragStart(e as React.TouchEvent)}
+        onTouchMove={
+          isDragging ? (e) => handleDragMove(e as React.TouchEvent) : undefined
+        }
+        onTouchEnd={handleDragEnd}
+      >
+        <div className={styles.indicatorContainer}>
+          <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
+        </div>
+        <header className={styles.header}>
+          <DropDown
+            placeholder="지역"
+            options={locationOptions}
+            onSelect={(selectedLocation) =>
+              console.log('선택된 위치:', selectedLocation)
+            }
+          />
+        </header>
+        <h2 className={styles.title}>인기 스포츠</h2>
+        <SportButtonList />
       </div>
-      <header className={styles.header}>
-        <DropDown
-          placeholder="지역"
-          options={locationOptions}
-          onSelect={selectedLocation =>
-            console.log('선택된 위치:', selectedLocation)
-          }
-        />
-      </header>
-      <h2 className={styles.title}>인기 스포츠</h2>
-      <SportButtonList />
     </div>
   );
 }
