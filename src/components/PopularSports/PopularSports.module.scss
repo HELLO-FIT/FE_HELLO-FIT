@@ -5,7 +5,7 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 100vw; 
+  width: 100vw;
   display: flex;
   justify-content: center;
   z-index: 5;
@@ -26,6 +26,8 @@
 
   .indicatorContainer {
     margin-bottom: 14px;
+    z-index: 10;
+    cursor: grab;
   }
 
   .header {

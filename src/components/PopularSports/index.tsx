@@ -37,11 +37,15 @@ export default function PopularSports() {
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
   const maxDragDistance = 140;
-
+  // 모바일 일 때는 문제없으나 pc 일 때는 다른 요소에도 드래그 적용되는 이슈
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
+    const target = event.target as Element; // 타입 단언
+
+    if (!target.closest(`.${styles.indicatorContainer}`)) return; // 인디케이터에서만 드래그 시작 허용
     setIsDragging(true);
     initialY.current =
       'touches' in event ? event.touches[0].clientY : event.clientY;
+    event.stopPropagation(); // 이벤트 전파 중단
   };
 
   const handleDragMove = (event: React.MouseEvent | React.TouchEvent) => {
@@ -51,7 +55,7 @@ export default function PopularSports() {
       'touches' in event ? event.touches[0].clientY : event.clientY;
     const delta = currentY - initialY.current;
 
-    setPosition((prevPosition) => {
+    setPosition(prevPosition => {
       const newPosition = prevPosition + delta;
       return Math.max(Math.min(newPosition, maxDragDistance), 0);
     });
@@ -61,7 +65,7 @@ export default function PopularSports() {
 
   const handleDragEnd = () => {
     setIsDragging(false);
-    setPosition((prevPosition) =>
+    setPosition(prevPosition =>
       prevPosition < maxDragDistance / 2 ? maxDragDistance : 0
     );
   };
@@ -71,25 +75,32 @@ export default function PopularSports() {
       <div
         className={styles.popularSportsContainer}
         style={{ transform: `translateY(${position}px)` }}
-        onMouseDown={(e) => handleDragStart(e as React.MouseEvent)}
         onMouseMove={
-          isDragging ? (e) => handleDragMove(e as React.MouseEvent) : undefined
+          isDragging ? e => handleDragMove(e as React.MouseEvent) : undefined
+        }
+        onTouchMove={
+          isDragging ? e => handleDragMove(e as React.TouchEvent) : undefined
         }
         onMouseUp={handleDragEnd}
-        onTouchStart={(e) => handleDragStart(e as React.TouchEvent)}
-        onTouchMove={
-          isDragging ? (e) => handleDragMove(e as React.TouchEvent) : undefined
-        }
         onTouchEnd={handleDragEnd}
       >
-        <div className={styles.indicatorContainer}>
+        <div
+          className={styles.indicatorContainer}
+          onMouseDown={e => {
+            handleDragStart(e as React.MouseEvent);
+          }}
+          onTouchStart={e => {
+            handleDragStart(e as React.TouchEvent);
+          }}
+          style={{ cursor: 'grab' }}
+        >
           <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
         </div>
         <header className={styles.header}>
           <DropDown
             placeholder="지역"
             options={locationOptions}
-            onSelect={(selectedLocation) =>
+            onSelect={selectedLocation =>
               console.log('선택된 위치:', selectedLocation)
             }
           />
