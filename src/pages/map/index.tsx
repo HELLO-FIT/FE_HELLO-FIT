@@ -8,11 +8,10 @@ import facilityData from './mockData';
 
 declare global {
   interface Window {
-    kakao: any; // Declare as any globally to avoid TypeScript issues
+    kakao: any;
   }
 }
 
-// Specific types for Kakao Map API objects used in the file
 interface KakaoLatLng {
   new (lat: number, lng: number): KakaoLatLng;
 }
@@ -28,7 +27,11 @@ interface KakaoMap {
 }
 
 interface KakaoMarkerImage {
-  new (src: string, size: { width: number; height: number }, options?: { offset: { x: number; y: number } }): KakaoMarkerImage;
+  new (
+    src: string,
+    size: { width: number; height: number },
+    options?: { offset: { x: number; y: number } }
+  ): KakaoMarkerImage;
 }
 
 interface KakaoMarker {
@@ -54,7 +57,9 @@ interface Facility {
 
 export default function Map() {
   const router = useRouter();
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
+    null
+  );
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
 
   useEffect(() => {
@@ -73,42 +78,54 @@ export default function Map() {
         };
         const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
-        facilityData.forEach((facility) => {
+        facilityData.forEach(facility => {
           const geocoder = new window.kakao.maps.services.Geocoder();
-          geocoder.addressSearch(facility.address, (result: { x: string; }[], status: any) => {
-            if (status === window.kakao.maps.services.Status.OK) {
-              const coords = new window.kakao.maps.LatLng(parseFloat(result[0].y), parseFloat(result[0].x));
-              const markerImage = new window.kakao.maps.MarkerImage(
-                '/image/marker.svg',
-                new window.kakao.maps.Size(40, 40),
-                { offset: new window.kakao.maps.Point(20, 40) }
-              );
-
-              const marker = new window.kakao.maps.Marker({
-                position: coords,
-                image: markerImage,
-              });
-              marker.setMap(map);
-
-              window.kakao.maps.event.addListener(marker, 'click', () => {
-                marker.setImage(
-                  new window.kakao.maps.MarkerImage(
-                    '/image/address-marker-normal.svg',
-                    new window.kakao.maps.Size(40, 40),
-                    { offset: new window.kakao.maps.Point(20, 40) }
-                  )
+          geocoder.addressSearch(
+            facility.address,
+            (
+              result: {
+                y: string;
+                x: string;
+              }[],
+              status: any
+            ) => {
+              if (status === window.kakao.maps.services.Status.OK) {
+                const coords = new window.kakao.maps.LatLng(
+                  parseFloat(result[0].y),
+                  parseFloat(result[0].x)
                 );
-                setSelectedFacility(facility);
-              });
-            } else {
-              console.error('주소 검색 실패:', status);
+                const markerImage = new window.kakao.maps.MarkerImage(
+                  '/image/marker.svg',
+                  new window.kakao.maps.Size(40, 40),
+                  { offset: new window.kakao.maps.Point(20, 40) }
+                );
+
+                const marker = new window.kakao.maps.Marker({
+                  position: coords,
+                  image: markerImage,
+                });
+                marker.setMap(map);
+
+                window.kakao.maps.event.addListener(marker, 'click', () => {
+                  marker.setImage(
+                    new window.kakao.maps.MarkerImage(
+                      '/image/address-marker-normal.svg',
+                      new window.kakao.maps.Size(40, 40),
+                      { offset: new window.kakao.maps.Point(20, 40) }
+                    )
+                  );
+                  setSelectedFacility(facility);
+                });
+              } else {
+                console.error('주소 검색 실패:', status);
+              }
             }
-          });
+          );
         });
 
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
-            (position) => {
+            position => {
               const userLocation = new window.kakao.maps.LatLng(
                 position.coords.latitude,
                 position.coords.longitude
@@ -125,7 +142,7 @@ export default function Map() {
               userMarker.setMap(map);
               map.setCenter(userLocation);
             },
-            (error) => {
+            error => {
               console.error('현재 위치를 가져오는 데 실패했습니다:', error);
             }
           );
