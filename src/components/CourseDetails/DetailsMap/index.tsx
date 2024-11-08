@@ -104,7 +104,7 @@ export default function DetailsMap({
     return () => {
       mapScript.removeEventListener('load', onLoadKakaoMap);
     };
-  }, [address]);
+  }, [address, KAKAO_MAP_KEY]);
 
   return (
     <div

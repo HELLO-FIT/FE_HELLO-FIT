@@ -5,7 +5,6 @@ import Schedule from '@/components/Schedule';
 import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
-import ButtonContainer from '@/components/ButtonContainer';
 import SportButton from '@/components/Button/SportButton';
 import SportButtonList from '@/components/SportButtonList';
 import styles from './preview.module.scss';
@@ -109,7 +108,7 @@ export default function Preview() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>SearchBar</h2>
+        <h2 className={styles.sectionTitle}>SpecialInfoCard</h2>
         <SpecialInfoCard
           coach={data.coach}
           vehicle={data.vehicle}
