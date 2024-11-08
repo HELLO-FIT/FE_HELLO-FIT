@@ -123,18 +123,20 @@ export const ICONS = {
   kakao: '/icon/custom/icon-kakao.svg',
   landingDumbbell: '/icon/custom/icon-landing-dumbbell.svg',
   // 로고 아이콘
-  logo: '/icon/custom/logo.svg',
-  logoBlue: '/icon/custom/logo-blue.svg',
-  logoGreen: '/icon/custom/logo-green.svg',
+  logo: '/icon/custom/logo/logo.svg',
+  logoBlue: '/icon/custom/logo/logo-blue.svg',
+  logoGreen: '/icon/custom/logo/logo-green.svg',
   scheduleEllipse: '/icon/custom/schedule-ellipse.svg',
   checked: '/icon/custom/icon-checked.svg',
   unchecked: '/icon/custom/icon-unchecked.svg',
   // 스포츠 종목 아이콘
-  boxing: '/icon/custom/icon-boxing.svg',
-  hapkido: '/icon/custom/icon-hapkido.svg',
-  health: '/icon/custom/icon-health.svg',
-  pilates: '/icon/custom/icon-pilates.svg',
-  indicator: '/icon/custom/icon-indicator.svg',
+  boxing: '/icon/custom/sport/icon-boxing.svg',
+  hapkido: '/icon/custom/sport/icon-hapkido.svg',
+  health: '/icon/custom/sport/icon-health.svg',
+  pilates: '/icon/custom/sport/icon-pilates.svg',
+  // 인디케이터 아이콘
+  indicator: '/icon/custom/indicator/icon-indicator.svg',
+  indicatorDot: '/icon/custom/indicator/icon-indicator-dot.svg',
 };
 
 export const IMAGES = {
