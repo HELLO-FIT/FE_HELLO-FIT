@@ -12,6 +12,16 @@ interface IconComponentProps {
 
 const DEFAULT_SIZES = { l: 24, m: 20, s: 16, custom: 24 };
 
+type IconRecord = { l?: string; m?: string; s?: string };
+
+function isSizeRecord(icon: unknown): icon is IconRecord {
+  return (
+    typeof icon === 'object' &&
+    icon !== null &&
+    ('l' in icon || 'm' in icon || 's' in icon)
+  );
+}
+
 export default function IconComponent({
   name,
   size = 'custom',
@@ -21,7 +31,11 @@ export default function IconComponent({
 }: IconComponentProps) {
   const iconSrc = ICONS[name];
 
-  // `size`가 'custom'일 때 별도로 처리
+  if (!iconSrc) {
+    console.warn(`Icon "${name}" not found in ICONS`);
+    return null;
+  }
+
   if (typeof iconSrc === 'string' || size === 'custom') {
     return (
       <Image
@@ -33,9 +47,16 @@ export default function IconComponent({
     );
   }
 
-  // 'l', 'm', 's' 크기에서만 `Record` 접근
-  const iconSizeSrc = (iconSrc as Record<'l' | 'm' | 's', string>)[size as 'l' | 'm' | 's'];
-  const imgSize = width || height || DEFAULT_SIZES[size];
+  if (isSizeRecord(iconSrc)) {
+    // 기본 크기 `m`으로 fallback 처리
+    const iconSizeSrc = iconSrc[size] || iconSrc.m;
+    const imgSize = width || height || DEFAULT_SIZES[size];
+    return (
+      <Image src={iconSizeSrc} alt={alt} width={imgSize} height={imgSize} />
+    );
+  }
 
-  return <Image src={iconSizeSrc} alt={alt} width={imgSize} height={imgSize} />;
+  // 아이콘 미등록 경우
+  console.warn(`Icon "${name}" with size "${size}" not found`);
+  return null;
 }

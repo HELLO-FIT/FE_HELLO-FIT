@@ -1,9 +1,9 @@
 import React from 'react';
 import SportButton from '@/components/Button/SportButton';
-import { IconComponentProps } from '@/components/Asset/Icon'; // 수정: IconComponentProps 가져오기
+import { ICONS } from '@/constants/asset'; 
 
-const sportsData: { iconName: IconComponentProps['name']; label: string }[] = [
-  { iconName: 'logo', label: '태권도' },
+const sportsData: { iconName: keyof typeof ICONS; label: string }[] = [
+  { iconName: 'logoBlue', label: '태권도' },
   { iconName: 'boxing', label: '복싱' },
   { iconName: 'hapkido', label: '합기도' },
   { iconName: 'health', label: '헬스' },
