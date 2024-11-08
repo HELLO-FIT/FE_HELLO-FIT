@@ -31,3 +31,11 @@
   background-color: $white;
   @include C12M;
 }
+
+.sports {
+  padding: 0px 8px;
+  border-radius: 8px;
+  color: $blue60;
+  background-color: $blue10;
+  @include B14M;
+}

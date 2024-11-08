@@ -5,6 +5,7 @@ import IconComponent from '../Asset/Icon';
 import Schedule from '../Schedule';
 import data from '@/components/Schedule/temp.json';
 import Checkbox from '../Checkbox/Checkbox';
+import Link from 'next/link';
 
 export default function Lesson() {
   const scheduleCount = data.length;
@@ -35,7 +36,9 @@ export default function Lesson() {
       </div>
       <div className={styles.listContainer}>
         {data.map(item => (
-          <Schedule key={item.id} id={item.id} />
+          <Link key={item.id} href={`/details/${item.id}`}>
+            <Schedule key={item.id} id={item.id} />
+          </Link>
         ))}
       </div>
     </div>

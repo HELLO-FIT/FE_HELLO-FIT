@@ -102,6 +102,7 @@ export default function Preview() {
         <Chips text="장애인 화장실" chipState="label" />
         <Chips text="장애인 화장실" chipState="checked" />
         <Chips text="장애인 화장실" chipState="unchecked" />
+        <Chips text="복싱" chipState="sports" />
       </section>
     </div>
   );

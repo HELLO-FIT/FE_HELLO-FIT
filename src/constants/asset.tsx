@@ -125,6 +125,7 @@ export const ICONS = {
   scheduleEllipse: '/icon/custom/schedule-ellipse.svg',
   checked: '/icon/custom/icon-checked.svg',
   unchecked: '/icon/custom/icon-unchecked.svg',
+  marker: '/icon/custom/address-marker.svg',
 };
 
 export const IMAGES = {
