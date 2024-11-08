@@ -10,7 +10,9 @@ interface SportButtonProps {
 export default function SportButton({ iconName, label }: SportButtonProps) {
   return (
     <div className={styles.sportButton}>
-      <IconComponent name={iconName} size="m" alt={label} />
+      <div className={styles.iconContainer}>
+        <IconComponent name={iconName} size="m" alt={label} />
+      </div>
       <p className={styles.label}>{label}</p>
     </div>
   );

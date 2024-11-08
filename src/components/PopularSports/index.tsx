@@ -2,6 +2,7 @@ import React from 'react';
 import DropDown from '@/components/DropDown';
 import SportButtonList from '@/components/SportButtonList';
 import styles from './PopularSports.module.scss';
+import IconComponent from '../Asset/Icon';
 
 const locationOptions = [
   '서울 종로구',
@@ -31,10 +32,12 @@ const locationOptions = [
   '서울 강동구',
 ];
 
-
 export default function PopularSports() {
   return (
     <div className={styles.popularSportsContainer}>
+      <div className={styles.indicatorContainer}>
+        <IconComponent name="indicator" size="custom" alt="Indicator" />
+      </div>
       <header className={styles.header}>
         <DropDown
           placeholder="지역"

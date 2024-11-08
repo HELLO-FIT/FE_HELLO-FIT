@@ -179,7 +179,7 @@ export default function Preview() {
         </div>
       </section>
 
-      <section className={styles.section}>
+      <section className={styles.sectionBlue}>
         <h2 className={styles.sectionTitle}>Poplular Sports</h2>
         <PopularSports />
       </section>
