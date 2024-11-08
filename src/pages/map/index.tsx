@@ -4,7 +4,7 @@ import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import Indicator from '@/components/MapHome/Indicator';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import facilityData from './mockData';
+import facilityData from '../../utils/mockData';
 /* eslint-disable  */
 declare global {
   interface Window {
