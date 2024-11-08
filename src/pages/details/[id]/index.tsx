@@ -12,7 +12,7 @@ export default function Details() {
 
   return (
     <>
-      <Subheader subheaderText="강좌 상세" />
+      <Subheader subheaderText="시설 상세" />
       {Id && <CourseDetails schedule={Id} />}
       <ButtonContainer />
     </>

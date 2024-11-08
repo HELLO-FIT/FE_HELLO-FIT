@@ -25,12 +25,24 @@
   color: $gray90;
 }
 
-.address {
+.addressWrapper {
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: space-between;
   @include B14M;
   color: $gray80;
+  cursor: pointer;
+
+  .address {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .rightIcon {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .mapContainer {

@@ -11,7 +11,7 @@ export default function Map() {
   const Id = data.find(item => item.id === Number(id));
   return (
     <>
-      <Subheader subheaderText="강좌 상세" isGray={false} />
+      <Subheader subheaderText="시설 상세" isGray={false} />
       {Id && <LargeMap address={Id.address} />}
       <ButtonContainer />
     </>

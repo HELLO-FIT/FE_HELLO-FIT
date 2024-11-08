@@ -1,0 +1,64 @@
+@import '@/styles/globals';
+
+.box {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  background-color: rgba(233, 244, 230, 0.8);
+  border-radius: 12px;
+}
+
+.labelValueText {
+  @include B14M;
+  display: flex;
+  gap: 16px;
+
+  .label {
+    color: $green80;
+  }
+
+  .value {
+    color: $gray80;
+  }
+}
+
+.labelValue {
+  @include B14M;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  .label {
+    color: $green80;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .value {
+    @include B14M;
+    color: $gray80;
+  }
+
+  .buttonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .button {
+    padding: 6px 10px;
+    background-color: $white;
+    color: $gray90;
+    @include C12M;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 40px;
+    border: none;
+    outline: none;
+  }
+}
