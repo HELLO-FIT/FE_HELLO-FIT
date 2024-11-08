@@ -8,8 +8,40 @@ import facilityData from './mockData';
 
 declare global {
   interface Window {
-    kakao: any;
+    kakao: any; // Declare as any globally to avoid TypeScript issues
   }
+}
+
+// Specific types for Kakao Map API objects used in the file
+interface KakaoLatLng {
+  new (lat: number, lng: number): KakaoLatLng;
+}
+
+interface KakaoMapOptions {
+  center: KakaoLatLng;
+  level: number;
+}
+
+interface KakaoMap {
+  new (container: HTMLElement, options: KakaoMapOptions): KakaoMap;
+  setCenter(position: KakaoLatLng): void;
+}
+
+interface KakaoMarkerImage {
+  new (src: string, size: { width: number; height: number }, options?: { offset: { x: number; y: number } }): KakaoMarkerImage;
+}
+
+interface KakaoMarker {
+  setImage(image: KakaoMarkerImage): void;
+  setMap(map: KakaoMap | null): void;
+  position: KakaoLatLng;
+}
+
+interface KakaoGeocoder {
+  addressSearch(
+    address: string,
+    callback: (result: Array<{ y: string; x: string }>, status: string) => void
+  ): void;
 }
 
 interface Facility {
@@ -18,11 +50,6 @@ interface Facility {
   item_nm: string;
   location: string;
   address: string;
-}
-
-interface KakaoMapResult {
-  y: string;
-  x: string;
 }
 
 export default function Map() {
@@ -41,15 +68,14 @@ export default function Map() {
       window.kakao.maps.load(() => {
         const mapContainer = document.getElementById('map') as HTMLElement;
         const mapOption = {
-          center: new window.kakao.maps.LatLng(37.5665, 126.978), // 서울 중심 좌표
+          center: new window.kakao.maps.LatLng(37.5665, 126.978),
           level: 3,
         };
         const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
-        // 시설 위치에 마커 추가
         facilityData.forEach((facility) => {
           const geocoder = new window.kakao.maps.services.Geocoder();
-          geocoder.addressSearch(facility.address, (result: KakaoMapResult[], status: string) => {
+          geocoder.addressSearch(facility.address, (result: { x: string; }[], status: any) => {
             if (status === window.kakao.maps.services.Status.OK) {
               const coords = new window.kakao.maps.LatLng(parseFloat(result[0].y), parseFloat(result[0].x));
               const markerImage = new window.kakao.maps.MarkerImage(
@@ -59,12 +85,11 @@ export default function Map() {
               );
 
               const marker = new window.kakao.maps.Marker({
-                map: map,
                 position: coords,
                 image: markerImage,
               });
+              marker.setMap(map);
 
-              // 마커 클릭 시 선택한 마커의 이미지 변경 및 시설 정보 표시
               window.kakao.maps.event.addListener(marker, 'click', () => {
                 marker.setImage(
                   new window.kakao.maps.MarkerImage(
@@ -73,7 +98,7 @@ export default function Map() {
                     { offset: new window.kakao.maps.Point(20, 40) }
                   )
                 );
-                setSelectedFacility(facility); // 선택한 시설 정보 설정
+                setSelectedFacility(facility);
               });
             } else {
               console.error('주소 검색 실패:', status);
@@ -81,7 +106,6 @@ export default function Map() {
           });
         });
 
-        // 사용자 현재 위치 마커 표시
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -94,12 +118,11 @@ export default function Map() {
                 new window.kakao.maps.Size(40, 40),
                 { offset: new window.kakao.maps.Point(20, 40) }
               );
-              new window.kakao.maps.Marker({
-                map: map,
+              const userMarker = new window.kakao.maps.Marker({
                 position: userLocation,
                 image: userMarkerImage,
-                title: '현재 위치',
               });
+              userMarker.setMap(map);
               map.setCenter(userLocation);
             },
             (error) => {
@@ -123,7 +146,7 @@ export default function Map() {
       <div id="map" style={{ width: '100%', height: '100vh' }}></div>
       {router.pathname === '/map' && <PopularSports />}
       <Indicator />
-      {selectedFacility && <FacilityInfo facility={selectedFacility} />} 
+      {selectedFacility && <FacilityInfo facility={selectedFacility} />}
     </>
   );
 }
