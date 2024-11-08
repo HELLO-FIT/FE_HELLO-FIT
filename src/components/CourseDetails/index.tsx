@@ -1,15 +1,14 @@
 import { useRouter } from 'next/router';
 import styles from './CourseDetails.module.scss';
-import { getWeekdays } from '@/utils/getWeekdays';
 import { CourseDetailsProps } from './CourseDetails.types';
 import Chips from '../Button/Chips';
 import IconComponent from '../Asset/Icon';
-import { formatCurrency } from '@/utils/formatCurrency';
 import DetailsMap from './DetailsMap';
+import CourseCard from './CourseCard';
+import InfoCard from './InfoCard';
 
 export default function CourseDetails({ schedule }: CourseDetailsProps) {
   const router = useRouter();
-  const weekdays = getWeekdays(schedule.lectr_weekday_val);
 
   const handleMapClick = () => {
     router.push(`/details/${schedule.id}/map`);
@@ -39,45 +38,21 @@ export default function CourseDetails({ schedule }: CourseDetailsProps) {
         </div>
         <div className={styles.labelSectionWrapper}>
           <label className={styles.title}>시설 정보</label>
-          <section className={styles.box}>
-            <p className={styles.labelValue}>
-              <span className={styles.label}>연락처</span>
-              <span className={styles.value}>{schedule.phone}</span>
-            </p>
-            <p className={styles.labelValue}>
-              <span className={styles.label}>대표자</span>
-              <span className={styles.value}>{schedule.lectr_nm}</span>
-            </p>
-          </section>
+          <InfoCard
+            contact={schedule.phone}
+            representative={schedule.lectr_nm}
+          />
         </div>
         <div className={styles.labelSectionWrapper}>
           <label className={styles.title}>개설 강좌</label>
-          <section className={styles.box}>
-            <p className={styles.labelValue}>
-              <span className={styles.label}>강좌명</span>
-              <span className={styles.highlight}>{schedule.course_nm}</span>
-            </p>
-            <p className={styles.labelValue}>
-              <span className={styles.label}>강사</span>
-              <span className={styles.value}>{schedule.lectr_nm}</span>
-            </p>
-            <p className={styles.labelValue}>
-              <span className={styles.label}>시간</span>
-              <span className={styles.value}>
-                {schedule.start_tm} ~ {schedule.close_tm}
-              </span>
-            </p>
-            <p className={styles.labelValue}>
-              <span className={styles.label}>요일</span>
-              <span className={styles.value}>{weekdays}</span>
-            </p>
-            <p className={styles.labelValue}>
-              <span className={styles.label}>가격</span>
-              <span className={styles.value}>
-                {formatCurrency(schedule.settl_amt)}
-              </span>
-            </p>
-          </section>
+          <CourseCard
+            courseName={schedule.course_nm}
+            instructor={schedule.lectr_nm}
+            startTime={schedule.start_tm}
+            endTime={schedule.close_tm}
+            weekdays={schedule.lectr_weekday_val}
+            price={schedule.settl_amt}
+          />
         </div>
       </div>
     </div>

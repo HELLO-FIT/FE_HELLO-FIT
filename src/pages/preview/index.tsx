@@ -12,8 +12,16 @@ import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/SearchBar/SearchBar';
 import Chips from '@/components/Button/Chips';
+import SpecialInfoCard from '@/components/CourseDetails/SpecialInfoCard';
 
 export default function Preview() {
+  const data = {
+    coach: 2,
+    vehicle: true,
+    specialType: ['지체', '시각', '언어'],
+    amenities: ['장애인 화장실', '장애인 주차구역', '휠체어 경사로'],
+  };
+
   return (
     <div className={styles.previewPage}>
       <h1 className={styles.mainTitle}>Component Preview</h1>
@@ -73,11 +81,6 @@ export default function Preview() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Button Container</h2>
-        <ButtonContainer />
-      </section>
-
-      <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button</h2>
         <SportButton icon={'/icon/custom/logo-blue.svg'} label="테스트" />
       </section>
@@ -103,6 +106,16 @@ export default function Preview() {
         <Chips text="장애인 화장실" chipState="checked" />
         <Chips text="장애인 화장실" chipState="unchecked" />
         <Chips text="복싱" chipState="sports" />
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>SearchBar</h2>
+        <SpecialInfoCard
+          coach={data.coach}
+          vehicle={data.vehicle}
+          specialType={data.specialType}
+          amenities={data.amenities}
+        />
       </section>
     </div>
   );
