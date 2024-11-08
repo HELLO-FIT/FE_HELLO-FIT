@@ -14,7 +14,6 @@ import SearchBar from '@/components/SearchBar/SearchBar';
 import Chips from '@/components/Button/Chips';
 import DropDown from '@/components/DropDown';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import PopularSports from '@/components/PopularSports';
 
 // 위치 목업 데이터
 const locationOptions = [
@@ -178,11 +177,6 @@ export default function Preview() {
         <div className={styles.spinnerContainer}>
           <LoadingSpinner />
         </div>
-      </section>
-
-      <section className={styles.sectionBlue}>
-        <h2 className={styles.sectionTitle}>Poplular Sports</h2>
-        <PopularSports />
       </section>
     </div>
   );
