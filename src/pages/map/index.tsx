@@ -5,46 +5,11 @@ import PopularSports from '@/components/MapHome/PopularSports';
 import Indicator from '@/components/MapHome/Indicator';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import facilityData from './mockData';
-
+/* eslint-disable  */
 declare global {
   interface Window {
     kakao: any;
   }
-}
-
-interface KakaoLatLng {
-  new (lat: number, lng: number): KakaoLatLng;
-}
-
-interface KakaoMapOptions {
-  center: KakaoLatLng;
-  level: number;
-}
-
-interface KakaoMap {
-  new (container: HTMLElement, options: KakaoMapOptions): KakaoMap;
-  setCenter(position: KakaoLatLng): void;
-}
-
-interface KakaoMarkerImage {
-  new (
-    src: string,
-    size: { width: number; height: number },
-    options?: { offset: { x: number; y: number } }
-  ): KakaoMarkerImage;
-}
-
-interface KakaoMarker {
-  setImage(image: KakaoMarkerImage): void;
-  setMap(map: KakaoMap | null): void;
-  position: KakaoLatLng;
-}
-
-interface KakaoGeocoder {
-  addressSearch(
-    address: string,
-    callback: (result: Array<{ y: string; x: string }>, status: string) => void
-  ): void;
 }
 
 interface Facility {
@@ -53,6 +18,11 @@ interface Facility {
   item_nm: string;
   location: string;
   address: string;
+}
+
+interface KakaoMapResult {
+  y: string;
+  x: string;
 }
 
 export default function Map() {
@@ -71,24 +41,19 @@ export default function Map() {
 
     const initializeMap = () => {
       window.kakao.maps.load(() => {
-        const mapContainer = document.getElementById('map') as HTMLElement;
+        const mapContainer = document.getElementById('map');
         const mapOption = {
-          center: new window.kakao.maps.LatLng(37.5665, 126.978),
+          center: new window.kakao.maps.LatLng(37.5665, 126.978), // 서울 중심 좌표
           level: 3,
         };
         const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
+        // 시설 위치에 마커 추가
         facilityData.forEach(facility => {
           const geocoder = new window.kakao.maps.services.Geocoder();
           geocoder.addressSearch(
             facility.address,
-            (
-              result: {
-                y: string;
-                x: string;
-              }[],
-              status: any
-            ) => {
+            (result: KakaoMapResult[], status: string) => {
               if (status === window.kakao.maps.services.Status.OK) {
                 const coords = new window.kakao.maps.LatLng(
                   parseFloat(result[0].y),
@@ -101,11 +66,13 @@ export default function Map() {
                 );
 
                 const marker = new window.kakao.maps.Marker({
+                  map: map,
                   position: coords,
                   image: markerImage,
                 });
-                marker.setMap(map);
 
+                // 마커 클릭 시 선택한 마커의 이미지 변경 및 시설 정보 표시
+                // 이미지 변경까지만 되므로 수정중
                 window.kakao.maps.event.addListener(marker, 'click', () => {
                   marker.setImage(
                     new window.kakao.maps.MarkerImage(
@@ -114,7 +81,7 @@ export default function Map() {
                       { offset: new window.kakao.maps.Point(20, 40) }
                     )
                   );
-                  setSelectedFacility(facility);
+                  setSelectedFacility(facility); // 선택한 시설 정보 설정
                 });
               } else {
                 console.error('주소 검색 실패:', status);
@@ -123,6 +90,7 @@ export default function Map() {
           );
         });
 
+        // 사용자 현재 위치 마커 표시
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             position => {
@@ -135,11 +103,12 @@ export default function Map() {
                 new window.kakao.maps.Size(40, 40),
                 { offset: new window.kakao.maps.Point(20, 40) }
               );
-              const userMarker = new window.kakao.maps.Marker({
+              new window.kakao.maps.Marker({
+                map: map,
                 position: userLocation,
                 image: userMarkerImage,
+                title: '현재 위치',
               });
-              userMarker.setMap(map);
               map.setCenter(userLocation);
             },
             error => {
@@ -167,3 +136,4 @@ export default function Map() {
     </>
   );
 }
+/* eslint-enable  */
