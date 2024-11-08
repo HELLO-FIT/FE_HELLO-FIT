@@ -137,6 +137,7 @@ export const ICONS = {
   // 인디케이터 아이콘
   indicator: '/icon/custom/indicator/icon-indicator.svg',
   indicatorDot: '/icon/custom/indicator/icon-indicator-dot.svg',
+  marker: '/icon/custom/marker.svg',
 };
 
 export const IMAGES = {
