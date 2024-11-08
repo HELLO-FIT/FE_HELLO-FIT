@@ -4,7 +4,7 @@ import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import Indicator from '@/components/MapHome/Indicator';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import facilityData from './mockData'; 
+import facilityData from './mockData';
 
 declare global {
   interface Window {
@@ -18,6 +18,11 @@ interface Facility {
   item_nm: string;
   location: string;
   address: string;
+}
+
+interface KakaoMapResult {
+  y: string;
+  x: string;
 }
 
 export default function Map() {
@@ -44,9 +49,9 @@ export default function Map() {
         // 시설 위치에 마커 추가
         facilityData.forEach((facility) => {
           const geocoder = new window.kakao.maps.services.Geocoder();
-          geocoder.addressSearch(facility.address, (result: any, status: any) => {
+          geocoder.addressSearch(facility.address, (result: KakaoMapResult[], status: string) => {
             if (status === window.kakao.maps.services.Status.OK) {
-              const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+              const coords = new window.kakao.maps.LatLng(parseFloat(result[0].y), parseFloat(result[0].x));
               const markerImage = new window.kakao.maps.MarkerImage(
                 '/image/marker.svg',
                 new window.kakao.maps.Size(40, 40),
@@ -119,7 +124,7 @@ export default function Map() {
       <div id="map" style={{ width: '100%', height: '100vh' }}></div>
       {router.pathname === '/map' && <PopularSports />}
       <Indicator />
-      {selectedFacility && <FacilityInfo facility={selectedFacility} />} {/* 시설 정보를 전달 */}
+      {selectedFacility && <FacilityInfo facility={selectedFacility} />} 
     </>
   );
 }
