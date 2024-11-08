@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import DropDown from '@/components/DropDown';
-import SportButtonList from '@/components/SportButtonList';
-import Indicator from '@/components/Indicator/index';
+import SportButtonList from '@/components/MapHome/SportButtonList';
+import Indicator from '@/components/MapHome/Indicator/index';
 import styles from './PopularSports.module.scss';
 
 export default function PopularSports() {

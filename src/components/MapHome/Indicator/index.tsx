@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Indicator.module.scss';
-import IconComponent from '../Asset/Icon';
+import IconComponent from '../../Asset/Icon';
 
 interface IndicatorProps {
   onDragStart?: (event: React.MouseEvent | React.TouchEvent) => void;

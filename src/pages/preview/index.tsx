@@ -6,7 +6,7 @@ import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
 import SportButton from '@/components/Button/SportButton';
-import SportButtonList from '@/components/SportButtonList';
+import SportButtonList from '@/components/MapHome/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/SearchBar/SearchBar';

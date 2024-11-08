@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Header from '@/components/Layout/Header';
-import PopularSports from '@/components/PopularSports';
+import PopularSports from '@/components/MapHome/PopularSports';
+import Indicator from '@/components/MapHome/Indicator';
+import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import facilityData from './mockData'; 
 
 declare global {
@@ -10,8 +12,17 @@ declare global {
   }
 }
 
+interface Facility {
+  id: number;
+  name: string;
+  item_nm: string;
+  location: string;
+  address: string;
+}
+
 export default function Map() {
   const router = useRouter();
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
 
   useEffect(() => {
@@ -48,7 +59,8 @@ export default function Map() {
                 image: markerImage,
               });
 
-              // 마커 클릭 시 선택한 마커의 이미지 변경
+              // 마커 클릭 시 선택한 마커의 이미지 변경 및 시설 정보 표시
+              // 이미지 변경까지만 되므로 수정중
               window.kakao.maps.event.addListener(marker, 'click', () => {
                 marker.setImage(
                   new window.kakao.maps.MarkerImage(
@@ -57,6 +69,7 @@ export default function Map() {
                     { offset: new window.kakao.maps.Point(20, 40) }
                   )
                 );
+                setSelectedFacility(facility); // 선택한 시설 정보 설정
               });
             } else {
               console.error('주소 검색 실패:', status);
@@ -105,6 +118,8 @@ export default function Map() {
       <Header />
       <div id="map" style={{ width: '100%', height: '100vh' }}></div>
       {router.pathname === '/map' && <PopularSports />}
+      <Indicator />
+      {selectedFacility && <FacilityInfo facility={selectedFacility} />} {/* 시설 정보를 전달 */}
     </>
   );
 }
