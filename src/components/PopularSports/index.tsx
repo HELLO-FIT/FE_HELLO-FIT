@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import DropDown from '@/components/DropDown';
 import SportButtonList from '@/components/SportButtonList';
-import styles from './PopularSports.module.scss';
 import IconComponent from '../Asset/Icon';
+import styles from './PopularSports.module.scss';
 
 const locationOptions = [
   '서울 종로구',
@@ -33,10 +33,57 @@ const locationOptions = [
 ];
 
 export default function PopularSports() {
+  const [position, setPosition] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const initialY = useRef(0);
+  const maxDragDistance = +140;
+
+  const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
+    setIsDragging(true);
+    initialY.current =
+      'touches' in event ? event.touches[0].clientY : event.clientY;
+  };
+
+  const handleDragMove = (event: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging) return;
+
+    const currentY =
+      'touches' in event ? event.touches[0].clientY : event.clientY;
+    const delta = currentY - initialY.current;
+
+    setPosition(prevPosition => {
+      const newPosition = prevPosition + delta;
+      return Math.max(Math.min(newPosition, 0), maxDragDistance);
+    });
+
+    initialY.current = currentY;
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+
+    setPosition(prevPosition =>
+      prevPosition < maxDragDistance / 2 ? maxDragDistance : 0
+    );
+  };
+
   return (
-    <div className={styles.popularSportsContainer}>
+    <div
+      className={styles.popularSportsContainer}
+      style={{ transform: `translate(-50%, ${position}px)` }}
+      onMouseDown={e => handleDragStart(e as React.MouseEvent)}
+      onMouseMove={
+        isDragging ? e => handleDragMove(e as React.MouseEvent) : undefined
+      }
+      onMouseUp={handleDragEnd}
+      onTouchStart={e => handleDragStart(e as React.TouchEvent)}
+      onTouchMove={
+        isDragging ? e => handleDragMove(e as React.TouchEvent) : undefined
+      }
+      onTouchEnd={handleDragEnd}
+    >
       <div className={styles.indicatorContainer}>
-        <IconComponent name="indicator" size="custom" alt="Indicator" />
+        <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
       </div>
       <header className={styles.header}>
         <DropDown
@@ -47,9 +94,7 @@ export default function PopularSports() {
           }
         />
       </header>
-
       <h2 className={styles.title}>인기 스포츠</h2>
-
       <SportButtonList />
     </div>
   );
