@@ -34,10 +34,12 @@ export const ICONS = {
     m: '/icon/m/icon-circle-x.svg',
     s: '/icon/s/icon-circle-x.svg',
   },
+  up: {
+    m: '/icon/m/icon-up.svg',
+  },
   down: {
     l: '/icon/l/icon-down.svg',
     m: '/icon/m/icon-down.svg',
-    s: '/icon/s/icon-down.svg',
   },
   image: {
     l: '/icon/l/icon-image.svg',
@@ -114,18 +116,28 @@ export const ICONS = {
   markerEmpty: '/icon/custom/GNB/marker-empty.svg',
   markerFull: '/icon/custom/GNB/marker-full.svg',
   // 커스텀 아이콘
+  // 찜 아이콘
   blueHeartBlank: '/icon/custom/icon-blue-heart-blank.svg',
   blueHeartFull: '/icon/custom/icon-blue-heart-full.svg',
+  landingKakao: '/icon/custom/icon-landing-kakao.svg',
   kakao: '/icon/custom/icon-kakao.svg',
   landingDumbbell: '/icon/custom/icon-landing-dumbbell.svg',
-  logo: '/icon/custom/logo.svg',
-  logoBlue: '/icon/custom/logo-blue.svg',
-  logoGreen: '/icon/custom/logo-green.svg',
-  landingKakao: '/icon/custom/icon-landing-kakao.svg',
+  // 로고 아이콘
+  logo: '/icon/custom/logo/logo.svg',
+  logoBlue: '/icon/custom/logo/logo-blue.svg',
+  logoGreen: '/icon/custom/logo/logo-green.svg',
   scheduleEllipse: '/icon/custom/schedule-ellipse.svg',
   checked: '/icon/custom/icon-checked.svg',
   unchecked: '/icon/custom/icon-unchecked.svg',
-  marker: '/icon/custom/address-marker.svg',
+  // 스포츠 종목 아이콘
+  boxing: '/icon/custom/sport/icon-boxing.svg',
+  hapkido: '/icon/custom/sport/icon-hapkido.svg',
+  health: '/icon/custom/sport/icon-health.svg',
+  pilates: '/icon/custom/sport/icon-pilates.svg',
+  // 인디케이터 아이콘
+  indicator: '/icon/custom/indicator/icon-indicator.svg',
+  indicatorDot: '/icon/custom/indicator/icon-indicator-dot.svg',
+  marker: '/icon/custom/marker.svg',
 };
 
 export const IMAGES = {

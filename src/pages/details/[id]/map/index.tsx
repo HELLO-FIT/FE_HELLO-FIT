@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import data from '@/components/Schedule/temp.json';
 import Subheader from '@/components/Layout/Subheader';
 import LargeMap from '@/components/CourseDetails/LargeMap';
-import ButtonContainer from '@/components/ButtonContainer';
+import ButtonContainer from '@/components/MapHome/ButtonContainer';
 
 export default function Map() {
   const router = useRouter();

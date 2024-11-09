@@ -1,4 +1,4 @@
-import ButtonContainer from '@/components/ButtonContainer';
+import ButtonContainer from '@/components/MapHome/ButtonContainer';
 import CourseDetails from '@/components/CourseDetails';
 import Subheader from '@/components/Layout/Subheader';
 import data from '@/components/Schedule/temp.json';
