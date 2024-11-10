@@ -1,9 +1,13 @@
 import Link from 'next/link';
+import { useRecoilValue } from 'recoil';
 import IconComponent from '../Asset/Icon';
 import styles from './Landing.module.scss';
 import Login from './Login';
+import { authState } from '@/states/authState';
 
 export default function Landing() {
+  const { isLoggedIn } = useRecoilValue(authState);
+
   return (
     <div className={styles.background}>
       <div className={styles.logoContainer}>
@@ -19,7 +23,7 @@ export default function Landing() {
         </div>
       </div>
       <div className={styles.btnContainer}>
-        <Login />
+        {isLoggedIn && <Login />}
         <Link href="/map">
           <div className={styles.serviceBtn} role="button" tabIndex={0}>
             서비스 둘러보기
