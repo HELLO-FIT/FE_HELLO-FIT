@@ -6,9 +6,12 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <script
+          defer
+          src="https://developers.kakao.com/sdk/js/kakao.min.js"
+        ></script>
+        <script
           async
-          type="text/javascript"
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&libraries=services,clusterer,drawing&autoload=false`}
+          src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&libraries=services,clusterer,drawing&autoload=false`}
         ></script>
       </Head>
       <body>

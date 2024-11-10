@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import IconComponent from '../Asset/Icon';
 import styles from './Landing.module.scss';
+import Login from './Login';
 
 export default function Landing() {
   return (
@@ -18,17 +19,7 @@ export default function Landing() {
         </div>
       </div>
       <div className={styles.btnContainer}>
-        <div className={styles.kakaoBtn} role="button" tabIndex={0}>
-          <div className={styles.kakaoIcon}>
-            <IconComponent
-              name="landingKakao"
-              alt="dumbbell icon"
-              width={24}
-              height={24}
-            />
-          </div>
-          카카오로 계속하기
-        </div>
+        <Login />
         <Link href="/map">
           <div className={styles.serviceBtn} role="button" tabIndex={0}>
             서비스 둘러보기
