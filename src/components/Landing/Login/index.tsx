@@ -24,7 +24,7 @@ interface ErrorResponse {
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [auth, setAuth] = useRecoilState(authState);
+  const [, setAuth] = useRecoilState(authState);
   const APP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
 
   const loginMutation = useMutation({
