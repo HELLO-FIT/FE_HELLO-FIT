@@ -138,6 +138,7 @@ export const ICONS = {
   indicator: '/icon/custom/indicator/icon-indicator.svg',
   indicatorDot: '/icon/custom/indicator/icon-indicator-dot.svg',
   marker: '/icon/custom/marker.svg',
+  addressMarker: '/icon/custom/address-marker.svg',
 };
 
 export const IMAGES = {
