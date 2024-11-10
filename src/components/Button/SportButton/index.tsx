@@ -1,23 +1,17 @@
 import React from 'react';
-import Image from 'next/image';
+import IconComponent, { IconComponentProps } from '@/components/Asset/Icon';
 import styles from './SportButton.module.scss';
 
 interface SportButtonProps {
-  icon: string;
+  iconName: IconComponentProps['name'];
   label: string;
 }
 
-export default function SportButton({ icon, label }: SportButtonProps) {
+export default function SportButton({ iconName, label }: SportButtonProps) {
   return (
     <div className={styles.sportButton}>
       <div className={styles.iconContainer}>
-        <Image
-          src={icon}
-          alt={label}
-          width={50}
-          height={50}
-          className={styles.icon}
-        />
+        <IconComponent name={iconName} size="m" alt={label} />
       </div>
       <p className={styles.label}>{label}</p>
     </div>

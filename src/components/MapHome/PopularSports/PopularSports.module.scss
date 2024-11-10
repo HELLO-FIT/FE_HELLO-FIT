@@ -1,0 +1,60 @@
+@import '@/styles/globals.scss';
+
+.popularSportsContainerWrapper {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  z-index: 5;
+}
+
+.popularSportsContainer {
+  width: 100%;
+  max-width: 600px;
+  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  background-color: $white;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  border: 1px solid $gray20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px 93px 20px;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 16px 0;
+}
+
+.title {
+  @include B16M;
+  color: $gray90;
+  align-self: flex-start;
+  margin-bottom: 16px;
+}
+
+.sportsList {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .popularSportsContainer {
+    max-width: 100vw;
+  }
+}

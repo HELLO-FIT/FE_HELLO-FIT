@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ToggleButton from '@/components/ToggleButton';
+import ToggleButton from '@/components/Button/ToggleButton';
 import styles from './Header.module.scss';
 import IconComponent from '@/components/Asset/Icon';
 import Tooltip from '@/components/Tooltip/Tooltip';
