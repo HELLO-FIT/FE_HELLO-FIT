@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from './Login.module.scss';
 import IconComponent from '@/components/Asset/Icon';
+import { useMutation } from '@tanstack/react-query';
 import BASE_URL from '@/constants/baseurl';
+import { useRecoilState } from 'recoil';
+import { authState } from '@/states/authState';
 
 interface AuthObj {
   access_token: string;
@@ -20,9 +23,33 @@ interface ErrorResponse {
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [auth, setAuth] = useRecoilState(authState);
   const APP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
 
-  const router = useRouter();
+  const loginMutation = useMutation({
+    mutationFn: async (accessToken: string) => {
+      const response = await BASE_URL.post('/auth/login', {
+        kakaoAccessToken: accessToken,
+      });
+      return response.data;
+    },
+    onSuccess: data => {
+      setAuth({
+        access_token: data.access_token,
+        isLoggedIn: true,
+      });
+      localStorage.setItem('access_token', data.access_token);
+      router.push('/map');
+    },
+    onError: (error: ErrorResponse) => {
+      console.error('로그인 실패:', error);
+      setLoading(false);
+    },
+    onSettled: () => {
+      setLoading(false);
+    },
+  });
 
   const handleLogin = async () => {
     setLoading(true);
@@ -32,22 +59,11 @@ export default function Login() {
     }
 
     window.Kakao.Auth.login({
-      success: async (authObj: AuthObj) => {
-        try {
-          const response = await BASE_URL.post('/auth/login', {
-            kakaoAccessToken: authObj.access_token,
-          });
-
-          localStorage.setItem('access_token', authObj.access_token);
-          router.push('/map');
-        } catch (error) {
-          console.error('로그인 실패:', error);
-        } finally {
-          setLoading(false);
-        }
+      success: (authObj: AuthObj) => {
+        loginMutation.mutate(authObj.access_token);
       },
-      fail: (error: ErrorResponse) => {
-        console.error('로그인 실패:', error);
+      fail: (err: ErrorResponse) => {
+        console.error('로그인 실패:', err);
         setLoading(false);
       },
     });

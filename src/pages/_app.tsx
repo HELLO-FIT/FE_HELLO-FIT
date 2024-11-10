@@ -5,6 +5,7 @@ import '@/styles/reset.css';
 import Header from '@/components/Layout/Header';
 import { useRouter } from 'next/router';
 import GNB from '@/components/Layout/GNB';
+import { RecoilRoot } from 'recoil';
 
 const queryClient = new QueryClient();
 
@@ -30,18 +31,20 @@ export default function App({ Component, pageProps }: AppProps) {
   const withoutHeader = ['/', '/login'].includes(router.pathname);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="body">
-        <div
-          className={`appContainer ${!hideGNB ? 'withGNB' : ''} ${
-            withoutHeader ? 'withoutHeader' : ''
-          }`}
-        >
-          {!hideHeader && <Header />}
-          <Component {...pageProps} />
-          {!hideGNB && <GNB />}
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <div className="body">
+          <div
+            className={`appContainer ${!hideGNB ? 'withGNB' : ''} ${
+              withoutHeader ? 'withoutHeader' : ''
+            }`}
+          >
+            {!hideHeader && <Header />}
+            <Component {...pageProps} />
+            {!hideGNB && <GNB />}
+          </div>
         </div>
-      </div>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </RecoilRoot>
   );
 }
