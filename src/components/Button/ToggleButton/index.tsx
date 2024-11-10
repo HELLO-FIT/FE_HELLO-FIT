@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 import styles from './ToggleButton.module.scss';
 
 interface ToggleButtonProps {
@@ -6,15 +8,26 @@ interface ToggleButtonProps {
 }
 
 export default function ToggleButton({ onButtonClick }: ToggleButtonProps) {
+  const [toggle, setToggle] = useRecoilState(toggleState);
   const [activeButton, setActiveButton] = useState<'general' | 'special'>(
     'general'
   );
 
+  useEffect(() => {
+    if (toggle === 'special') {
+      setActiveButton('special');
+    } else {
+      setActiveButton('general');
+    }
+  }, [toggle]);
+
   const handleClick = (buttonType: 'general' | 'special') => {
     setActiveButton(buttonType);
+    setToggle(buttonType);
     if (onButtonClick) {
       onButtonClick(buttonType);
     }
+    localStorage.setItem('toggleState', buttonType);
   };
 
   return (

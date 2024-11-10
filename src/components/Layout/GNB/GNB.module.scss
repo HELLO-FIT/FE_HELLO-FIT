@@ -35,7 +35,12 @@
   flex: 1;
 }
 
-.activeLabel {
+.generalLabel {
   @include C12M;
   color: $blue50;
+}
+
+.specialLabel {
+  @include C12M;
+  color: $green70;
 }
