@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
 import { toggleState } from '@/states/toggleState';
 import styles from './GNB.module.scss';
 import { ICONS } from '@/constants/asset';
@@ -9,6 +10,18 @@ import IconComponent from '@/components/Asset/Icon';
 export default function GNB() {
   const router = useRouter();
   const toggle = useRecoilValue(toggleState);
+  const [iconState, setIconState] = useState<string>('');
+  const [labelColor, setLabelColor] = useState<string>(styles.label);
+
+  useEffect(() => {
+    if (toggle === 'special') {
+      setIconState('special');
+      setLabelColor(styles.specialLabel);
+    } else {
+      setIconState('general');
+      setLabelColor(styles.generalLabel);
+    }
+  }, [toggle]);
 
   const navItems = [
     {
@@ -53,21 +66,12 @@ export default function GNB() {
     <nav className={styles.gnb}>
       {navItems.map(item => {
         const isActive = router.asPath === item.href;
+
         const iconName = isActive
-          ? toggle === 'special'
+          ? iconState === 'special'
             ? item.icon.activeSpecial
             : item.icon.activeGeneral
           : item.icon.inactive;
-
-        let labelClass = styles.label;
-
-        if (isActive) {
-          if (toggle === 'special') {
-            labelClass = styles.specialLabel;
-          } else if (toggle === 'general') {
-            labelClass = styles.generalLabel;
-          }
-        }
 
         return (
           <Link href={item.href} key={item.href} passHref>
@@ -78,7 +82,9 @@ export default function GNB() {
                 width={24}
                 height={24}
               />
-              <p className={`${styles.label} ${labelClass}`}>{item.label}</p>
+              <p className={`${isActive ? labelColor : styles.label}`}>
+                {item.label}
+              </p>
             </div>
           </Link>
         );
