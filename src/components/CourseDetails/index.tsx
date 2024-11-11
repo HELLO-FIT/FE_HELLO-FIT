@@ -28,7 +28,7 @@ export default function CourseDetails({ schedule }: CourseDetailsProps) {
           </div>
           <div className={styles.addressWrapper} onClick={handleMapClick}>
             <div className={styles.address}>
-              <IconComponent name="marker" width={16} height={16} />
+              <IconComponent name="addressMarker" width={16} height={16} />
               {schedule.address}
             </div>
             <div className={styles.rightIcon}>

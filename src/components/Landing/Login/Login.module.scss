@@ -1,0 +1,27 @@
+@import '@/styles/globals.scss';
+
+.kakaoBtn {
+  width: 90%;
+  max-width: 350px;
+  height: 52px;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #ffe400;
+  color: #222;
+  @include BOLD;
+  line-height: 130%;
+  letter-spacing: -0.16px;
+  position: relative;
+  cursor: pointer;
+
+  .kakaoIcon {
+    position: absolute;
+    left: 24px;
+    display: flex;
+    align-items: center;
+  }
+}

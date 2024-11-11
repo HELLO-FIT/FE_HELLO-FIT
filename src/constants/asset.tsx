@@ -109,12 +109,16 @@ export const ICONS = {
   // GNB 아이콘
   bellEmpty: '/icon/custom/GNB/bell-empty.svg',
   bellFull: '/icon/custom/GNB/bell-full.svg',
+  bellFullSpecial: '/icon/custom/GNB/bell-full-s.svg',
   gridEmpty: '/icon/custom/GNB/grid-empty.svg',
   gridFull: '/icon/custom/GNB/grid-full.svg',
+  gridFullSpecial: '/icon/custom/GNB/grid-full-s.svg',
   heartEmpty: '/icon/custom/GNB/heart-empty.svg',
   heartFull: '/icon/custom/GNB/heart-full.svg',
+  heartFullSpecial: '/icon/custom/GNB/heart-full-s.svg',
   markerEmpty: '/icon/custom/GNB/marker-empty.svg',
   markerFull: '/icon/custom/GNB/marker-full.svg',
+  markerFullSpecial: '/icon/custom/GNB/marker-full-s.svg',
   // 커스텀 아이콘
   // 찜 아이콘
   blueHeartBlank: '/icon/custom/icon-blue-heart-blank.svg',
@@ -138,6 +142,7 @@ export const ICONS = {
   indicator: '/icon/custom/indicator/icon-indicator.svg',
   indicatorDot: '/icon/custom/indicator/icon-indicator-dot.svg',
   marker: '/icon/custom/marker.svg',
+  addressMarker: '/icon/custom/address-marker.svg',
 };
 
 export const IMAGES = {
