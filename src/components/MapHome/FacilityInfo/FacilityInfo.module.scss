@@ -1,11 +1,28 @@
 @import '@/styles/globals.scss';
 
 .facilityInfoContainer {
-  padding: 24px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 600px;
   background-color: $white;
-  border-radius: 16px;
-  margin: 16px 0;
-  // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  z-index: 5;
+  border: 1px solid $gray20;
+
+  .indicatorWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0; 
+    cursor: grab;
+  }
+
+  .content {
+    padding: 24px;
+  }
 
   h1 {
     @include B20R;
@@ -29,12 +46,6 @@
       margin-right: 8px;
       color: $blue60;
     }
-  }
-
-  .infoLabel {
-    padding-bottom: 8px;
-    @include B14R;
-    color: $gray90;
   }
 
   .facilityDetails {

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Chips from '@/components/Button/Chips';
 import IconComponent from '@/components/Asset/Icon';
 import { Facility } from '@/apis/get/getFacilities';
@@ -9,10 +9,11 @@ interface FacilityInfoProps {
 }
 
 export default function FacilityInfo({ facility }: FacilityInfoProps) {
-  const [position, setPosition] = useState(0);
+  const initialPosition = -50; 
+  const maxDragDistance = 150; 
+  const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
-  const maxDragDistance = 140;
 
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
@@ -27,7 +28,7 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
 
     setPosition((prevPosition) => {
       const newPosition = prevPosition + delta;
-      return Math.max(Math.min(newPosition, maxDragDistance), 0);
+      return Math.max(Math.min(newPosition, maxDragDistance), initialPosition);
     });
 
     initialY.current = currentY;
@@ -35,8 +36,12 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
 
   const handleDragEnd = () => {
     setIsDragging(false);
-    setPosition((prevPosition) => (prevPosition < maxDragDistance / 2 ? maxDragDistance : 0));
+    setPosition((prevPosition) => (prevPosition < (maxDragDistance + initialPosition) / 2 ? maxDragDistance : initialPosition));
   };
+
+  useEffect(() => {
+    setPosition(initialPosition); 
+  }, [facility]);
 
   if (!facility) return null;
 
@@ -51,7 +56,9 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
       onTouchMove={isDragging ? handleDragMove : undefined}
       onTouchEnd={handleDragEnd}
     >
-      <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
+      <div className={styles.indicatorWrapper}>
+        <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
+      </div>
       <div className={styles.content}>
         <h1>{facility.name}</h1>
         <div className={styles.chipsContainer}>
@@ -64,7 +71,6 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
         <div className={styles.facilityDetails}>
           <div className={styles.contactRow}>
             <span className={styles.label}>연락처</span>
-            {/* 연락처 데이터가 없는 것 같아서 식별을 위해 임의로 시리얼 넘버로 지정 */}
             <span className={styles.value}>{facility.serialNumber}</span>
           </div>
           <div className={styles.contactRow}>
