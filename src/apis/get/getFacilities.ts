@@ -1,15 +1,17 @@
+import BASE_URL from "@/constants/baseurl";
+
 export interface Facility {
   businessId: string;
   serialNumber: string;
   name: string;
   cityCode: string;
   cityName: string;
-  districtCode: string;
-  districtName: string;
   localCode: string;
   localName: string;
+  address: string;
+  detailAddress: string;
+  owner: string;
   items: string[];
-  itemsK: string;
 }
 
 interface GetFacilitiesParams {
@@ -21,20 +23,18 @@ interface GetFacilitiesParams {
 export async function getFacilities(
   params: GetFacilitiesParams
 ): Promise<Facility[]> {
-  // undefined 값을 제거하기 위해 필터링
+  // 필터링하여 undefined 값 제거
   const filteredParams = Object.fromEntries(
     Object.entries(params).filter(([_, v]) => v !== undefined)
   );
 
-  const queryString = new URLSearchParams(
-    filteredParams as Record<string, string>
-  ).toString();
-
-  const response = await fetch(`/normal/facilities?${queryString}`);
-
-  if (!response.ok) {
+  try {
+    const response = await BASE_URL.get<Facility[]>('/normal/facilities', {
+      params: filteredParams,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching facilities:', error);
     throw new Error('Failed to fetch facilities');
   }
-
-  return response.json();
 }

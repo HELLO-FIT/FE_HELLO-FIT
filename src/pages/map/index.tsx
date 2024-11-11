@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Header from '@/components/Layout/Header';
-import PopularSports from '@/components/MapHome/PopularSports';
+// import Indicator from '@/components/MapHome/Indicator';
+import { getFacilities, Facility } from '@/apis/get/getFacilities';
 import Indicator from '@/components/MapHome/Indicator';
-import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import facilityData from '../../utils/mockData';
-/* eslint-disable  */
+
+/* eslint-disable */
 declare global {
   interface Window {
     kakao: any;
   }
-}
-
-interface Facility {
-  id: number;
-  name: string;
-  item_nm: string;
-  location: string;
-  address: string;
 }
 
 interface KakaoMapResult {
@@ -27,12 +19,25 @@ interface KakaoMapResult {
 
 export default function Map() {
   const router = useRouter();
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
-    null
-  );
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
+  const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>('sports');
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
+  const [map, setMap] = useState<any>(null);
+  const [selectedMarker, setSelectedMarker] = useState<any>(null); // 현재 선택된 마커
 
   useEffect(() => {
+    const fetchFacilities = async () => {
+      try {
+        const data = await getFacilities({ localCode: '11680' }); // 예시 지역 코드
+        setFacilities(data);
+      } catch (error) {
+        console.error('시설 데이터를 가져오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchFacilities();
+
     const mapScript = document.createElement('script');
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services`;
@@ -46,72 +51,30 @@ export default function Map() {
           center: new window.kakao.maps.LatLng(37.5665, 126.978), // 서울 중심 좌표
           level: 3,
         };
-        const map = new window.kakao.maps.Map(mapContainer, mapOption);
+        const kakaoMap = new window.kakao.maps.Map(mapContainer, mapOption);
+        setMap(kakaoMap);
 
-        // 시설 위치에 마커 추가
-        facilityData.forEach(facility => {
-          const geocoder = new window.kakao.maps.services.Geocoder();
-          geocoder.addressSearch(
-            facility.address,
-            (result: KakaoMapResult[], status: string) => {
-              if (status === window.kakao.maps.services.Status.OK) {
-                const coords = new window.kakao.maps.LatLng(
-                  parseFloat(result[0].y),
-                  parseFloat(result[0].x)
-                );
-                const markerImage = new window.kakao.maps.MarkerImage(
-                  '/image/marker.svg',
-                  new window.kakao.maps.Size(28, 28),
-                  { offset: new window.kakao.maps.Point(20, 40) }
-                );
-
-                const marker = new window.kakao.maps.Marker({
-                  map: map,
-                  position: coords,
-                  image: markerImage,
-                });
-
-                // 마커 클릭 시 선택한 마커의 이미지 변경 및 시설 정보 표시
-                // 이미지 변경까지만 되므로 수정중
-                window.kakao.maps.event.addListener(marker, 'click', () => {
-                  marker.setImage(
-                    new window.kakao.maps.MarkerImage(
-                      '/image/address-marker-normal.svg',
-                      new window.kakao.maps.Size(40, 40),
-                      { offset: new window.kakao.maps.Point(20, 40) }
-                    )
-                  );
-                  setSelectedFacility(facility); // 선택한 시설 정보 설정
-                });
-              } else {
-                console.error('주소 검색 실패:', status);
-              }
-            }
-          );
-        });
-
-        // 사용자 현재 위치 마커 표시
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
-            position => {
+            (position) => {
               const userLocation = new window.kakao.maps.LatLng(
                 position.coords.latitude,
                 position.coords.longitude
               );
               const userMarkerImage = new window.kakao.maps.MarkerImage(
-                '/image/my-location.svg',
+                '/image/my-location.svg', // 사용자 위치 아이콘
                 new window.kakao.maps.Size(40, 40),
                 { offset: new window.kakao.maps.Point(20, 40) }
               );
               new window.kakao.maps.Marker({
-                map: map,
+                map: kakaoMap,
                 position: userLocation,
                 image: userMarkerImage,
                 title: '현재 위치',
               });
-              map.setCenter(userLocation);
+              kakaoMap.setCenter(userLocation); // 지도의 중심을 현재 위치로 설정
             },
-            error => {
+            (error) => {
               console.error('현재 위치를 가져오는 데 실패했습니다:', error);
             }
           );
@@ -126,14 +89,63 @@ export default function Map() {
     };
   }, [KAKAO_MAP_KEY]);
 
+  // 시설 마커 표시 (facilities가 업데이트될 때만 실행)
+  useEffect(() => {
+    if (!map || facilities.length === 0) return;
+
+    facilities.forEach((facility) => {
+      const geocoder = new window.kakao.maps.services.Geocoder();
+      geocoder.addressSearch(
+        facility.address,
+        (result: KakaoMapResult[], status: string) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            const coords = new window.kakao.maps.LatLng(
+              parseFloat(result[0].y),
+              parseFloat(result[0].x)
+            );
+            const defaultMarkerImage = new window.kakao.maps.MarkerImage(
+              '/image/marker.svg', // 기본 시설 마커 아이콘
+              new window.kakao.maps.Size(28, 28),
+              { offset: new window.kakao.maps.Point(20, 40) }
+            );
+
+            const marker = new window.kakao.maps.Marker({
+              map: map,
+              position: coords,
+              image: defaultMarkerImage,
+            });
+
+            // 마커 클릭 시 선택된 마커 아이콘으로 변경하고 시설 정보 표시
+            window.kakao.maps.event.addListener(marker, 'click', () => {
+              // 이전에 선택된 마커가 있다면 기본 이미지로 되돌림
+              if (selectedMarker) {
+                selectedMarker.setImage(defaultMarkerImage); // 이전 마커를 기본 아이콘으로 되돌림
+              }
+
+              // 현재 마커를 선택된 상태로 설정
+              const selectedMarkerImage = new window.kakao.maps.MarkerImage(
+                '/image/address-marker-normal.svg', // 선택된 시설 마커 아이콘
+                new window.kakao.maps.Size(40, 40),
+                { offset: new window.kakao.maps.Point(20, 40) }
+              );
+              marker.setImage(selectedMarkerImage); // 선택된 마커 아이콘 적용
+              setSelectedMarker(marker); // 선택된 마커 업데이트
+              setSelectedFacility(facility); // 선택된 시설 정보 설정
+              setIndicatorMode('facilityInfo'); // 표시 모드를 시설 정보로 변경
+            });
+          } else {
+            console.error('주소 검색 실패:', status);
+          }
+        }
+      );
+    });
+  }, [map, facilities, selectedMarker]);
+
   return (
     <>
       <Header />
       <div id="map" style={{ width: '100%', height: '100vh' }}></div>
-      {router.pathname === '/map' && <PopularSports />}
-      <Indicator />
-      {selectedFacility && <FacilityInfo facility={selectedFacility} />}
+      <Indicator selectedFacility={selectedFacility} indicatorMode={indicatorMode} />
     </>
   );
 }
-/* eslint-enable  */

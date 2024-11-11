@@ -1,18 +1,62 @@
-// 수정중
 @import '@/styles/globals.scss';
 
 .facilityInfoContainer {
-  padding: 10px;
+  padding: 24px;
   background-color: $white;
-  border-radius: 12px;
-  margin: 10px 0;
+  border-radius: 16px;
+  margin: 16px 0;
+  // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-  h3 {
-    @include B14M;
-    margin-bottom: 5px;
+  h1 {
+    @include B20R;
+    @include BOLD;
+    color: $gray90;
+    margin-bottom: 12px;
   }
 
-  p {
-    margin: 3px 0;
+  .chipsContainer {
+    padding: 12px 0 20px 0;
+  }
+
+  .addressInfo {
+    display: flex;
+    align-items: center;
+    @include B14R;
+    color: $gray70;
+    margin-bottom: 16px;
+
+    .iconPlaceholder {
+      margin-right: 8px;
+      color: $blue60;
+    }
+  }
+
+  .infoLabel {
+    padding-bottom: 8px;
+    @include B14R;
+    color: $gray90;
+  }
+
+  .facilityDetails {
+    padding: 16px;
+    background-color: $gray10;
+    border-radius: 12px;
+
+    .contactRow {
+      display: flex;
+      justify-content: space-between;
+      margin: 12px 0;
+
+      .label {
+        color: $blue60;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .value {
+        color: $gray80;
+        font-size: 14px;
+      }
+    }
   }
 }
