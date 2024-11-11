@@ -1,31 +1,63 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
+import { toggleState } from '@/states/toggleState';
 import styles from './GNB.module.scss';
 import { ICONS } from '@/constants/asset';
 import IconComponent from '@/components/Asset/Icon';
 
 export default function GNB() {
   const router = useRouter();
+  const toggle = useRecoilValue(toggleState);
+  const [iconState, setIconState] = useState<string>('');
+  const [labelColor, setLabelColor] = useState<string>(styles.label);
+
+  useEffect(() => {
+    if (toggle === 'special') {
+      setIconState('special');
+      setLabelColor(styles.specialLabel);
+    } else {
+      setIconState('general');
+      setLabelColor(styles.generalLabel);
+    }
+  }, [toggle]);
 
   const navItems = [
     {
       href: '/map',
-      icon: { active: 'markerFull', inactive: 'markerEmpty' },
+      icon: {
+        activeGeneral: 'markerFull',
+        activeSpecial: 'markerFullSpecial',
+        inactive: 'markerEmpty',
+      },
       label: '지도',
     },
     {
       href: '/lesson',
-      icon: { active: 'gridFull', inactive: 'gridEmpty' },
+      icon: {
+        activeGeneral: 'gridFull',
+        activeSpecial: 'gridFullSpecial',
+        inactive: 'gridEmpty',
+      },
       label: '강좌',
     },
     {
       href: '/likelist',
-      icon: { active: 'heartFull', inactive: 'heartEmpty' },
+      icon: {
+        activeGeneral: 'heartFull',
+        activeSpecial: 'heartFullSpecial',
+        inactive: 'heartEmpty',
+      },
       label: '찜',
     },
     {
       href: '/noti',
-      icon: { active: 'bellFull', inactive: 'bellEmpty' },
+      icon: {
+        activeGeneral: 'bellFull',
+        activeSpecial: 'bellFullSpecial',
+        inactive: 'bellEmpty',
+      },
       label: '알림',
     },
   ];
@@ -34,8 +66,12 @@ export default function GNB() {
     <nav className={styles.gnb}>
       {navItems.map(item => {
         const isActive = router.asPath === item.href;
-        const iconName = isActive ? item.icon.active : item.icon.inactive;
-        const labelClass = isActive ? styles.activeLabel : styles.label;
+
+        const iconName = isActive
+          ? iconState === 'special'
+            ? item.icon.activeSpecial
+            : item.icon.activeGeneral
+          : item.icon.inactive;
 
         return (
           <Link href={item.href} key={item.href} passHref>
@@ -46,7 +82,9 @@ export default function GNB() {
                 width={24}
                 height={24}
               />
-              <p className={labelClass}>{item.label}</p>
+              <p className={`${isActive ? labelColor : styles.label}`}>
+                {item.label}
+              </p>
             </div>
           </Link>
         );

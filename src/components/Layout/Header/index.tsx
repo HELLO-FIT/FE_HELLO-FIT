@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ToggleButton from '@/components/Button/ToggleButton';
 import styles from './Header.module.scss';
 import IconComponent from '@/components/Asset/Icon';
 import Tooltip from '@/components/Tooltip/Tooltip';
+import { useRecoilState } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 
 export default function Header() {
   const [logoName, setLogoName] = useState<'logoBlue' | 'logoGreen'>(
     'logoBlue'
   );
+  const [toggle, setToggle] = useRecoilState(toggleState);
+
+  useEffect(() => {
+    if (toggle === 'special') {
+      setLogoName('logoGreen');
+    } else {
+      setLogoName('logoBlue');
+    }
+  }, [toggle]);
+
+  useEffect(() => {
+    localStorage.setItem('toggleState', toggle);
+  }, [toggle]);
 
   const handleButtonClick = (buttonType: 'general' | 'special') => {
-    setLogoName(buttonType === 'special' ? 'logoGreen' : 'logoBlue');
+    setToggle(buttonType);
   };
 
   return (
