@@ -61,7 +61,7 @@ export default function Map() {
                 );
                 const markerImage = new window.kakao.maps.MarkerImage(
                   '/image/marker.svg',
-                  new window.kakao.maps.Size(40, 40),
+                  new window.kakao.maps.Size(28, 28),
                   { offset: new window.kakao.maps.Point(20, 40) }
                 );
 
