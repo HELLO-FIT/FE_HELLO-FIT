@@ -23,7 +23,6 @@ interface GetFacilitiesParams {
 export async function getFacilities(
   params: GetFacilitiesParams
 ): Promise<Facility[]> {
-  // 필터링하여 undefined 값 제거
   const filteredParams = Object.fromEntries(
     Object.entries(params).filter(([_, v]) => v !== undefined)
   );

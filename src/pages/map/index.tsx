@@ -3,6 +3,7 @@ import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import { getFacilities, Facility } from '@/apis/get/getFacilities';
+import { getFacilityDetails, FacilityDetails } from '@/apis/get/getFacilityDetails';
 
 declare global {
   interface Window {
@@ -17,7 +18,7 @@ interface KakaoMapResult {
 
 export default function Map() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
+  const [selectedFacility, setSelectedFacility] = useState<FacilityDetails | null>(null);
   const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>('sports');
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
@@ -89,7 +90,6 @@ export default function Map() {
   useEffect(() => {
     if (!map || facilities.length === 0) return;
 
-    // 기본 마커 이미지와 선택된 마커 이미지 설정
     const defaultMarkerImage = new window.kakao.maps.MarkerImage(
       '/image/marker.svg',
       new window.kakao.maps.Size(28, 28),
@@ -113,27 +113,28 @@ export default function Map() {
               parseFloat(result[0].x)
             );
 
-            // 기본 마커 생성
             const marker = new window.kakao.maps.Marker({
               map: map,
               position: coords,
               image: defaultMarkerImage,
             });
 
-            // 마커 클릭 이벤트 추가
-            window.kakao.maps.event.addListener(marker, 'click', () => {
-              // 이전에 선택된 마커가 있다면 기본 이미지로 변경
+            window.kakao.maps.event.addListener(marker, 'click', async () => {
               if (selectedMarker && selectedMarker !== marker) {
                 selectedMarker.setImage(defaultMarkerImage);
               }
 
-              // 현재 마커를 선택된 이미지로 변경
               marker.setImage(selectedMarkerImage);
-
-              // 선택된 마커와 시설 상태 업데이트
               setSelectedMarker(marker);
-              setSelectedFacility(facility);
-              setIndicatorMode('facilityInfo');
+
+              // 시설 상세 정보 가져오기
+              try {
+                const details = await getFacilityDetails(facility.businessId, facility.serialNumber);
+                setSelectedFacility(details);
+                setIndicatorMode('facilityInfo');
+              } catch (error) {
+                console.error('Failed to fetch facility details:', error);
+              }
             });
           } else {
             console.error('주소 검색 실패:', status);

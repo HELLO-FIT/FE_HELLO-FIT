@@ -1,29 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Chips from '@/components/Button/Chips';
 import IconComponent from '@/components/Asset/Icon';
-import { Facility } from '@/apis/get/getFacilities';
+import Chips from '@/components/Button/Chips';
+import { FacilityDetails } from '@/apis/get/getFacilityDetails';
 import styles from './FacilityInfo.module.scss';
 
 interface FacilityInfoProps {
-  facility: Facility | null;
+  facility: FacilityDetails | null;
 }
 
 export default function FacilityInfo({ facility }: FacilityInfoProps) {
-  const initialPosition = -50; 
-  const maxDragDistance = 150; 
+  const initialPosition = -50;
+  const maxDragDistance = 150;
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
 
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
-    initialY.current = 'touches' in event ? event.touches[0].clientY : event.clientY;
+    initialY.current =
+      'touches' in event ? event.touches[0].clientY : event.clientY;
   };
 
   const handleDragMove = (event: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging) return;
 
-    const currentY = 'touches' in event ? event.touches[0].clientY : event.clientY;
+    const currentY =
+      'touches' in event ? event.touches[0].clientY : event.clientY;
     const delta = currentY - initialY.current;
 
     setPosition((prevPosition) => {
@@ -36,11 +38,15 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
 
   const handleDragEnd = () => {
     setIsDragging(false);
-    setPosition((prevPosition) => (prevPosition < (maxDragDistance + initialPosition) / 2 ? maxDragDistance : initialPosition));
+    setPosition((prevPosition) =>
+      prevPosition < (maxDragDistance + initialPosition) / 2
+        ? maxDragDistance
+        : initialPosition
+    );
   };
 
   useEffect(() => {
-    setPosition(initialPosition); 
+    setPosition(initialPosition);
   }, [facility]);
 
   if (!facility) return null;
@@ -71,7 +77,7 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
         <div className={styles.facilityDetails}>
           <div className={styles.contactRow}>
             <span className={styles.label}>연락처</span>
-            <span className={styles.value}>{facility.serialNumber}</span>
+            <span className={styles.value}>{facility.phone || '연락처 없음'}</span>
           </div>
           <div className={styles.contactRow}>
             <span className={styles.label}>대표자</span>
