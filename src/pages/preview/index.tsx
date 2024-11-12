@@ -14,7 +14,6 @@ import Chips from '@/components/Button/Chips';
 import SpecialInfoCard from '@/components/CourseDetails/SpecialInfoCard';
 import DropDown from '@/components/DropDown';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import Indicator from '@/components/MapHome/Indicator';
 
 // 위치 목업 데이터
 const locationOptions = [
@@ -190,11 +189,6 @@ export default function Preview() {
         <div className={styles.spinnerContainer}>
           <LoadingSpinner />
         </div>
-      </section>
-
-      <section className={styles.sectionBlue}>
-        <h2 className={styles.sectionTitle}>Indicator Component</h2>
-        <Indicator selectedFacility={null} indicatorMode={'sports'} />
       </section>
     </div>
   );
