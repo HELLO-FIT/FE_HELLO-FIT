@@ -14,7 +14,7 @@ export interface Facility {
   items: string[];
 }
 
-interface GetFacilitiesParams {
+export interface GetFacilitiesParams {
   facilityName?: string;
   localCode?: string;
   itemName?: string;

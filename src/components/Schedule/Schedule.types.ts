@@ -1,3 +1,3 @@
 export interface ScheduleProps {
-  id: number;
+  id: string;
 }
