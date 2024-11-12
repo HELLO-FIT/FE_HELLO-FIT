@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import { getFacilities, Facility } from '@/apis/get/getFacilities';
 
-/* eslint-disable */
 declare global {
   interface Window {
     kakao: any;
@@ -18,7 +16,6 @@ interface KakaoMapResult {
 }
 
 export default function Map() {
-  const router = useRouter();
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
   const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>('sports');
@@ -92,6 +89,19 @@ export default function Map() {
   useEffect(() => {
     if (!map || facilities.length === 0) return;
 
+    // 기본 마커 이미지와 선택된 마커 이미지 설정
+    const defaultMarkerImage = new window.kakao.maps.MarkerImage(
+      '/image/marker.svg',
+      new window.kakao.maps.Size(28, 28),
+      { offset: new window.kakao.maps.Point(20, 40) }
+    );
+
+    const selectedMarkerImage = new window.kakao.maps.MarkerImage(
+      '/image/address-marker-normal.svg',
+      new window.kakao.maps.Size(28, 28),
+      { offset: new window.kakao.maps.Point(20, 40) }
+    );
+
     facilities.forEach((facility) => {
       const geocoder = new window.kakao.maps.services.Geocoder();
       geocoder.addressSearch(
@@ -102,29 +112,25 @@ export default function Map() {
               parseFloat(result[0].y),
               parseFloat(result[0].x)
             );
-            const defaultMarkerImage = new window.kakao.maps.MarkerImage(
-              '/image/marker.svg',
-              new window.kakao.maps.Size(28, 28),
-              { offset: new window.kakao.maps.Point(20, 40) }
-            );
 
+            // 기본 마커 생성
             const marker = new window.kakao.maps.Marker({
               map: map,
               position: coords,
               image: defaultMarkerImage,
             });
 
+            // 마커 클릭 이벤트 추가
             window.kakao.maps.event.addListener(marker, 'click', () => {
-              if (selectedMarker) {
+              // 이전에 선택된 마커가 있다면 기본 이미지로 변경
+              if (selectedMarker && selectedMarker !== marker) {
                 selectedMarker.setImage(defaultMarkerImage);
               }
 
-              const selectedMarkerImage = new window.kakao.maps.MarkerImage(
-                '/image/address-marker-normal.svg',
-                new window.kakao.maps.Size(28, 28),
-                { offset: new window.kakao.maps.Point(20, 40) }
-              );
+              // 현재 마커를 선택된 이미지로 변경
               marker.setImage(selectedMarkerImage);
+
+              // 선택된 마커와 시설 상태 업데이트
               setSelectedMarker(marker);
               setSelectedFacility(facility);
               setIndicatorMode('facilityInfo');
@@ -135,7 +141,7 @@ export default function Map() {
         }
       );
     });
-  }, [map, facilities, selectedMarker]);
+  }, [map, facilities]);
 
   return (
     <>
