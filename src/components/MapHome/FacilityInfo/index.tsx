@@ -15,6 +15,17 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
 
+  const formatPhoneNumber = (phone: string) => {
+    if (phone.length === 11) {
+      return phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    } else if (phone.length === 10) {
+      return phone.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
+    } else if (phone.length === 9) {
+      return phone.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3');
+    }
+    return phone;
+  };
+
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
     initialY.current =
@@ -28,7 +39,7 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
       'touches' in event ? event.touches[0].clientY : event.clientY;
     const delta = currentY - initialY.current;
 
-    setPosition((prevPosition) => {
+    setPosition(prevPosition => {
       const newPosition = prevPosition + delta;
       return Math.max(Math.min(newPosition, maxDragDistance), initialPosition);
     });
@@ -38,7 +49,7 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
 
   const handleDragEnd = () => {
     setIsDragging(false);
-    setPosition((prevPosition) =>
+    setPosition(prevPosition =>
       prevPosition < (maxDragDistance + initialPosition) / 2
         ? maxDragDistance
         : initialPosition
@@ -71,13 +82,21 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
           <Chips chipState="sports" text={facility.items[0]} />
         </div>
         <p className={styles.addressInfo}>
-          <IconComponent name="addressMarker" size="s" alt="Address Marker Icon" />{' '}
+          <IconComponent
+            name="addressMarker"
+            size="s"
+            alt="Address Marker Icon"
+          />{' '}
           {facility.cityName} {facility.localName} {facility.address}
         </p>
         <div className={styles.facilityDetails}>
           <div className={styles.contactRow}>
             <span className={styles.label}>연락처</span>
-            <span className={styles.value}>{facility.phone || '연락처 없음'}</span>
+            <span className={styles.value}>
+              {facility.phone
+                ? formatPhoneNumber(facility.phone)
+                : '연락처 없음'}
+            </span>
           </div>
           <div className={styles.contactRow}>
             <span className={styles.label}>대표자</span>
