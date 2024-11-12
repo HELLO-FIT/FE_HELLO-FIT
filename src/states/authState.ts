@@ -5,5 +5,6 @@ export const authState = atom({
   default: {
     access_token: '',
     isLoggedIn: false,
+    email: '',
   },
 });

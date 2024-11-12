@@ -6,6 +6,7 @@ import Header from '@/components/Layout/Header';
 import { useRouter } from 'next/router';
 import GNB from '@/components/Layout/GNB';
 import { RecoilRoot } from 'recoil';
+import Modal from '@/components/Modal/Modal';
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
     '/noti',
     '/details/[id]',
     '/details/[id]/map',
+    '/setting',
   ].includes(router.pathname);
   const hideHeader = [
     '/',
@@ -27,6 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
     '/map',
     '/details/[id]',
     '/details/[id]/map',
+    '/setting',
   ].includes(router.pathname);
   const withoutHeader = ['/', '/login'].includes(router.pathname);
 
@@ -44,6 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
             {!hideGNB && <GNB />}
           </div>
         </div>
+        <Modal />
       </QueryClientProvider>
     </RecoilRoot>
   );

@@ -23,7 +23,7 @@ export default function Landing() {
         </div>
       </div>
       <div className={styles.btnContainer}>
-        {isLoggedIn && <Login />}
+        {!isLoggedIn && <Login />}
         <Link href="/map">
           <div className={styles.serviceBtn} role="button" tabIndex={0}>
             서비스 둘러보기
