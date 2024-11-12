@@ -1,4 +1,4 @@
-import BASE_URL from "@/constants/baseurl";
+import BASE_URL from '@/constants/baseurl';
 
 export interface Facility {
   businessId: string;

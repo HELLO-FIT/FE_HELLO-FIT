@@ -3,8 +3,12 @@ import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import { getFacilities, Facility } from '@/apis/get/getFacilities';
-import { getFacilityDetails, FacilityDetails } from '@/apis/get/getFacilityDetails';
+import {
+  getFacilityDetails,
+  FacilityDetails,
+} from '@/apis/get/getFacilityDetails';
 
+/* eslint-disable */
 declare global {
   interface Window {
     kakao: any;
@@ -18,8 +22,11 @@ interface KakaoMapResult {
 
 export default function Map() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<FacilityDetails | null>(null);
-  const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>('sports');
+  const [selectedFacility, setSelectedFacility] =
+    useState<FacilityDetails | null>(null);
+  const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>(
+    'sports'
+  );
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
@@ -54,7 +61,7 @@ export default function Map() {
 
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
-            (position) => {
+            position => {
               const userLocation = new window.kakao.maps.LatLng(
                 position.coords.latitude,
                 position.coords.longitude
@@ -72,7 +79,7 @@ export default function Map() {
               });
               kakaoMap.setCenter(userLocation);
             },
-            (error) => {
+            error => {
               console.error('현재 위치를 가져오는 데 실패했습니다:', error);
             }
           );
@@ -102,7 +109,7 @@ export default function Map() {
       { offset: new window.kakao.maps.Point(20, 40) }
     );
 
-    facilities.forEach((facility) => {
+    facilities.forEach(facility => {
       const geocoder = new window.kakao.maps.services.Geocoder();
       geocoder.addressSearch(
         facility.address,
@@ -129,7 +136,10 @@ export default function Map() {
 
               // 시설 상세 정보 가져오기
               try {
-                const details = await getFacilityDetails(facility.businessId, facility.serialNumber);
+                const details = await getFacilityDetails(
+                  facility.businessId,
+                  facility.serialNumber
+                );
                 setSelectedFacility(details);
                 setIndicatorMode('facilityInfo');
               } catch (error) {
@@ -158,3 +168,4 @@ export default function Map() {
     </>
   );
 }
+/* eslint-enable */
