@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
 import IconComponent from '../Asset/Icon';
 import styles from './Landing.module.scss';
-import Login from './Login';
+import Login from '../Auth/Login';
 import { authState } from '@/states/authState';
 
 export default function Landing() {
