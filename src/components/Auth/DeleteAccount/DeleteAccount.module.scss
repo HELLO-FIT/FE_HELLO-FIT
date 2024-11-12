@@ -1,0 +1,21 @@
+@import '@/styles/globals.scss';
+
+.section {
+  width: 100%;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-bottom: 1px solid $gray10;
+  @include B14M;
+}
+
+.subtext {
+  @include C12M;
+  color: $gray50;
+}
+
+.cursor {
+  cursor: pointer;
+}

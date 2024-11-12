@@ -58,7 +58,7 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
 
   useEffect(() => {
     setPosition(initialPosition);
-  }, [facility]);
+  }, [facility, initialPosition]);
 
   if (!facility) return null;
 

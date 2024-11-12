@@ -12,13 +12,19 @@ export default function SubheaderWithLogo({
     router.push('/map');
   };
 
+  const handleMenuClick = () => {
+    if (showMenu) {
+      router.push('/setting');
+    }
+  };
+
   return (
     <header className={styles.container}>
       <div className={styles.btnContainer} onClick={handleLogoClick}>
         <IconComponent name="logoBlue" width={60} height={34} />
       </div>
       {showMenu && (
-        <div className={styles.btnContainer}>
+        <div className={styles.btnContainer} onClick={handleMenuClick}>
           <IconComponent name="menu" size="l" />
         </div>
       )}
