@@ -12,58 +12,60 @@ import {
 import Checkbox from '../Checkbox/Checkbox';
 import Link from 'next/link';
 import { cityCodes, localCodes } from '@/constants/localCode';
+import Filter from './Filter';
 
 export default function Lesson() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [selectedCityCode, setSelectedCityCode] = useState<string>(''); // cityCode 선택
-  const [selectedLocalCode, setSelectedLocalCode] = useState<string>(''); // localCode 선택
-  const [localCodeList, setLocalCodeList] = useState<{ [key: string]: string }>(
-    {}
-  );
-  const [isLocalCodeVisible, setIsLocalCodeVisible] = useState<boolean>(false); // localCode 드롭다운 표시 여부
+  const [selectedCityCode, setSelectedCityCode] = useState<string>('');
+  const [selectedLocalCode, setSelectedLocalCode] = useState<string>('');
+  const [currentOptions, setCurrentOptions] = useState<{
+    [key: string]: string;
+  }>({});
+  const [isNextStep, setIsNextStep] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchFacilities = async () => {
-      try {
-        if (selectedLocalCode) {
-          const params: GetFacilitiesParams = {
-            localCode: selectedLocalCode,
-          };
-
-          const fetchedFacilities = await getFacilities(params);
-          setFacilities(fetchedFacilities);
-        }
-      } catch (error) {
-        console.log(error, '시설 데이터를 불러오는 데 실패했습니다.');
-      }
-    };
-
-    if (selectedLocalCode) {
-      fetchFacilities();
-    }
-  }, [selectedLocalCode]);
-
-  useEffect(() => {
-    if (selectedCityCode) {
-      setLocalCodeList(localCodes[selectedCityCode] || {});
-      setIsLocalCodeVisible(true);
-      setSelectedLocalCode('');
+    if (selectedCityCode && localCodes[selectedCityCode]) {
+      setCurrentOptions(localCodes[selectedCityCode]);
     } else {
-      setIsLocalCodeVisible(false);
+      setCurrentOptions({});
     }
   }, [selectedCityCode]);
 
-  const handleCityCodeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedCityCode(event.target.value);
+  const handleNextClick = () => {
+    if (selectedCityCode) {
+      setIsNextStep(true);
+    }
   };
 
-  const handleLocalCodeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedLocalCode(event.target.value);
+  const handleValueChange = (key: string) => {
+    if (isNextStep) {
+      setSelectedLocalCode(key);
+    } else {
+      setSelectedCityCode(key);
+    }
   };
+
+  const handleCompleteClick = async () => {
+    if (!selectedCityCode || !selectedLocalCode) return;
+    setIsNextStep(false);
+
+    try {
+      const params: GetFacilitiesParams = { localCode: selectedLocalCode };
+      const fetchedFacilities = await getFacilities(params);
+      setFacilities(fetchedFacilities);
+    } catch (error) {
+      console.error('시설 데이터를 불러오는 데 실패했습니다:', error);
+    }
+  };
+
+  const selectedRegion =
+    selectedCityCode &&
+    selectedLocalCode &&
+    cityCodes[selectedCityCode] &&
+    localCodes[selectedCityCode] &&
+    localCodes[selectedCityCode][selectedLocalCode]
+      ? `${cityCodes[selectedCityCode]} ${localCodes[selectedCityCode][selectedLocalCode]}`
+      : '지역';
 
   return (
     <div className={styles.container}>
@@ -84,28 +86,16 @@ export default function Lesson() {
         <IconComponent name="right" size="l" />
       </div>
       <div className={styles.locationSelectors}>
-        <select onChange={handleCityCodeChange} value={selectedCityCode}>
-          <option value="">시도를 선택하세요</option>
-          {Object.entries(cityCodes).map(([code, name]) => (
-            <option key={code} value={code}>
-              {name}
-            </option>
-          ))}
-        </select>
-        {isLocalCodeVisible && (
-          <select
-            onChange={handleLocalCodeChange}
-            value={selectedLocalCode}
-            disabled={!selectedCityCode}
-          >
-            <option value="">시군구를 선택하세요</option>
-            {Object.entries(localCodeList).map(([code, name]) => (
-              <option key={code} value={code}>
-                {name}
-              </option>
-            ))}
-          </select>
-        )}
+        <Filter
+          options={isNextStep ? currentOptions : cityCodes}
+          value={isNextStep ? selectedLocalCode : selectedCityCode}
+          onChange={handleValueChange}
+          title={isNextStep ? '시군구 선택 (2/2)' : '시도 선택 (1/2)'}
+          placeholder={selectedRegion}
+          onNextClick={handleNextClick}
+          onCompleteClick={handleCompleteClick}
+          isNextStep={isNextStep}
+        />
       </div>
       <div className={styles.checkboxContainer}>
         <Checkbox>장애 지원 시설</Checkbox>
@@ -116,7 +106,7 @@ export default function Lesson() {
       <div className={styles.listContainer}>
         {facilities.map(facility => (
           <Link
-            key={facility.businessId}
+            key={`${facility.businessId}-${facility.name}`}
             href={`/details/${facility.businessId}`}
           >
             <Schedule facility={facility} />

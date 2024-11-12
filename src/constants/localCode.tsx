@@ -1,5 +1,5 @@
 // 시도 코드
-export const cityCodes = {
+export const cityCodes: { [key: string]: string } = {
   '11': '서울',
   '26': '부산',
   '27': '대구',
