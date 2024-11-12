@@ -10,7 +10,7 @@ import {
   useRecoilTransactionObserver_UNSTABLE,
   useSetRecoilState,
 } from 'recoil';
-import Modal from '@/components/Modal/Modal';
+import Modal from '@/components/Modal';
 import { authState } from '@/states/authState';
 import { useEffect } from 'react';
 

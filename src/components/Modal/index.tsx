@@ -10,12 +10,16 @@ export default function Modal() {
 
   const handleClose = () => {
     setModal({ ...modal, isOpen: false });
-    modal.onClose && modal.onClose();
+    if (typeof modal.onClose === 'function') {
+      modal.onClose();
+    }
   };
 
   const handleConfirm = () => {
     setModal({ ...modal, isOpen: false });
-    modal.onConfirm && modal.onConfirm();
+    if (typeof modal.onConfirm === 'function') {
+      modal.onConfirm();
+    }
   };
 
   useOutsideClick(modalRef, handleClose);

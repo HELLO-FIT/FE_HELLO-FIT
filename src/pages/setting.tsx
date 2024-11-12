@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 
-export default function setting() {
+export default function SettingPage() {
   const auth = useRecoilValue(authState);
   const router = useRouter();
 

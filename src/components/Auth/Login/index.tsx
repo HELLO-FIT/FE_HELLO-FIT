@@ -21,6 +21,12 @@ interface ErrorResponse {
   error_description: string;
 }
 
+interface KakaoUserInfo {
+  kakao_account: {
+    email: string | null;
+  };
+}
+
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -72,7 +78,7 @@ export default function Login() {
       success: (authObj: AuthObj) => {
         window.Kakao.API.request({
           url: '/v2/user/me',
-          success: (userInfo: any) => {
+          success: (userInfo: KakaoUserInfo) => {
             const email = userInfo.kakao_account?.email || '이메일 정보 없음';
 
             loginMutation.mutate({
