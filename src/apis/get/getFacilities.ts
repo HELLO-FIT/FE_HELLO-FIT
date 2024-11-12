@@ -23,8 +23,9 @@ interface GetFacilitiesParams {
 export async function getFacilities(
   params: GetFacilitiesParams
 ): Promise<Facility[]> {
+  // API 요청 시 undefined 값이 포함되지 않도록 처리
   const filteredParams = Object.fromEntries(
-    Object.entries(params).filter(([_, v]) => v !== undefined)
+    Object.entries(params).filter(([, v]) => v !== undefined)
   );
 
   try {
