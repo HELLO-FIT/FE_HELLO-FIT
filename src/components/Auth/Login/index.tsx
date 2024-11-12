@@ -28,21 +28,27 @@ export default function Login() {
   const APP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
 
   const loginMutation = useMutation({
-    mutationFn: async ({ accessToken }: { accessToken: string }) => {
+    mutationFn: async ({
+      accessToken,
+      email,
+    }: {
+      accessToken: string;
+      email: string;
+    }) => {
       const response = await BASE_URL.post('/auth/login', {
         kakaoAccessToken: accessToken,
       });
-      return response.data;
+      return { ...response.data, email };
     },
-    onSuccess: (data, variables: { accessToken: string; email: string }) => {
+    onSuccess: data => {
       setAuth({
-        access_token: data.access_token,
+        access_token: data.accessToken,
         isLoggedIn: true,
-        email: variables.email,
+        email: data.email,
       });
 
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('email', variables.email);
+      localStorage.setItem('access_token', data.accessToken);
+      localStorage.setItem('email', data.email);
       router.push('/map');
     },
     onError: (error: ErrorResponse) => {
@@ -68,7 +74,6 @@ export default function Login() {
           url: '/v2/user/me',
           success: (userInfo: any) => {
             const email = userInfo.kakao_account?.email || '이메일 정보 없음';
-            console.log('사용자 이메일:', email);
 
             loginMutation.mutate({
               accessToken: authObj.access_token,

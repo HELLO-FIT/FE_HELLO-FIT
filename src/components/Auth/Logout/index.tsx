@@ -23,6 +23,7 @@ export default function Logout() {
     });
 
     localStorage.removeItem('access_token');
+    localStorage.removeItem('email');
     router.push('/map');
   };
 
