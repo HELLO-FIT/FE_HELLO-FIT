@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import ToggleButton from '@/components/Button/ToggleButton';
 import styles from './Header.module.scss';
 import IconComponent from '@/components/Asset/Icon';
@@ -7,6 +8,7 @@ import { useRecoilState } from 'recoil';
 import { toggleState } from '@/states/toggleState';
 
 export default function Header() {
+  const router = useRouter();
   const [logoName, setLogoName] = useState<'logoBlue' | 'logoGreen'>(
     'logoBlue'
   );
@@ -28,14 +30,13 @@ export default function Header() {
     setToggle(buttonType);
   };
 
-  // 로고 클릭 시 페이지 리로드
-  const handleLogoClick = () => {
-    window.location.href = '/map';
+  const handleLogoClickWithRouter = () => {
+    router.reload();
   };
 
   return (
     <header className={styles.header}>
-      <div className={styles.btnContainer} onClick={handleLogoClick}>
+      <div className={styles.btnContainer} onClick={handleLogoClickWithRouter}>
         <IconComponent name={logoName} width={60} height={34} />
       </div>
       <div className={styles.toggleButtonContainer}>
