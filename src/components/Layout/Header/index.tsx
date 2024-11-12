@@ -28,9 +28,16 @@ export default function Header() {
     setToggle(buttonType);
   };
 
+  // 로고 클릭 시 페이지 리로드
+  const handleLogoClick = () => {
+    window.location.href = '/map';
+  };
+
   return (
     <header className={styles.header}>
-      <IconComponent name={logoName} width={60} height={34} />
+      <div className={styles.btnContainer} onClick={handleLogoClick}>
+        <IconComponent name={logoName} width={60} height={34} />
+      </div>
       <div className={styles.toggleButtonContainer}>
         <Tooltip text="이용권에 따라 선택해주세요!">
           <ToggleButton onButtonClick={handleButtonClick} />
