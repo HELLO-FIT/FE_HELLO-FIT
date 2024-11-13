@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
@@ -30,6 +30,17 @@ export default function Map() {
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const popularSportsRef = useRef<HTMLDivElement>(null);
+  const [buttonBottom, setButtonBottom] = useState(20);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   useEffect(() => {
     const fetchFacilities = async () => {
@@ -66,6 +77,7 @@ export default function Map() {
                 position.coords.latitude,
                 position.coords.longitude
               );
+              setUserLocation(userLocation);
               const userMarkerImage = new window.kakao.maps.MarkerImage(
                 '/image/my-location.svg',
                 new window.kakao.maps.Size(40, 40),
@@ -134,7 +146,6 @@ export default function Map() {
               marker.setImage(selectedMarkerImage);
               setSelectedMarker(marker);
 
-              // 시설 상세 정보 가져오기
               try {
                 const details = await getFacilityDetails(
                   facility.businessId,
@@ -154,11 +165,56 @@ export default function Map() {
     });
   }, [map, facilities]);
 
+  const moveToUserLocation = () => {
+    if (map && userLocation) {
+      map.setCenter(userLocation);
+    } else {
+      console.warn('Map or userLocation is not available');
+    }
+  };
+
+  useEffect(() => {
+    const updateButtonPosition = () => {
+      const popularSportsHeight = popularSportsRef.current
+        ? popularSportsRef.current.clientHeight
+        : 0;
+      setButtonBottom(popularSportsHeight + 20);
+    };
+
+    updateButtonPosition();
+
+    window.addEventListener('resize', updateButtonPosition);
+    return () => window.removeEventListener('resize', updateButtonPosition);
+  }, [indicatorMode]);
+
   return (
     <>
       <Header />
-      <div id="map" style={{ width: '100%', height: '100vh' }}></div>
-      <div style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 10 }}>
+      <div
+        id="map"
+        style={{ width: '100%', height: '100vh', position: 'relative' }}
+      >
+        <div
+          onClick={moveToUserLocation}
+          style={{
+            position: 'fixed',
+            right: '20px',
+            bottom: `${buttonBottom}px`,
+            cursor: 'pointer',
+            zIndex: 100,
+          }}
+        >
+          <img
+            src="/image/position.svg"
+            alt="현재 위치로 돌아가기"
+            style={{ width: '40px', height: '40px' }}
+          />
+        </div>
+      </div>
+      <div
+        ref={popularSportsRef}
+        style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 10 }}
+      >
         {indicatorMode === 'sports' ? (
           <PopularSports />
         ) : (
