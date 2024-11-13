@@ -1,14 +1,112 @@
+import { useEffect, useState } from 'react';
 import SearchBar from '@/components/SearchBar/SearchBar';
 import styles from './Lesson.module.scss';
 import ImageComponent from '../Asset/Image';
 import IconComponent from '../Asset/Icon';
 import Schedule from '../Schedule';
-import data from '@/components/Schedule/temp.json';
-import Checkbox from '../Checkbox/Checkbox';
+import {
+  Facility,
+  getFacilities,
+  GetFacilitiesParams,
+} from '@/apis/get/getFacilities';
 import Link from 'next/link';
+import { cityCodes, localCodes } from '@/constants/localCode';
+import { sportsList } from '@/constants/sportsList';
+import LocalFilter from './LocalFilter';
+import SportsFilter from './SportsFilter';
 
 export default function Lesson() {
-  const scheduleCount = data.length;
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [selectedCityCode, setSelectedCityCode] = useState<string>('');
+  const [selectedLocalCode, setSelectedLocalCode] = useState<string>('');
+  const [selectedSport, setSelectedSport] = useState<string>('');
+  const [currentOptions, setCurrentOptions] = useState<{
+    [key: string]: string;
+  }>({});
+  const [isNextStep, setIsNextStep] = useState<boolean>(false);
+
+  // 지역 데이터 필터링
+  useEffect(() => {
+    if (selectedCityCode && localCodes[selectedCityCode]) {
+      setCurrentOptions(localCodes[selectedCityCode]);
+    } else {
+      setCurrentOptions({});
+    }
+  }, [selectedCityCode]);
+
+  const handleNextClick = () => {
+    if (selectedCityCode) {
+      setIsNextStep(true);
+    }
+  };
+
+  const handleValueChange = (key: string) => {
+    if (isNextStep) {
+      setSelectedLocalCode(key);
+    } else {
+      setSelectedCityCode(key);
+    }
+  };
+
+  const handleCompleteClick = async () => {
+    if (!selectedCityCode || !selectedLocalCode) return;
+    setIsNextStep(false);
+
+    try {
+      const params: GetFacilitiesParams = {
+        localCode: selectedLocalCode,
+      };
+
+      const fetchedFacilities = await getFacilities(params);
+
+      // 지역 필터링 후 스포츠 필터링 적용
+      setFacilities(filterFacilitiesBySport(fetchedFacilities, selectedSport));
+    } catch (error) {
+      console.error('시설 데이터를 불러오는 데 실패했습니다:', error);
+    }
+  };
+
+  const filterFacilitiesBySport = (
+    facilities: Facility[],
+    sport: string
+  ): Facility[] => {
+    if (!sport) return facilities; // 스포츠 선택이 없으면 전체 반환
+    return facilities.filter(facility =>
+      facility.items.some(item => item.trim() === sport.trim())
+    );
+  };
+
+  // 스포츠 변경 시 데이터 다시 가져오기
+  useEffect(() => {
+    const fetchFilteredFacilities = async () => {
+      if (!selectedCityCode || !selectedLocalCode) return;
+
+      try {
+        const params: GetFacilitiesParams = {
+          localCode: selectedLocalCode,
+        };
+
+        const fetchedFacilities = await getFacilities(params);
+
+        setFacilities(
+          filterFacilitiesBySport(fetchedFacilities, selectedSport)
+        );
+      } catch (error) {
+        console.error('스포츠 필터링 데이터 가져오기에 실패했습니다:', error);
+      }
+    };
+
+    fetchFilteredFacilities();
+  }, [selectedSport, selectedCityCode, selectedLocalCode]);
+
+  const selectedRegion =
+    selectedCityCode &&
+    selectedLocalCode &&
+    cityCodes[selectedCityCode] &&
+    localCodes[selectedCityCode] &&
+    localCodes[selectedCityCode][selectedLocalCode]
+      ? `${cityCodes[selectedCityCode]} ${localCodes[selectedCityCode][selectedLocalCode]}`
+      : '지역';
 
   return (
     <div className={styles.container}>
@@ -28,16 +126,35 @@ export default function Lesson() {
         </div>
         <IconComponent name="right" size="l" />
       </div>
+      <div className={styles.locationSelectors}>
+        <LocalFilter
+          options={isNextStep ? currentOptions : cityCodes}
+          value={isNextStep ? selectedLocalCode : selectedCityCode}
+          onChange={handleValueChange}
+          title={isNextStep ? '시군구 선택 (2/2)' : '시도 선택 (1/2)'}
+          placeholder={selectedRegion}
+          onNextClick={handleNextClick}
+          onCompleteClick={handleCompleteClick}
+          isNextStep={isNextStep}
+        />
+        <SportsFilter
+          options={sportsList}
+          value={selectedSport}
+          onChange={setSelectedSport}
+        />
+      </div>
       <div className={styles.checkboxContainer}>
-        <Checkbox>장애 지원 시설</Checkbox>
         <div className={styles.totalText}>
-          총<p className={styles.totalTextColor}>{scheduleCount}</p>시설
+          총<p className={styles.totalTextColor}>{facilities.length}</p>시설
         </div>
       </div>
       <div className={styles.listContainer}>
-        {data.map(item => (
-          <Link key={item.id} href={`/details/${item.id}`}>
-            <Schedule key={item.id} id={item.id} />
+        {facilities.map(facility => (
+          <Link
+            key={`${facility.businessId}-${facility.name}`}
+            href={`/details/${facility.businessId}`}
+          >
+            <Schedule facility={facility} />
           </Link>
         ))}
       </div>

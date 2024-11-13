@@ -1,6 +1,5 @@
 import data from '@/components/Schedule/temp.json';
 import styles from './LikeList.module.scss';
-import Schedule from '../Schedule';
 
 export default function LikeList() {
   const scheduleCount = data.length;
@@ -12,9 +11,9 @@ export default function LikeList() {
         <p className={styles.counter}>{scheduleCount}</p>
       </header>
       <div className={styles.listContainer}>
-        {data.map(item => (
+        {/* {data.map(item => (
           <Schedule key={item.id} id={item.id} />
-        ))}
+        ))} */}
       </div>
     </div>
   );
