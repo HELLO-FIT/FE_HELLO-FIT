@@ -48,7 +48,7 @@ export default function Lesson() {
     };
 
     fetchInitialFacilities();
-  }, []);
+  }, [selectedSport]);
 
   // 지역 데이터 필터링
   useEffect(() => {

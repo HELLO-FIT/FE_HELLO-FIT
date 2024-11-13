@@ -11,7 +11,6 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 export default function LargeMap({ businessId, serialNumber }: LargeMapProps) {
   const [facility, setFacility] = useState<FacilityDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchFacilityDetails = async () => {
@@ -19,7 +18,7 @@ export default function LargeMap({ businessId, serialNumber }: LargeMapProps) {
         const data = await getFacilityDetails(businessId, serialNumber);
         setFacility(data);
       } catch (error) {
-        setError('시설 정보를 가져오는 데 실패했습니다.');
+        console.log('시설 정보를 가져오는 데 실패했습니다.');
       } finally {
         setLoading(false);
       }
@@ -31,7 +30,6 @@ export default function LargeMap({ businessId, serialNumber }: LargeMapProps) {
   }, [businessId, serialNumber]);
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <div>{error}</div>;
 
   return (
     <div className={styles.container}>
