@@ -40,18 +40,24 @@ export default function Map() {
     };
   }, []);
 
+  // 특정 스포츠 종목에 따른 시설 정보 가져오기 - 테스트 중
+  const fetchFacilitiesBySport = async (sport: string | null = null) => {
+    try {
+      const data = await getFacilities({
+        localCode: '11680',
+        itemName: sport || undefined,
+      });
+      setFacilities(data);
+    } catch (error) {
+      console.error('시설 데이터를 가져오는 중 오류 발생:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchFacilities = async () => {
-      try {
-        const data = await getFacilities({ localCode: '11680' });
-        setFacilities(data);
-      } catch (error) {
-        console.error('시설 데이터를 가져오는 중 오류 발생:', error);
-      }
-    };
+    fetchFacilitiesBySport();
+  }, []);
 
-    fetchFacilities();
-
+  useEffect(() => {
     const mapScript = document.createElement('script');
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services`;
@@ -182,7 +188,7 @@ export default function Map() {
         style={{ width: '100%', height: '100vh', position: 'relative' }}
       ></div>
       {indicatorMode === 'sports' ? (
-        <PopularSports />
+        <PopularSports onSelectSport={fetchFacilitiesBySport} />
       ) : (
         selectedFacility && <FacilityInfo facility={selectedFacility} />
       )}
