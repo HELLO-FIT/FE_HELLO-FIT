@@ -17,7 +17,7 @@ export default function LargeMap({ businessId, serialNumber }: LargeMapProps) {
       try {
         const data = await getFacilityDetails(businessId, serialNumber);
         setFacility(data);
-      } catch (error) {
+      } catch {
         console.log('시설 정보를 가져오는 데 실패했습니다.');
       } finally {
         setLoading(false);
