@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
@@ -7,6 +7,7 @@ import {
   getFacilityDetails,
   FacilityDetails,
 } from '@/apis/get/getFacilityDetails';
+import styles from './map.module.scss';
 
 /* eslint-disable */
 declare global {
@@ -31,12 +32,9 @@ export default function Map() {
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [userLocation, setUserLocation] = useState(null);
-  const popularSportsRef = useRef<HTMLDivElement>(null);
-  const [buttonBottom, setButtonBottom] = useState(20);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-
     return () => {
       document.body.style.overflow = 'auto';
     };
@@ -173,55 +171,21 @@ export default function Map() {
     }
   };
 
-  useEffect(() => {
-    const updateButtonPosition = () => {
-      const popularSportsHeight = popularSportsRef.current
-        ? popularSportsRef.current.clientHeight
-        : 0;
-      setButtonBottom(popularSportsHeight + 20);
-    };
-
-    updateButtonPosition();
-
-    window.addEventListener('resize', updateButtonPosition);
-    return () => window.removeEventListener('resize', updateButtonPosition);
-  }, [indicatorMode]);
-
   return (
     <>
       <Header />
+      <div className={styles.positionButton} onClick={moveToUserLocation}>
+        <img src="/image/position.svg" alt="현재 위치로 돌아가기" />
+      </div>
       <div
         id="map"
         style={{ width: '100%', height: '100vh', position: 'relative' }}
-      >
-        <div
-          onClick={moveToUserLocation}
-          style={{
-            position: 'fixed',
-            right: '20px',
-            bottom: `${buttonBottom}px`,
-            cursor: 'pointer',
-            zIndex: 100,
-          }}
-        >
-          <img
-            src="/image/position.svg"
-            alt="현재 위치로 돌아가기"
-            style={{ width: '40px', height: '40px' }}
-          />
-        </div>
-      </div>
-      <div
-        ref={popularSportsRef}
-        style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 10 }}
-      >
-        {indicatorMode === 'sports' ? (
-          <PopularSports />
-        ) : (
-          selectedFacility && <FacilityInfo facility={selectedFacility} />
-        )}
-      </div>
+      ></div>
+      {indicatorMode === 'sports' ? (
+        <PopularSports />
+      ) : (
+        selectedFacility && <FacilityInfo facility={selectedFacility} />
+      )}
     </>
   );
 }
-/* eslint-enable */
