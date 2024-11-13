@@ -120,12 +120,16 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button</h2>
-        <SportButton iconName={'logoBlue'} label={'Sport Button Test'} />
+        <SportButton iconName={'logoBlue'} label={'Sport Button Test'} onClick={function (): void {
+          throw new Error('Function not implemented.');
+        } } isSelected={false} />
       </section>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
-        <SportButtonList />
+        <SportButtonList onSelectSport={function (sport: string): void {
+          throw new Error('Function not implemented.');
+        } } />
       </section>
 
       <section className={styles.section}>
