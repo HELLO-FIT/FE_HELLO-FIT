@@ -9,10 +9,9 @@ import {
   getFacilities,
   GetFacilitiesParams,
 } from '@/apis/get/getFacilities';
-import Checkbox from '../Checkbox/Checkbox';
 import Link from 'next/link';
 import { cityCodes, localCodes } from '@/constants/localCode';
-import Filter from './Filter';
+import LocalFilter from './LocalFilter';
 
 export default function Lesson() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -86,7 +85,7 @@ export default function Lesson() {
         <IconComponent name="right" size="l" />
       </div>
       <div className={styles.locationSelectors}>
-        <Filter
+        <LocalFilter
           options={isNextStep ? currentOptions : cityCodes}
           value={isNextStep ? selectedLocalCode : selectedCityCode}
           onChange={handleValueChange}
@@ -98,7 +97,6 @@ export default function Lesson() {
         />
       </div>
       <div className={styles.checkboxContainer}>
-        <Checkbox>장애 지원 시설</Checkbox>
         <div className={styles.totalText}>
           총<p className={styles.totalTextColor}>{facilities.length}</p>시설
         </div>

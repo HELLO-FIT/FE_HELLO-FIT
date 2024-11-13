@@ -1,3 +1,5 @@
+import { Facility } from '@/apis/get/getFacilities';
+
 export interface ScheduleProps {
-  id: string;
+  facility: Facility;
 }

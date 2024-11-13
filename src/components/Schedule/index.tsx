@@ -1,10 +1,6 @@
 import styles from './Schedule.module.scss';
 import IconComponent from '../Asset/Icon';
-import { Facility } from '@/apis/get/getFacilities';
-
-interface ScheduleProps {
-  facility: Facility;
-}
+import { ScheduleProps } from './Schedule.types';
 
 export default function Schedule({ facility }: ScheduleProps) {
   return (

@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
-import styles from './Filter.module.scss';
-import { FilterProps } from './Filter.types';
+import styles from './LocalFilter.module.scss';
+import { LocalFilterProps } from './LocalFilter.types';
 import IconComponent from '@/components/Asset/Icon';
 import useOutsideClick from '@/hooks/useOutsideClick';
 
-export default function Filter({
+export default function LocalFilter({
   options,
   value,
   onChange,
@@ -13,7 +13,7 @@ export default function Filter({
   onNextClick,
   onCompleteClick,
   isNextStep,
-}: FilterProps) {
+}: LocalFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
 
