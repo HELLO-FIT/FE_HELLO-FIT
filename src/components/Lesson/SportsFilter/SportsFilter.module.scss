@@ -89,7 +89,7 @@
 }
 
 .optionList::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;
 }
 
 .optionList::-webkit-scrollbar-track {
@@ -104,28 +104,6 @@
 
 .optionList::-webkit-scrollbar-thumb:hover {
   background: $blue60;
-}
-
-.actionButton {
-  width: 100%;
-  height: 52px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  outline: none;
-  border: none;
-  color: $white;
-  @include T16B;
-}
-
-.enabled {
-  background-color: $blue60;
-  cursor: pointer;
-}
-
-.disabled {
-  background-color: $gray30;
 }
 
 @keyframes slideUp {

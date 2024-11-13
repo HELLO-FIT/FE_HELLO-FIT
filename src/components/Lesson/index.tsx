@@ -11,17 +11,21 @@ import {
 } from '@/apis/get/getFacilities';
 import Link from 'next/link';
 import { cityCodes, localCodes } from '@/constants/localCode';
+import { sportsList } from '@/constants/sportsList';
 import LocalFilter from './LocalFilter';
+import SportsFilter from './SportsFilter';
 
 export default function Lesson() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [selectedCityCode, setSelectedCityCode] = useState<string>('');
   const [selectedLocalCode, setSelectedLocalCode] = useState<string>('');
+  const [selectedSport, setSelectedSport] = useState<string>('');
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
   }>({});
   const [isNextStep, setIsNextStep] = useState<boolean>(false);
 
+  // 지역 데이터 필터링
   useEffect(() => {
     if (selectedCityCode && localCodes[selectedCityCode]) {
       setCurrentOptions(localCodes[selectedCityCode]);
@@ -49,13 +53,55 @@ export default function Lesson() {
     setIsNextStep(false);
 
     try {
-      const params: GetFacilitiesParams = { localCode: selectedLocalCode };
+      const params: GetFacilitiesParams = {
+        localCode: selectedLocalCode,
+      };
+
+      // 지역 필터링 데이터 가져오기
       const fetchedFacilities = await getFacilities(params);
-      setFacilities(fetchedFacilities);
+
+      // 지역 필터링 후 스포츠 필터링 적용
+      setFacilities(filterFacilitiesBySport(fetchedFacilities, selectedSport));
     } catch (error) {
       console.error('시설 데이터를 불러오는 데 실패했습니다:', error);
     }
   };
+
+  // 스포츠 필터링 로직 분리
+  const filterFacilitiesBySport = (
+    facilities: Facility[],
+    sport: string
+  ): Facility[] => {
+    if (!sport) return facilities; // 스포츠 선택이 없으면 전체 반환
+    return facilities.filter(facility =>
+      facility.items.some(item => item.trim() === sport.trim())
+    );
+  };
+
+  // 스포츠 변경 시 데이터 다시 가져오기
+  useEffect(() => {
+    const fetchFilteredFacilities = async () => {
+      if (!selectedCityCode || !selectedLocalCode) return;
+
+      try {
+        const params: GetFacilitiesParams = {
+          localCode: selectedLocalCode,
+        };
+
+        // 지역에 따른 데이터 가져오기
+        const fetchedFacilities = await getFacilities(params);
+
+        // 스포츠 필터링 적용
+        setFacilities(
+          filterFacilitiesBySport(fetchedFacilities, selectedSport)
+        );
+      } catch (error) {
+        console.error('스포츠 필터링 데이터 가져오기에 실패했습니다:', error);
+      }
+    };
+
+    fetchFilteredFacilities();
+  }, [selectedSport]);
 
   const selectedRegion =
     selectedCityCode &&
@@ -94,6 +140,11 @@ export default function Lesson() {
           onNextClick={handleNextClick}
           onCompleteClick={handleCompleteClick}
           isNextStep={isNextStep}
+        />
+        <SportsFilter
+          options={sportsList}
+          value={selectedSport}
+          onChange={setSelectedSport}
         />
       </div>
       <div className={styles.checkboxContainer}>

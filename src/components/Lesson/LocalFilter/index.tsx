@@ -32,7 +32,10 @@ export default function LocalFilter({
 
   return (
     <div className={styles.container}>
-      <div className={styles.selectedValue} onClick={() => setIsOpen(!isOpen)}>
+      <div
+        className={`${styles.selectedValue} ${value ? styles.selectedDropdown : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         {placeholder}
         <IconComponent
           name={isOpen ? 'up' : 'down'}
