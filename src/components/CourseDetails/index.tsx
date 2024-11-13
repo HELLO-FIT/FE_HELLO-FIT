@@ -34,7 +34,7 @@ export default function CourseDetails({
 
       fetchFacilityDetails();
     }
-  }, [businessId]);
+  }, [businessId, serialNumber]);
 
   const handleMapClick = () => {
     if (facility) {
@@ -82,7 +82,6 @@ export default function CourseDetails({
           {facility.courses.map((course, index) => (
             <div key={index} className={styles.facilityInfo}>
               <label className={styles.title}>
-                {' '}
                 {facility.courses.length === 1
                   ? '개설 강좌'
                   : `개설 강좌 ${index + 1}`}

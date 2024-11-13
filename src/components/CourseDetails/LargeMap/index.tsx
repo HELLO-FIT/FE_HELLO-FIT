@@ -31,7 +31,7 @@ export default function LargeMap({ businessId, serialNumber }: LargeMapProps) {
   }, [businessId, serialNumber]);
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <p>{error}</p>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className={styles.container}>
