@@ -12,6 +12,12 @@
   color: $gray90;
 }
 
+.chipsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .titleBtnSection {
   display: flex;
   flex-direction: column;
@@ -71,10 +77,16 @@
   border-radius: 12px;
 }
 
-.labelSectionWrapper {
+.facilityInfo {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.labelSectionWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .labelValue {

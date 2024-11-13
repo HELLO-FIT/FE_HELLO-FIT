@@ -12,6 +12,7 @@ import SportsFilter from './SportsFilter';
 import Schedule from '../Schedule';
 import Link from 'next/link';
 import ImageComponent from '../Asset/Image';
+import { sportsList } from '@/constants/sportsList';
 
 export default function Lesson() {
   const DEFAULT_CITY_CODE = '11'; // 서울
@@ -158,7 +159,7 @@ export default function Lesson() {
           isNextStep={isNextStep}
         />
         <SportsFilter
-          options={['축구', '농구', '배드민턴']}
+          options={sportsList}
           value={selectedSport}
           onChange={setSelectedSport}
         />
@@ -172,7 +173,7 @@ export default function Lesson() {
         {facilities.map(facility => (
           <Link
             key={`${facility.businessId}-${facility.serialNumber}`}
-            href={`/details/${facility.businessId}`}
+            href={`/details/${facility.businessId}/${facility.serialNumber}`}
           >
             <Schedule facility={facility} />
           </Link>

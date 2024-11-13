@@ -1,3 +1,4 @@
 export interface LargeMapProps {
-  address: string;
+  businessId: string;
+  serialNumber: string;
 }
