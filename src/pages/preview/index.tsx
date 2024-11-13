@@ -94,11 +94,6 @@ export default function Preview() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Schedule</h2>
-        <Schedule id={1} />
-      </section>
-
-      <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Notification</h2>
         <Notification
           key={1}
