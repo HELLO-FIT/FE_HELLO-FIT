@@ -33,32 +33,35 @@ export default function SportsFilter({
         />
       </div>
       {isOpen && (
-        <div className={styles.bottomSheet} ref={filterRef}>
-          <div className={styles.indicatorWrapper}>
-            <IconComponent
-              name="indicator"
-              size="custom"
-              alt="Drag Indicator"
-            />
+        <>
+          <div className={styles.overlay} onClick={() => setIsOpen(false)} />
+          <div className={styles.bottomSheet} ref={filterRef}>
+            <div className={styles.indicatorWrapper}>
+              <IconComponent
+                name="indicator"
+                size="custom"
+                alt="Drag Indicator"
+              />
+            </div>
+            <h2 className={styles.title}>스포츠 종목 선택</h2>
+            <div className={styles.optionList}>
+              {options.map(option => (
+                <div
+                  key={option}
+                  className={`${styles.option} ${
+                    value === option ? styles.selected : ''
+                  }`}
+                  onClick={() => handleOptionClick(option)}
+                >
+                  {option}
+                  {value === option && (
+                    <IconComponent name="check" size="m" alt="selected check" />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
-          <h2 className={styles.title}>스포츠 종목 선택</h2>
-          <div className={styles.optionList}>
-            {options.map(option => (
-              <div
-                key={option}
-                className={`${styles.option} ${
-                  value === option ? styles.selected : ''
-                }`}
-                onClick={() => handleOptionClick(option)}
-              >
-                {option}
-                {value === option && (
-                  <IconComponent name="check" size="m" alt="selected check" />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        </>
       )}
     </div>
   );

@@ -44,54 +44,57 @@ export default function LocalFilter({
         />
       </div>
       {isOpen && (
-        <div className={styles.bottomSheet} ref={filterRef}>
-          <div className={styles.indicatorWrapper}>
-            <IconComponent
-              name="indicator"
-              size="custom"
-              alt="Drag Indicator"
-            />
-          </div>
-          <h2 className={styles.title}>{title}</h2>
-          <div className={styles.optionList}>
-            {Object.entries(options).map(([key, label]) => (
-              <div
-                key={key}
-                className={`${styles.option} ${
-                  value === key ? styles.selected : ''
+        <>
+          <div className={styles.overlay} onClick={() => setIsOpen(false)} />
+          <div className={styles.bottomSheet} ref={filterRef}>
+            <div className={styles.indicatorWrapper}>
+              <IconComponent
+                name="indicator"
+                size="custom"
+                alt="Drag Indicator"
+              />
+            </div>
+            <h2 className={styles.title}>{title}</h2>
+            <div className={styles.optionList}>
+              {Object.entries(options).map(([key, label]) => (
+                <div
+                  key={key}
+                  className={`${styles.option} ${
+                    value === key ? styles.selected : ''
+                  }`}
+                  onClick={() => handleOptionClick(key)}
+                >
+                  {label}
+                  {value === key && (
+                    <IconComponent name="check" size="m" alt="selected check" />
+                  )}
+                </div>
+              ))}
+            </div>
+            {!isNextStep && (
+              <button
+                className={`${styles.actionButton} ${
+                  value ? styles.enabled : styles.disabled
                 }`}
-                onClick={() => handleOptionClick(key)}
+                disabled={!value}
+                onClick={onNextClick}
               >
-                {label}
-                {value === key && (
-                  <IconComponent name="check" size="m" alt="selected check" />
-                )}
-              </div>
-            ))}
+                다음
+              </button>
+            )}
+            {isNextStep && (
+              <button
+                className={`${styles.actionButton} ${
+                  value ? styles.enabled : styles.disabled
+                }`}
+                disabled={!value}
+                onClick={handleCompleteClick}
+              >
+                완료
+              </button>
+            )}
           </div>
-          {!isNextStep && (
-            <button
-              className={`${styles.actionButton} ${
-                value ? styles.enabled : styles.disabled
-              }`}
-              disabled={!value}
-              onClick={onNextClick}
-            >
-              다음
-            </button>
-          )}
-          {isNextStep && (
-            <button
-              className={`${styles.actionButton} ${
-                value ? styles.enabled : styles.disabled
-              }`}
-              disabled={!value}
-              onClick={handleCompleteClick}
-            >
-              완료
-            </button>
-          )}
-        </div>
+        </>
       )}
     </div>
   );
