@@ -1,7 +1,6 @@
 import React from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
-import Schedule from '@/components/Schedule';
 import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
@@ -91,11 +90,6 @@ export default function Preview() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Toggle Button</h2>
         <ToggleButton />
-      </section>
-
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Schedule</h2>
-        <Schedule id={1} />
       </section>
 
       <section className={styles.section}>
