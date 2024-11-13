@@ -11,6 +11,7 @@ import LocalFilter from './LocalFilter';
 import SportsFilter from './SportsFilter';
 import Schedule from '../Schedule';
 import Link from 'next/link';
+import ImageComponent from '../Asset/Image';
 
 export default function Lesson() {
   const DEFAULT_CITY_CODE = '11'; // 서울
@@ -133,6 +134,12 @@ export default function Lesson() {
       <SearchBar />
       <div className={styles.popularBtn}>
         <div className={styles.leftContainer}>
+          <ImageComponent
+            name="popularImage"
+            width={46}
+            height={44}
+            alt="인기 강좌 버튼 이미지"
+          />
           <div className={styles.titleContainer}>
             <p className={styles.buttonSubtitle}>살펴보세요!</p>
             <p className={styles.buttonTitle}>우리 동네 인기 스포츠 강좌</p>
