@@ -7,6 +7,7 @@ import {
   getFacilityDetails,
   FacilityDetails,
 } from '@/apis/get/getFacilityDetails';
+import styles from './map.module.scss';
 
 /* eslint-disable */
 declare global {
@@ -30,19 +31,33 @@ export default function Map() {
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
+  const [userLocation, setUserLocation] = useState(null);
 
   useEffect(() => {
-    const fetchFacilities = async () => {
-      try {
-        const data = await getFacilities({ localCode: '11680' });
-        setFacilities(data);
-      } catch (error) {
-        console.error('시설 데이터를 가져오는 중 오류 발생:', error);
-      }
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
     };
+  }, []);
 
-    fetchFacilities();
+  // 특정 스포츠 종목에 따른 시설 정보 가져오기 - 테스트 중
+  const fetchFacilitiesBySport = async (sport: string | null = null) => {
+    try {
+      const data = await getFacilities({
+        localCode: '11680',
+        itemName: sport || undefined,
+      });
+      setFacilities(data);
+    } catch (error) {
+      console.error('시설 데이터를 가져오는 중 오류 발생:', error);
+    }
+  };
 
+  useEffect(() => {
+    fetchFacilitiesBySport();
+  }, []);
+
+  useEffect(() => {
     const mapScript = document.createElement('script');
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services`;
@@ -66,6 +81,7 @@ export default function Map() {
                 position.coords.latitude,
                 position.coords.longitude
               );
+              setUserLocation(userLocation);
               const userMarkerImage = new window.kakao.maps.MarkerImage(
                 '/image/my-location.svg',
                 new window.kakao.maps.Size(40, 40),
@@ -134,7 +150,6 @@ export default function Map() {
               marker.setImage(selectedMarkerImage);
               setSelectedMarker(marker);
 
-              // 시설 상세 정보 가져오기
               try {
                 const details = await getFacilityDetails(
                   facility.businessId,
@@ -154,18 +169,29 @@ export default function Map() {
     });
   }, [map, facilities]);
 
+  const moveToUserLocation = () => {
+    if (map && userLocation) {
+      map.setCenter(userLocation);
+    } else {
+      console.warn('Map or userLocation is not available');
+    }
+  };
+
   return (
     <>
       <Header />
-      <div id="map" style={{ width: '100%', height: '100vh' }}></div>
-      <div style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 10 }}>
-        {indicatorMode === 'sports' ? (
-          <PopularSports />
-        ) : (
-          selectedFacility && <FacilityInfo facility={selectedFacility} />
-        )}
+      <div className={styles.positionButton} onClick={moveToUserLocation}>
+        <img src="/image/position.svg" alt="현재 위치로 돌아가기" />
       </div>
+      <div
+        id="map"
+        style={{ width: '100%', height: '100vh', position: 'relative' }}
+      ></div>
+      {indicatorMode === 'sports' ? (
+        <PopularSports onSelectSport={fetchFacilitiesBySport} />
+      ) : (
+        selectedFacility && <FacilityInfo facility={selectedFacility} />
+      )}
     </>
   );
 }
-/* eslint-enable */

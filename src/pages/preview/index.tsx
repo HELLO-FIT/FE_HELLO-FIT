@@ -4,8 +4,8 @@ import ToggleButton from '@/components/Button/ToggleButton';
 import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
-import SportButton from '@/components/Button/SportButton';
-import SportButtonList from '@/components/MapHome/SportButtonList';
+// import SportButton from '@/components/Button/SportButton';
+// import SportButtonList from '@/components/MapHome/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/SearchBar/SearchBar';
@@ -117,16 +117,20 @@ export default function Preview() {
         <h2 className={styles.sectionTitle}>Like Button</h2>
         <LikeButton />
       </section>
-
+{/* 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button</h2>
-        <SportButton iconName={'logoBlue'} label={'Sport Button Test'} />
-      </section>
+        <SportButton iconName={'logoBlue'} label={'Sport Button Test'} onClick={function (): void {
+          throw new Error('Function not implemented.');
+        } } isSelected={false} />
+      </section> */}
 
-      <section className={styles.section}>
+      {/* <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
-        <SportButtonList />
-      </section>
+        <SportButtonList onSelectSport={function (sport: string): void {
+          throw new Error('Function not implemented.');
+        } } />
+      </section> */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>CheckBox</h2>
