@@ -57,7 +57,6 @@ export default function Lesson() {
         localCode: selectedLocalCode,
       };
 
-      // 지역 필터링 데이터 가져오기
       const fetchedFacilities = await getFacilities(params);
 
       // 지역 필터링 후 스포츠 필터링 적용
@@ -67,7 +66,6 @@ export default function Lesson() {
     }
   };
 
-  // 스포츠 필터링 로직 분리
   const filterFacilitiesBySport = (
     facilities: Facility[],
     sport: string
@@ -88,10 +86,8 @@ export default function Lesson() {
           localCode: selectedLocalCode,
         };
 
-        // 지역에 따른 데이터 가져오기
         const fetchedFacilities = await getFacilities(params);
 
-        // 스포츠 필터링 적용
         setFacilities(
           filterFacilitiesBySport(fetchedFacilities, selectedSport)
         );
@@ -101,7 +97,7 @@ export default function Lesson() {
     };
 
     fetchFilteredFacilities();
-  }, [selectedSport]);
+  }, [selectedSport, selectedCityCode, selectedLocalCode]);
 
   const selectedRegion =
     selectedCityCode &&
