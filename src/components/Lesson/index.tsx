@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import {
   Facility,
   getFacilities,
   GetFacilitiesParams,
 } from '@/apis/get/getFacilities';
+import {
+  selectedCityCodeState,
+  selectedLocalCodeState,
+  selectedSportState,
+} from '@/states/filterState';
 import { cityCodes, localCodes } from '@/constants/localCode';
 import styles from './Lesson.module.scss';
 import SearchBar from '@/components/SearchBar/SearchBar';
@@ -15,40 +21,39 @@ import ImageComponent from '../Asset/Image';
 import { sportsList } from '@/constants/sportsList';
 
 export default function Lesson() {
-  const DEFAULT_CITY_CODE = '11'; // 서울
-  const DEFAULT_LOCAL_CODE = '11680'; // 서울 강남구
-
   const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [selectedCityCode, setSelectedCityCode] =
-    useState<string>(DEFAULT_CITY_CODE);
-  const [selectedLocalCode, setSelectedLocalCode] =
-    useState<string>(DEFAULT_LOCAL_CODE);
-  const [selectedSport, setSelectedSport] = useState<string>('');
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
   }>({});
   const [isNextStep, setIsNextStep] = useState<boolean>(false);
+  const [selectedCityCode, setSelectedCityCode] = useRecoilState(
+    selectedCityCodeState
+  );
+  const [selectedLocalCode, setSelectedLocalCode] = useRecoilState(
+    selectedLocalCodeState
+  );
+  const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
 
   // 초기 데이터 로드
   useEffect(() => {
     const fetchInitialFacilities = async () => {
       try {
         const params: GetFacilitiesParams = {
-          localCode: DEFAULT_LOCAL_CODE,
+          localCode: selectedLocalCode,
         };
 
         const fetchedFacilities = await getFacilities(params);
         setFacilities(
           filterFacilitiesBySport(fetchedFacilities, selectedSport)
         );
-        setCurrentOptions(localCodes[DEFAULT_CITY_CODE]);
-      } catch (error) {
-        console.error('초기 시설 데이터를 불러오는 데 실패했습니다:', error);
+        setCurrentOptions(localCodes[selectedCityCode]);
+      } catch {
+        console.error('초기 시설 데이터를 불러오는 데 실패했습니다.');
       }
     };
 
     fetchInitialFacilities();
-  }, [selectedSport]);
+  }, [selectedLocalCode, selectedSport]);
 
   // 지역 데이터 필터링
   useEffect(() => {
@@ -84,8 +89,8 @@ export default function Lesson() {
 
       const fetchedFacilities = await getFacilities(params);
       setFacilities(filterFacilitiesBySport(fetchedFacilities, selectedSport));
-    } catch (error) {
-      console.error('시설 데이터를 불러오는 데 실패했습니다:', error);
+    } catch {
+      console.error('시설 데이터를 불러오는 데 실패했습니다.');
     }
   };
 
@@ -93,33 +98,11 @@ export default function Lesson() {
     facilities: Facility[],
     sport: string
   ): Facility[] => {
-    if (!sport) return facilities; // 스포츠 선택이 없으면 전체 반환
+    if (!sport) return facilities;
     return facilities.filter(facility =>
       facility.items.some(item => item.trim() === sport.trim())
     );
   };
-
-  // 스포츠 변경 시 데이터 다시 가져오기
-  useEffect(() => {
-    const fetchFilteredFacilities = async () => {
-      if (!selectedCityCode || !selectedLocalCode) return;
-
-      try {
-        const params: GetFacilitiesParams = {
-          localCode: selectedLocalCode,
-        };
-
-        const fetchedFacilities = await getFacilities(params);
-        setFacilities(
-          filterFacilitiesBySport(fetchedFacilities, selectedSport)
-        );
-      } catch (error) {
-        console.error('스포츠 필터링 데이터 가져오기에 실패했습니다:', error);
-      }
-    };
-
-    fetchFilteredFacilities();
-  }, [selectedSport, selectedCityCode, selectedLocalCode]);
 
   const selectedRegion =
     selectedCityCode &&
