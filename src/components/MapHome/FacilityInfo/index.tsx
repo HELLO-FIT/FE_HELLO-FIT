@@ -2,29 +2,23 @@ import React, { useState, useRef, useEffect } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import Chips from '@/components/Button/Chips';
 import { FacilityDetails } from '@/apis/get/getFacilityDetails';
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 import styles from './FacilityInfo.module.scss';
 
 interface FacilityInfoProps {
   facility: FacilityDetails | null;
+  onBackClick: () => void;
 }
 
-export default function FacilityInfo({ facility }: FacilityInfoProps) {
+export default function FacilityInfo({
+  facility,
+  onBackClick,
+}: FacilityInfoProps) {
   const initialPosition = -50;
   const maxDragDistance = 150;
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
-
-  const formatPhoneNumber = (phone: string) => {
-    if (phone.length === 11) {
-      return phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-    } else if (phone.length === 10) {
-      return phone.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
-    } else if (phone.length === 9) {
-      return phone.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3');
-    }
-    return phone;
-  };
 
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
@@ -77,7 +71,13 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
         <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
       </div>
       <div className={styles.content}>
-        <h1>{facility.name}</h1>
+        {/* h1과 backIconWrapper를 함께 감싼 header div 생성 */}
+        <div className={styles.header}>
+          <div className={styles.backIconWrapper} onClick={onBackClick}>
+            <IconComponent name="left" size="l" alt="Back to PopularSports" />
+          </div>
+          <h1>{facility.name}</h1>
+        </div>
         <div className={styles.chipsContainer}>
           <Chips chipState="sports" text={facility.items[0]} />
         </div>
