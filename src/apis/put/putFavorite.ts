@@ -1,4 +1,5 @@
 import BASE_URL from '@/constants/baseurl';
+import { AxiosError } from 'axios';
 
 export interface FavoriteResponse {
   success: boolean;
@@ -25,9 +26,9 @@ export async function putFavorite(
         message: '알 수 없는 오류가 발생했습니다.',
       };
     }
-  } catch (error: any) {
-    if (error.response) {
-      const { status } = error.response;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const { status } = error.response || {};
 
       if (status === 400) {
         return {

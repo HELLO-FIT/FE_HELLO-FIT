@@ -54,7 +54,7 @@ export default function Lesson() {
     };
 
     fetchInitialFacilities();
-  }, [selectedLocalCode, selectedSport]);
+  }, [selectedLocalCode, selectedSport, selectedCityCode]);
 
   // 지역 데이터 필터링
   useEffect(() => {

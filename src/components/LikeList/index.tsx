@@ -16,7 +16,7 @@ export default function LikeList() {
       setFavorites(data);
       setLoading(false);
     } catch (err) {
-      console.log('찜한 강좌를 가져오는데 실패했습니다.');
+      console.log('찜한 강좌를 가져오는데 실패했습니다.', err);
       setLoading(false);
     }
   };
@@ -36,16 +36,16 @@ export default function LikeList() {
         <p className={styles.counter}>{favorites.length}</p>
       </header>
       {favorites.length > 0 ? (
-        favorites.map(facility => (
-          <div className={styles.listContainer}>
+        <div className={styles.listContainer}>
+          {favorites.map(facility => (
             <Link
               key={`${facility.businessId}-${facility.serialNumber}`}
               href={`/details/${facility.businessId}/${facility.serialNumber}`}
             >
               <Schedule facility={facility} />
             </Link>
-          </div>
-        ))
+          ))}
+        </div>
       ) : (
         <div className={styles.resultContainer}>
           <IconComponent

@@ -20,7 +20,7 @@ export default function LikeButton({
         );
         setIsLiked(isFavorite);
       } catch (err) {
-        console.log('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+        console.log('네트워크 오류가 발생했습니다. 다시 시도해주세요.', err);
       }
     };
 
@@ -35,7 +35,7 @@ export default function LikeButton({
         setIsLiked(!isLiked);
       }
     } catch (err) {
-      console.log('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+      console.log('네트워크 오류가 발생했습니다. 다시 시도해주세요.', err);
     }
   };
 
