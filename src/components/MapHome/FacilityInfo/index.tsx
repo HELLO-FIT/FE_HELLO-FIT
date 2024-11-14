@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import Chips from '@/components/Button/Chips';
 import { FacilityDetails } from '@/apis/get/getFacilityDetails';
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber'; 
 import styles from './FacilityInfo.module.scss';
 
 interface FacilityInfoProps {
@@ -15,28 +16,15 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
 
-  const formatPhoneNumber = (phone: string) => {
-    if (phone.length === 11) {
-      return phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-    } else if (phone.length === 10) {
-      return phone.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
-    } else if (phone.length === 9) {
-      return phone.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3');
-    }
-    return phone;
-  };
-
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
-    initialY.current =
-      'touches' in event ? event.touches[0].clientY : event.clientY;
+    initialY.current = 'touches' in event ? event.touches[0].clientY : event.clientY;
   };
 
   const handleDragMove = (event: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging) return;
 
-    const currentY =
-      'touches' in event ? event.touches[0].clientY : event.clientY;
+    const currentY = 'touches' in event ? event.touches[0].clientY : event.clientY;
     const delta = currentY - initialY.current;
 
     setPosition(prevPosition => {
@@ -93,9 +81,7 @@ export default function FacilityInfo({ facility }: FacilityInfoProps) {
           <div className={styles.contactRow}>
             <span className={styles.label}>연락처</span>
             <span className={styles.value}>
-              {facility.phone
-                ? formatPhoneNumber(facility.phone)
-                : '연락처 없음'}
+              {facility.phone ? formatPhoneNumber(facility.phone) : '연락처 없음'}
             </span>
           </div>
           <div className={styles.contactRow}>
