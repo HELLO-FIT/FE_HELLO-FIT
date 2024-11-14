@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
 import {
   Facility,
   getFacilities,
@@ -10,19 +11,20 @@ import SearchBar from './SearchBar';
 import Link from 'next/link';
 import Schedule from '../Schedule';
 import IconComponent from '../Asset/Icon';
+import { selectedLocalCodeState } from '@/states/filterState';
 
 export default function Search() {
   const router = useRouter();
   const { query } = router.query;
-
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [filteredFacilities, setFilteredFacilities] = useState<Facility[]>([]);
+  const selectedLocalCode = useRecoilValue(selectedLocalCodeState);
 
   useEffect(() => {
     const fetchFacilities = async () => {
       try {
         const params: GetFacilitiesParams = {
-          localCode: '11680',
+          localCode: selectedLocalCode,
         };
         const fetchedFacilities = await getFacilities(params);
         setFacilities(fetchedFacilities);
@@ -32,7 +34,7 @@ export default function Search() {
     };
 
     fetchFacilities();
-  }, []);
+  }, [selectedLocalCode]);
 
   useEffect(() => {
     if (query && facilities.length > 0) {
