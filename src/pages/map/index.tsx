@@ -177,6 +177,10 @@ export default function Map() {
     }
   };
 
+  const handleBackClick = () => {
+    setIndicatorMode('sports');
+  };
+
   return (
     <>
       <Header />
@@ -190,7 +194,12 @@ export default function Map() {
       {indicatorMode === 'sports' ? (
         <PopularSports onSelectSport={fetchFacilitiesBySport} />
       ) : (
-        selectedFacility && <FacilityInfo facility={selectedFacility} />
+        selectedFacility && (
+          <FacilityInfo
+            facility={selectedFacility}
+            onBackClick={handleBackClick}
+          />
+        )
       )}
     </>
   );
