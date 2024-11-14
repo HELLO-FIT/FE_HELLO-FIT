@@ -14,8 +14,3 @@ export const selectedSportState = atom<string>({
   key: 'selectedSportState',
   default: '',
 });
-
-export const scrollState = atom({
-  key: 'scrollPositionState',
-  default: 0,
-});

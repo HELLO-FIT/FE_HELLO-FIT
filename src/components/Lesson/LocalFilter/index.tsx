@@ -90,7 +90,7 @@ export default function LocalFilter({
                 disabled={!value}
                 onClick={handleCompleteClick}
               >
-                완료
+                선택 완료
               </button>
             )}
           </div>
