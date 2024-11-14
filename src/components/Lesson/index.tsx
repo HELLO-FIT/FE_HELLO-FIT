@@ -12,7 +12,7 @@ import {
 } from '@/states/filterState';
 import { cityCodes, localCodes } from '@/constants/localCode';
 import styles from './Lesson.module.scss';
-import SearchBar from '@/components/SearchBar/SearchBar';
+import SearchBar from '@/components/Search/SearchBar';
 import LocalFilter from './LocalFilter';
 import SportsFilter from './SportsFilter';
 import Schedule from '../Schedule';

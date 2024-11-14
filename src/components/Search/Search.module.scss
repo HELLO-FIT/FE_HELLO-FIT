@@ -1,0 +1,49 @@
+@import '@/styles/globals.scss';
+
+.container {
+  width: 100%;
+  min-height: calc(100vh - 56px);
+  background-color: $gray10;
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  @include B14M;
+  color: $gray70;
+  margin: 20px 0 12px;
+  align-self: flex-start;
+}
+
+.scheduleContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-grow: 1;
+
+  .textContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mainText {
+    color: $gray90;
+    @include T16B;
+  }
+
+  .subText {
+    color: $gray60;
+    @include B14R;
+  }
+}
