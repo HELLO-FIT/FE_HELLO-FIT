@@ -1,5 +1,3 @@
-// SportButtonList.tsx
-
 import React, { useState } from 'react';
 import SportButton from '@/components/Button/SportButton';
 import { ICONS } from '@/constants/asset';
@@ -13,10 +11,12 @@ const sportsData: { iconName: keyof typeof ICONS; label: string }[] = [
 ];
 
 interface SportButtonListProps {
-  onSelectSport: (sport: string) => void; // 선택된 스포츠 종목을 전달
+  onSelectSport: (sport: string) => void; 
 }
 
-export default function SportButtonList({ onSelectSport }: SportButtonListProps) {
+export default function SportButtonList({
+  onSelectSport,
+}: SportButtonListProps) {
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
 
   const handleSportClick = (label: string) => {

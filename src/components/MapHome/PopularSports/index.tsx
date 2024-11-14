@@ -1,5 +1,3 @@
-// PopularSports.tsx
-
 import React, { useState, useRef } from 'react';
 import DropDown from '@/components/DropDown';
 import SportButtonList from '@/components/MapHome/SportButtonList';
@@ -72,7 +70,7 @@ export default function PopularSports({ onSelectSport }: PopularSportsProps) {
           />
         </header>
         <h2 className={styles.title}>인기 스포츠</h2>
-        <SportButtonList onSelectSport={onSelectSport} /> {/* 선택한 스포츠 전달 */}
+        <SportButtonList onSelectSport={onSelectSport} />
       </div>
     </div>
   );
