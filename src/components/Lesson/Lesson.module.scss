@@ -2,9 +2,11 @@
 
 .container {
   width: 100%;
-  min-height: calc(100vh - 113px);
+  min-height: calc(100vh - 121px);
   padding: 4px 20px 20px;
   background-color: $gray10;
+  display: flex;
+  flex-direction: column;
 }
 
 .popularBtn {
@@ -72,4 +74,30 @@
   display: flex;
   justify-content: flex-start;
   gap: 8px;
+}
+
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-grow: 1;
+
+  .textContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mainText {
+    color: $gray90;
+    @include T16B;
+  }
+
+  .subText {
+    color: $gray60;
+    @include B14R;
+  }
 }
