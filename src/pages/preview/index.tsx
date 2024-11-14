@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
 import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import LikeButton from '@/components/Button/LikeButton';
-// import SportButton from '@/components/Button/SportButton';
-// import SportButtonList from '@/components/MapHome/SportButtonList';
+import SportButton from '@/components/Button/SportButton';
+import SportButtonList from '@/components/MapHome/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/Search/SearchBar';
@@ -65,6 +65,13 @@ export default function Preview() {
     amenities: ['장애인 화장실', '장애인 주차구역', '휠체어 경사로'],
   };
 
+  const [selectedSport, setSelectedSport] = useState<string | null>(null);
+
+  const handleSelectSport = (sport: string) => {
+    setSelectedSport(sport);
+    console.log(`Selected sport: ${sport}`);
+  };
+
   return (
     <div className={styles.previewPage}>
       <h1 className={styles.mainTitle}>Component Preview</h1>
@@ -117,20 +124,24 @@ export default function Preview() {
         <h2 className={styles.sectionTitle}>Like Button</h2>
         <LikeButton />
       </section>
-      {/* 
+
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button</h2>
-        <SportButton iconName={'logoBlue'} label={'Sport Button Test'} onClick={function (): void {
-          throw new Error('Function not implemented.');
-        } } isSelected={false} />
-      </section> */}
+        <SportButton
+          iconName="logoBlue"
+          label="Sport Button Test"
+          onClick={() => console.log('Sport Button clicked')}
+          isSelected={false}
+        />
+      </section>
 
-      {/* <section className={styles.section}>
+      <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
-        <SportButtonList onSelectSport={function (sport: string): void {
-          throw new Error('Function not implemented.');
-        } } />
-      </section> */}
+        <SportButtonList onSelectSport={handleSelectSport} />
+        {selectedSport && (
+          <p style={{ marginTop: '20px' }}>선택한 스포츠: {selectedSport}</p>
+        )}
+      </section>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>CheckBox</h2>

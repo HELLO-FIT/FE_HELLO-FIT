@@ -7,25 +7,7 @@
   width: 70px;
   padding: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
   border-radius: 12px;
-
-  &:hover {
-    background-color: $gray10;
-    transform: scale(1.05);
-  }
-
-  &.selected {
-    background-color: $blue10; 
-    border: 1px solid $blue50; 
-    transform: scale(1.05); 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-
-    .label {
-      color: $blue60; 
-      @include B14M; 
-    }
-  }
 }
 
 .iconContainer {
@@ -37,10 +19,17 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 8px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 
-  .selected & {
-    background-color: $blue20; 
+  &:hover {
+    background-color: $gray30;
+    transform: scale(1.05);
+  }
+
+  &.selected {
+    background-color: $gray10;
+    border: 2px solid $blue50;
+    transform: scale(1.05);
   }
 }
 
@@ -55,8 +44,4 @@
   color: $gray90;
   text-align: center;
   transition: color 0.2s ease;
-
-  .selected & {
-    color: $blue60;
-  }
 }
