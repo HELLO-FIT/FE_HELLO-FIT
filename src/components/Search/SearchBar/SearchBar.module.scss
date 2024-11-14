@@ -12,7 +12,8 @@
   transition: border 0.3s ease;
 
   &:focus-within {
-    border: 1px solid $blue30;
+    border: 1px solid $blue50;
+    background-color: $blue5;
   }
 
   .inputContainer {
@@ -20,5 +21,9 @@
     @include B14M;
     border: none;
     outline: none;
+
+    &:focus-within {
+      background-color: $blue5;
+    }
   }
 }

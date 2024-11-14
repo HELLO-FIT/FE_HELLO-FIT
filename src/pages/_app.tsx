@@ -63,6 +63,7 @@ export default function App({ Component, pageProps }: AppProps) {
     '/details/[businessId]/[serialNumber]',
     '/details/[businessId]/[serialNumber]/map',
     '/setting',
+    '/search',
   ].includes(router.pathname);
   const hideHeader = [
     '/',
@@ -74,6 +75,7 @@ export default function App({ Component, pageProps }: AppProps) {
     '/details/[businessId]/[serialNumber]',
     '/details/[businessId]/[serialNumber]/map',
     '/setting',
+    '/search',
   ].includes(router.pathname);
   const withoutHeader = ['/', '/login'].includes(router.pathname);
 

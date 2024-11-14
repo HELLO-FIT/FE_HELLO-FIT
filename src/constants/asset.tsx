@@ -143,6 +143,7 @@ export const ICONS = {
   indicatorDot: '/icon/custom/indicator/icon-indicator-dot.svg',
   marker: '/icon/custom/marker.svg',
   addressMarker: '/icon/custom/address-marker.svg',
+  noResult: '/icon/custom/icon-no-result.svg',
 };
 
 export const IMAGES = {

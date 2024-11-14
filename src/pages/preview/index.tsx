@@ -8,7 +8,7 @@ import SportButton from '@/components/Button/SportButton';
 import SportButtonList from '@/components/MapHome/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
-import SearchBar from '@/components/SearchBar/SearchBar';
+import SearchBar from '@/components/Search/SearchBar';
 import Chips from '@/components/Button/Chips';
 import SpecialInfoCard from '@/components/CourseDetails/SpecialInfoCard';
 import DropDown from '@/components/DropDown';

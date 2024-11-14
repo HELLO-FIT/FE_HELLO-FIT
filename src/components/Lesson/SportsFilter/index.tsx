@@ -15,7 +15,11 @@ export default function SportsFilter({
   useOutsideClick(filterRef, () => setIsOpen(false));
 
   const handleOptionClick = (option: string) => {
-    onChange(option);
+    if (value === option) {
+      onChange('');
+    } else {
+      onChange(option);
+    }
     setIsOpen(false);
   };
 

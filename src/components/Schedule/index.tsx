@@ -3,6 +3,8 @@ import IconComponent from '../Asset/Icon';
 import { ScheduleProps } from './Schedule.types';
 
 export default function Schedule({ facility }: ScheduleProps) {
+  const currentMonth = new Date().getMonth() + 1;
+
   return (
     <div className={styles.container}>
       <div>
@@ -11,6 +13,8 @@ export default function Schedule({ facility }: ScheduleProps) {
           <p className={styles.location}>
             {facility.cityName} {facility.localName}
           </p>
+          <IconComponent name="scheduleEllipse" width={2} height={2} />
+          <p>{currentMonth}월</p>
           <IconComponent name="scheduleEllipse" width={2} height={2} />
           {facility.items.map((item, index) => (
             <span key={index}>
