@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
 import Notification from '@/components/Noti/Notification';
@@ -56,6 +56,13 @@ const sportsOptions = [
   '유도',
   '골프',
 ];
+
+const [selectedSport, setSelectedSport] = useState<string | null>(null);
+
+const handleSelectSport = (sport: string) => {
+  setSelectedSport(sport);
+  console.log(`Selected sport: ${sport}`);
+};
 
 export default function Preview() {
   const data = {
@@ -120,16 +127,20 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button</h2>
-        <SportButton iconName={'logoBlue'} label={'Sport Button Test'} onClick={function (): void {
-          throw new Error('Function not implemented.');
-        } } isSelected={false} />
+        <SportButton
+          iconName="logoBlue"
+          label="Sport Button Test"
+          onClick={() => console.log('Sport Button clicked')}
+          isSelected={false}
+        />
       </section>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
-        <SportButtonList onSelectSport={function (sport: string): void {
-          throw new Error('Function not implemented.');
-        } } />
+        <SportButtonList onSelectSport={handleSelectSport} />
+        {selectedSport && (
+          <p style={{ marginTop: '20px' }}>선택한 스포츠: {selectedSport}</p>
+        )}
       </section>
 
       <section className={styles.section}>
