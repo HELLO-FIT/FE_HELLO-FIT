@@ -60,8 +60,8 @@ export default function App({ Component, pageProps }: AppProps) {
     '/',
     '/login',
     '/noti',
-    '/details/[id]',
-    '/details/[id]/map',
+    '/details/[businessId]/[serialNumber]',
+    '/details/[businessId]/[serialNumber]/map',
     '/setting',
   ].includes(router.pathname);
   const hideHeader = [
@@ -71,8 +71,8 @@ export default function App({ Component, pageProps }: AppProps) {
     '/likelist',
     '/lesson',
     '/map',
-    '/details/[id]',
-    '/details/[id]/map',
+    '/details/[businessId]/[serialNumber]',
+    '/details/[businessId]/[serialNumber]/map',
     '/setting',
   ].includes(router.pathname);
   const withoutHeader = ['/', '/login'].includes(router.pathname);

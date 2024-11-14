@@ -2,7 +2,6 @@
 
 .container {
   width: 100%;
-  height: 74px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -28,6 +27,7 @@
 
 .information {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 2px;
   @include C12M;

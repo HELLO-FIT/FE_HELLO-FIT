@@ -3,7 +3,7 @@ export interface CourseCardProps {
   instructor: string;
   startTime: string;
   endTime: string;
-  weekdays: string;
-  price: string;
+  workday: string;
+  price: number;
   isSpecial?: boolean;
 }

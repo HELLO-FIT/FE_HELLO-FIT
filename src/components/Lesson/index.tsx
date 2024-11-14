@@ -1,29 +1,54 @@
 import { useEffect, useState } from 'react';
-import SearchBar from '@/components/SearchBar/SearchBar';
-import styles from './Lesson.module.scss';
-import ImageComponent from '../Asset/Image';
-import IconComponent from '../Asset/Icon';
-import Schedule from '../Schedule';
 import {
   Facility,
   getFacilities,
   GetFacilitiesParams,
 } from '@/apis/get/getFacilities';
-import Link from 'next/link';
 import { cityCodes, localCodes } from '@/constants/localCode';
-import { sportsList } from '@/constants/sportsList';
+import styles from './Lesson.module.scss';
+import SearchBar from '@/components/SearchBar/SearchBar';
 import LocalFilter from './LocalFilter';
 import SportsFilter from './SportsFilter';
+import Schedule from '../Schedule';
+import Link from 'next/link';
+import ImageComponent from '../Asset/Image';
+import { sportsList } from '@/constants/sportsList';
 
 export default function Lesson() {
+  const DEFAULT_CITY_CODE = '11'; // 서울
+  const DEFAULT_LOCAL_CODE = '11680'; // 서울 강남구
+
   const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [selectedCityCode, setSelectedCityCode] = useState<string>('');
-  const [selectedLocalCode, setSelectedLocalCode] = useState<string>('');
+  const [selectedCityCode, setSelectedCityCode] =
+    useState<string>(DEFAULT_CITY_CODE);
+  const [selectedLocalCode, setSelectedLocalCode] =
+    useState<string>(DEFAULT_LOCAL_CODE);
   const [selectedSport, setSelectedSport] = useState<string>('');
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
   }>({});
   const [isNextStep, setIsNextStep] = useState<boolean>(false);
+
+  // 초기 데이터 로드
+  useEffect(() => {
+    const fetchInitialFacilities = async () => {
+      try {
+        const params: GetFacilitiesParams = {
+          localCode: DEFAULT_LOCAL_CODE,
+        };
+
+        const fetchedFacilities = await getFacilities(params);
+        setFacilities(
+          filterFacilitiesBySport(fetchedFacilities, selectedSport)
+        );
+        setCurrentOptions(localCodes[DEFAULT_CITY_CODE]);
+      } catch (error) {
+        console.error('초기 시설 데이터를 불러오는 데 실패했습니다:', error);
+      }
+    };
+
+    fetchInitialFacilities();
+  }, [selectedSport]);
 
   // 지역 데이터 필터링
   useEffect(() => {
@@ -58,8 +83,6 @@ export default function Lesson() {
       };
 
       const fetchedFacilities = await getFacilities(params);
-
-      // 지역 필터링 후 스포츠 필터링 적용
       setFacilities(filterFacilitiesBySport(fetchedFacilities, selectedSport));
     } catch (error) {
       console.error('시설 데이터를 불러오는 데 실패했습니다:', error);
@@ -87,7 +110,6 @@ export default function Lesson() {
         };
 
         const fetchedFacilities = await getFacilities(params);
-
         setFacilities(
           filterFacilitiesBySport(fetchedFacilities, selectedSport)
         );
@@ -124,7 +146,6 @@ export default function Lesson() {
             <p className={styles.buttonTitle}>우리 동네 인기 스포츠 강좌</p>
           </div>
         </div>
-        <IconComponent name="right" size="l" />
       </div>
       <div className={styles.locationSelectors}>
         <LocalFilter
@@ -151,8 +172,8 @@ export default function Lesson() {
       <div className={styles.listContainer}>
         {facilities.map(facility => (
           <Link
-            key={`${facility.businessId}-${facility.name}`}
-            href={`/details/${facility.businessId}`}
+            key={`${facility.businessId}-${facility.serialNumber}`}
+            href={`/details/${facility.businessId}/${facility.serialNumber}`}
           >
             <Schedule facility={facility} />
           </Link>

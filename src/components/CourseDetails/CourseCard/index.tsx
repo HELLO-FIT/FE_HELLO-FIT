@@ -1,6 +1,5 @@
 import styles from './CourseCard.module.scss';
 import { formatCurrency } from '@/utils/formatCurrency';
-import { getWeekdays } from '@/utils/getWeekdays';
 import { CourseCardProps } from './CourseCard.types';
 
 export default function CourseCard({
@@ -8,12 +7,10 @@ export default function CourseCard({
   instructor,
   startTime,
   endTime,
-  weekdays,
+  workday,
   price,
   isSpecial = false,
 }: CourseCardProps) {
-  const weekdaysKR = getWeekdays(weekdays);
-
   return (
     <section className={styles.box}>
       <p className={styles.labelValue}>
@@ -32,7 +29,7 @@ export default function CourseCard({
       </p>
       <p className={styles.labelValue}>
         <span className={styles.label}>요일</span>
-        <span className={styles.value}>{weekdaysKR}</span>
+        <span className={styles.value}>{workday}</span>
       </p>
       {isSpecial && (
         <p className={styles.labelValue}>
