@@ -40,13 +40,17 @@ export default function Map() {
     };
   }, []);
 
-  // 특정 스포츠 종목에 따른 시설 정보 가져오기 - 테스트 중
+  // 특정 스포츠 종목에 따른 시설 정보 가져오기
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
       const data = await getFacilities({
+        // 임의 로컬 코드
         localCode: '11680',
         itemName: sport || undefined,
       });
+      console.log(`Fetching facilities for sport: ${sport}`);
+      console.log(data);
+
       setFacilities(data);
     } catch (error) {
       console.error('시설 데이터를 가져오는 중 오류 발생:', error);
@@ -113,6 +117,8 @@ export default function Map() {
   useEffect(() => {
     if (!map || facilities.length === 0) return;
 
+    const markers: any[] = [];
+
     const defaultMarkerImage = new window.kakao.maps.MarkerImage(
       '/image/marker.svg',
       new window.kakao.maps.Size(28, 28),
@@ -141,6 +147,7 @@ export default function Map() {
               position: coords,
               image: defaultMarkerImage,
             });
+            markers.push(marker);
 
             window.kakao.maps.event.addListener(marker, 'click', async () => {
               if (selectedMarker && selectedMarker !== marker) {
@@ -167,6 +174,11 @@ export default function Map() {
         }
       );
     });
+
+    // cleanup 함수에서 이전 마커 삭제
+    return () => {
+      markers.forEach(marker => marker.setMap(null));
+    };
   }, [map, facilities]);
 
   const moveToUserLocation = () => {
