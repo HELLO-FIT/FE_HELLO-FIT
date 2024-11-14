@@ -2,9 +2,11 @@
 
 .container {
   width: 100%;
-  min-height: calc(100vh - 113px);
+  min-height: calc(100vh - 121px);
   background-color: $gray10;
   padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .headerContainer {
@@ -21,7 +23,7 @@
 
   .counter {
     @include T16B;
-    color: $blue50;
+    color: $blue60;
   }
 }
 
@@ -29,4 +31,30 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-grow: 1;
+
+  .textContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mainText {
+    color: $gray90;
+    @include T16B;
+  }
+
+  .subText {
+    color: $gray60;
+    @include B14R;
+  }
 }
