@@ -57,19 +57,19 @@ const sportsOptions = [
   '골프',
 ];
 
-const [selectedSport, setSelectedSport] = useState<string | null>(null);
-
-const handleSelectSport = (sport: string) => {
-  setSelectedSport(sport);
-  console.log(`Selected sport: ${sport}`);
-};
-
 export default function Preview() {
   const data = {
     coach: 2,
     vehicle: true,
     specialType: ['지체', '시각', '언어'],
     amenities: ['장애인 화장실', '장애인 주차구역', '휠체어 경사로'],
+  };
+
+  const [selectedSport, setSelectedSport] = useState<string | null>(null);
+
+  const handleSelectSport = (sport: string) => {
+    setSelectedSport(sport);
+    console.log(`Selected sport: ${sport}`);
   };
 
   return (
