@@ -120,10 +120,10 @@ export default function Preview() {
         <CustomButton label="텍스트를 자유롭게 써주세요." />
       </section>
 
-      <section className={styles.section}>
+      {/* <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Like Button</h2>
         <LikeButton />
-      </section>
+      </section> */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button</h2>
