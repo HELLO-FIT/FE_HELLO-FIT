@@ -59,7 +59,7 @@ export default function Search() {
 
   return (
     <div className={styles.container}>
-      <SearchBar />
+      <SearchBar searchCase="replace" />
       <h2 className={styles.title}>검색 결과</h2>
       {filteredFacilities.length > 0 ? (
         <ul className={styles.scheduleContainer}>

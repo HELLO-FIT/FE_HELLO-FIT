@@ -1,15 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import IconComponent from '../../Asset/Icon';
 import styles from './SearchBar.module.scss';
+import { SearchBarProps } from './SearchBar.types';
 
-export default function SearchBar() {
+export default function SearchBar({ searchCase }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
 
+  useEffect(() => {
+    if (router.query.query) {
+      setSearchTerm(String(router.query.query));
+    }
+  }, [router.query.query]);
+
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      router.push(`/search?query=${encodeURIComponent(searchTerm)}`);
+      if (searchCase === 'replace') {
+        router.replace(`/search?query=${encodeURIComponent(searchTerm)}`);
+      } else {
+        router.push(`/search?query=${encodeURIComponent(searchTerm)}`);
+      }
     }
   };
 
