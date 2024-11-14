@@ -5,25 +5,42 @@ import Schedule from '../Schedule';
 import Link from 'next/link';
 import LoadingSpinner from '../LoadingSpinner';
 import IconComponent from '../Asset/Icon';
+import { useModal } from '@/utils/modalUtils';
 
 export default function LikeList() {
   const [favorites, setFavorites] = useState<FavoritesItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const fetchFavorites = async () => {
-    try {
-      const data = await getFavorites();
-      setFavorites(data);
-      setLoading(false);
-    } catch (err) {
-      console.log('찜한 강좌를 가져오는데 실패했습니다.', err);
-      setLoading(false);
-    }
-  };
+  const { openModal } = useModal();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      showModal();
+      return;
+    }
+
+    const fetchFavorites = async () => {
+      try {
+        const data = await getFavorites();
+        setFavorites(data);
+        setLoading(false);
+      } catch (err) {
+        console.log('찜한 강좌를 가져오는데 실패했습니다.');
+        setLoading(false);
+      }
+    };
+
     fetchFavorites();
   }, []);
+
+  const showModal = () => {
+    openModal({
+      content: '로그인',
+      onConfirm: () => (window.location.href = '/'),
+      onClose: () => (window.location.href = '/map'),
+    });
+  };
 
   if (loading) {
     return <LoadingSpinner />;
