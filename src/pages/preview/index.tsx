@@ -3,7 +3,6 @@ import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
 import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
-import LikeButton from '@/components/Button/LikeButton';
 import SportButton from '@/components/Button/SportButton';
 import SportButtonList from '@/components/MapHome/SportButtonList';
 import styles from './preview.module.scss';
@@ -120,10 +119,10 @@ export default function Preview() {
         <CustomButton label="텍스트를 자유롭게 써주세요." />
       </section>
 
-      <section className={styles.section}>
+      {/* <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Like Button</h2>
         <LikeButton />
-      </section>
+      </section> */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button</h2>

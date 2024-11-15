@@ -19,6 +19,7 @@ import Schedule from '../Schedule';
 import Link from 'next/link';
 import ImageComponent from '../Asset/Image';
 import { sportsList } from '@/constants/sportsList';
+import IconComponent from '../Asset/Icon';
 
 export default function Lesson() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -53,7 +54,7 @@ export default function Lesson() {
     };
 
     fetchInitialFacilities();
-  }, [selectedLocalCode, selectedSport]);
+  }, [selectedLocalCode, selectedSport, selectedCityCode]);
 
   // 지역 데이터 필터링
   useEffect(() => {
@@ -152,16 +153,31 @@ export default function Lesson() {
           총<p className={styles.totalTextColor}>{facilities.length}</p>시설
         </div>
       </div>
-      <div className={styles.listContainer}>
-        {facilities.map(facility => (
-          <Link
-            key={`${facility.businessId}-${facility.serialNumber}`}
-            href={`/details/${facility.businessId}/${facility.serialNumber}`}
-          >
-            <Schedule facility={facility} />
-          </Link>
-        ))}
-      </div>
+      {facilities.length > 0 ? (
+        <div className={styles.listContainer}>
+          {facilities.map(facility => (
+            <Link
+              key={`${facility.businessId}-${facility.serialNumber}`}
+              href={`/details/${facility.businessId}/${facility.serialNumber}`}
+            >
+              <Schedule facility={facility} />
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.resultContainer}>
+          <IconComponent
+            name="noResult"
+            width={48}
+            height={48}
+            alt="결과 없음"
+          />
+          <div className={styles.textContainer}>
+            <p className={styles.mainText}>해당하는 시설이 없어요.</p>
+            <p className={styles.subText}>종목을 변경해주세요.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
