@@ -32,20 +32,13 @@ export default function Map() {
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<any>(null);
-  const [localCode, setLocalCode] = useState<string>('11110'); // 기본값을 서울 종로구 '11110'으로 설정
+  const [localCode, setLocalCode] = useState<string>('11110'); // 기본값으로 서울 종로구 설정
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
-
-  // 특정 스포츠 종목에 따른 시설 정보 가져오기
+  // 시설 정보를 특정 스포츠 종목과 지역 코드에 맞게 가져오기
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
       const data = await getFacilities({
-        localCode: localCode || '11110', // 로컬 코드가 없으면 '11110' 사용
+        localCode: localCode || '11110', // 로컬 코드가 없으면 기본값 사용
         itemName: sport || undefined,
       });
       setFacilities(data);
@@ -54,6 +47,7 @@ export default function Map() {
     }
   };
 
+  // 사용자 위치 기반으로 지역 코드를 가져오고 시설 데이터를 업데이트
   const updateLocalCodeAndFetchFacilities = (
     latitude: number,
     longitude: number
@@ -64,15 +58,17 @@ export default function Map() {
       latitude,
       (result: any, status: string) => {
         if (status === window.kakao.maps.services.Status.OK && result[0].code) {
-          const newLocalCode = result[0].code || '11110'; // 실패 시 '11110'로 기본 설정
-          setLocalCode(newLocalCode);
-          localStorage.setItem('localCode', newLocalCode); // 로컬 스토리지에 지역 코드 저장
+          const fullLocalCode = result[0].code || '11110'; // 10자리 코드
+          const shortLocalCode = fullLocalCode.slice(0, 5); // 앞 5자리만 사용
+          setLocalCode(shortLocalCode); // 로컬 코드 상태 업데이트
+          localStorage.setItem('localCode', shortLocalCode); // 로컬 스토리지에 저장
           fetchFacilitiesBySport(); // 새로 설정된 로컬 코드에 맞춰 시설 데이터 로드
         }
       }
     );
   };
 
+  // 지도 초기화 및 사용자 위치 설정
   useEffect(() => {
     const mapScript = document.createElement('script');
     mapScript.async = true;
@@ -112,7 +108,6 @@ export default function Map() {
                 title: '현재 위치',
               });
 
-              // 현재 위치 기반으로 로컬 코드 업데이트 및 시설 데이터 로드
               updateLocalCodeAndFetchFacilities(
                 position.coords.latitude,
                 position.coords.longitude
@@ -133,6 +128,7 @@ export default function Map() {
     };
   }, [KAKAO_MAP_KEY]);
 
+  // 시설 데이터에 따른 마커 표시
   useEffect(() => {
     if (!map || facilities.length === 0) return;
 
@@ -194,7 +190,6 @@ export default function Map() {
       );
     });
 
-    // cleanup 함수에서 이전 마커 삭제
     return () => {
       markers.forEach(marker => marker.setMap(null));
     };
