@@ -34,11 +34,11 @@ export default function Map() {
   const [userLocation, setUserLocation] = useState<any>(null);
   const [localCode, setLocalCode] = useState<string>('11110'); // 기본값으로 서울 종로구 설정
 
-  // 시설 정보를 특정 스포츠 종목과 지역 코드에 맞게 가져오기
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
+      setFacilities([]); // 기존 시설 목록 초기화
       const data = await getFacilities({
-        localCode: localCode || '11110', // 로컬 코드가 없으면 기본값 사용
+        localCode: localCode || '11110', // 로컬 코드가 없으면 기본값 사용 (서울 종로구)
         itemName: sport || undefined,
       });
       setFacilities(data);
@@ -47,7 +47,6 @@ export default function Map() {
     }
   };
 
-  // 사용자 위치 기반으로 지역 코드를 가져오고 시설 데이터를 업데이트
   const updateLocalCodeAndFetchFacilities = (
     latitude: number,
     longitude: number
@@ -62,13 +61,11 @@ export default function Map() {
           const shortLocalCode = fullLocalCode.slice(0, 5); // 앞 5자리만 사용
           setLocalCode(shortLocalCode); // 로컬 코드 상태 업데이트
           localStorage.setItem('localCode', shortLocalCode); // 로컬 스토리지에 저장
-          fetchFacilitiesBySport(); // 새로 설정된 로컬 코드에 맞춰 시설 데이터 로드
         }
       }
     );
   };
 
-  // 지도 초기화 및 사용자 위치 설정
   useEffect(() => {
     const mapScript = document.createElement('script');
     mapScript.async = true;
@@ -128,7 +125,10 @@ export default function Map() {
     };
   }, [KAKAO_MAP_KEY]);
 
-  // 시설 데이터에 따른 마커 표시
+  useEffect(() => {
+    fetchFacilitiesBySport();
+  }, [localCode]);
+
   useEffect(() => {
     if (!map || facilities.length === 0) return;
 
