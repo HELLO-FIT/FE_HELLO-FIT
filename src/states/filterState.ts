@@ -7,7 +7,7 @@ export const selectedCityCodeState = atom<string>({
 
 export const selectedLocalCodeState = atom<string>({
   key: 'selectedLocalCodeState',
-  default: '11680', // 서울 강남구
+  default: '11110', // 서울 종로구
 });
 
 export const selectedSportState = atom<string>({

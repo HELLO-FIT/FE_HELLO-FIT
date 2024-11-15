@@ -31,7 +31,8 @@ export default function Map() {
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState<any>(null);
+  const [localCode, setLocalCode] = useState<string | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -40,26 +41,51 @@ export default function Map() {
     };
   }, []);
 
-  // 특정 스포츠 종목에 따른 시설 정보 가져오기
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
+      setFacilities([]); // 기존 시설 목록 초기화
       const data = await getFacilities({
-        // 임의 로컬 코드
-        localCode: '11680',
+        localCode: localCode || '11110', // 로컬 코드가 없으면 기본값 사용 (서울 종로구)
         itemName: sport || undefined,
       });
-      console.log(`Fetching facilities for sport: ${sport}`);
-      console.log(data);
-
       setFacilities(data);
     } catch (error) {
       console.error('시설 데이터를 가져오는 중 오류 발생:', error);
     }
   };
 
+  // 위치 정보를 통해 지역 코드를 업데이트하고 해당 지역의 시설을 불러오는 함수
+  const updateLocalCodeAndFetchFacilities = (
+    latitude: number,
+    longitude: number
+  ) => {
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.coord2RegionCode(
+      longitude,
+      latitude,
+      (result: any, status: string) => {
+        if (status === window.kakao.maps.services.Status.OK && result[0].code) {
+          const fullLocalCode = result[0].code.trim();
+          const shortLocalCode = fullLocalCode.slice(0, 5);
+
+          if (shortLocalCode.length === 5) {
+            setLocalCode(shortLocalCode);
+            localStorage.setItem('localCode', shortLocalCode);
+          } else {
+            console.error('Invalid local code length:', shortLocalCode);
+          }
+        } else {
+          console.error('Failed to fetch region code:', status);
+        }
+      }
+    );
+  };
+
   useEffect(() => {
-    fetchFacilitiesBySport();
-  }, []);
+    if (localCode !== null) {
+      fetchFacilitiesBySport();
+    }
+  }, [localCode]);
 
   useEffect(() => {
     const mapScript = document.createElement('script');
@@ -81,11 +107,13 @@ export default function Map() {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             position => {
-              const userLocation = new window.kakao.maps.LatLng(
+              const userLatLng = new window.kakao.maps.LatLng(
                 position.coords.latitude,
                 position.coords.longitude
               );
-              setUserLocation(userLocation);
+              setUserLocation(userLatLng);
+              kakaoMap.setCenter(userLatLng);
+
               const userMarkerImage = new window.kakao.maps.MarkerImage(
                 '/image/my-location.svg',
                 new window.kakao.maps.Size(40, 40),
@@ -93,11 +121,15 @@ export default function Map() {
               );
               new window.kakao.maps.Marker({
                 map: kakaoMap,
-                position: userLocation,
+                position: userLatLng,
                 image: userMarkerImage,
                 title: '현재 위치',
               });
-              kakaoMap.setCenter(userLocation);
+
+              updateLocalCodeAndFetchFacilities(
+                position.coords.latitude,
+                position.coords.longitude
+              );
             },
             error => {
               console.error('현재 위치를 가져오는 데 실패했습니다:', error);
@@ -175,7 +207,6 @@ export default function Map() {
       );
     });
 
-    // cleanup 함수에서 이전 마커 삭제
     return () => {
       markers.forEach(marker => marker.setMap(null));
     };

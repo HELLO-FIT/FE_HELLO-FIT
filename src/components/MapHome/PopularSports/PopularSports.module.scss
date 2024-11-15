@@ -43,8 +43,7 @@
 }
 
 .title {
-  @include B16M;
-  font-weight: 600;
+  @include T16B;
   color: $gray90;
   align-self: flex-start;
   margin-bottom: 16px;
@@ -52,7 +51,7 @@
 
 .sportsList {
   display: flex;
-  gap: 16px;
+  gap: 8px;
   justify-content: center;
   width: 100%;
 }
