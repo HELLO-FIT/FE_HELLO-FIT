@@ -31,7 +31,8 @@ export default function Map() {
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState<any>(null);
+  const [localCode, setLocalCode] = useState<string | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -44,22 +45,32 @@ export default function Map() {
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
       const data = await getFacilities({
-        // 임의 로컬 코드
-        localCode: '11680',
+        localCode: localCode || '11680', // 로컬 코드가 없으면 기본값으로 '11680' 사용
         itemName: sport || undefined,
       });
-      console.log(`Fetching facilities for sport: ${sport}`);
-      console.log(data);
-
       setFacilities(data);
     } catch (error) {
       console.error('시설 데이터를 가져오는 중 오류 발생:', error);
     }
   };
 
-  useEffect(() => {
-    fetchFacilitiesBySport();
-  }, []);
+  // 로컬 코드와 시설 데이터를 현재 위치 기반으로 설정
+  const updateLocalCodeAndFetchFacilities = (
+    latitude: number,
+    longitude: number
+  ) => {
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.coord2RegionCode(
+      longitude,
+      latitude,
+      (result: any, status: string) => {
+        if (status === window.kakao.maps.services.Status.OK && result[0].code) {
+          setLocalCode(result[0].code); // API에서 받은 로컬 코드로 상태 업데이트
+          fetchFacilitiesBySport(); // 새로 설정된 로컬 코드에 맞춰 시설 데이터 로드
+        }
+      }
+    );
+  };
 
   useEffect(() => {
     const mapScript = document.createElement('script');
@@ -78,14 +89,17 @@ export default function Map() {
         const kakaoMap = new window.kakao.maps.Map(mapContainer, mapOption);
         setMap(kakaoMap);
 
+        // 사용자 위치 표시와 로컬 코드 설정
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             position => {
-              const userLocation = new window.kakao.maps.LatLng(
+              const userLatLng = new window.kakao.maps.LatLng(
                 position.coords.latitude,
                 position.coords.longitude
               );
-              setUserLocation(userLocation);
+              setUserLocation(userLatLng);
+              kakaoMap.setCenter(userLatLng);
+
               const userMarkerImage = new window.kakao.maps.MarkerImage(
                 '/image/my-location.svg',
                 new window.kakao.maps.Size(40, 40),
@@ -93,11 +107,16 @@ export default function Map() {
               );
               new window.kakao.maps.Marker({
                 map: kakaoMap,
-                position: userLocation,
+                position: userLatLng,
                 image: userMarkerImage,
                 title: '현재 위치',
               });
-              kakaoMap.setCenter(userLocation);
+
+              // 현재 위치 기반으로 로컬 코드 업데이트 및 시설 데이터 로드
+              updateLocalCodeAndFetchFacilities(
+                position.coords.latitude,
+                position.coords.longitude
+              );
             },
             error => {
               console.error('현재 위치를 가져오는 데 실패했습니다:', error);
