@@ -32,7 +32,7 @@ export default function Map() {
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<any>(null);
-  const [localCode, setLocalCode] = useState<string>('11110'); // 기본값으로 서울 종로구 설정
+  const [localCode, setLocalCode] = useState<string | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -54,6 +54,7 @@ export default function Map() {
     }
   };
 
+  // 위치 정보를 통해 지역 코드를 업데이트하고 해당 지역의 시설을 불러오는 함수
   const updateLocalCodeAndFetchFacilities = (
     latitude: number,
     longitude: number
@@ -64,14 +65,27 @@ export default function Map() {
       latitude,
       (result: any, status: string) => {
         if (status === window.kakao.maps.services.Status.OK && result[0].code) {
-          const fullLocalCode = result[0].code || '11110'; // 10자리 코드
-          const shortLocalCode = fullLocalCode.slice(0, 5); // 앞 5자리만 사용
-          setLocalCode(shortLocalCode); // 로컬 코드 상태 업데이트
-          localStorage.setItem('localCode', shortLocalCode); // 로컬 스토리지에 저장
+          const fullLocalCode = result[0].code.trim();
+          const shortLocalCode = fullLocalCode.slice(0, 5);
+
+          if (shortLocalCode.length === 5) {
+            setLocalCode(shortLocalCode);
+            localStorage.setItem('localCode', shortLocalCode);
+          } else {
+            console.error('Invalid local code length:', shortLocalCode);
+          }
+        } else {
+          console.error('Failed to fetch region code:', status);
         }
       }
     );
   };
+
+  useEffect(() => {
+    if (localCode !== null) {
+      fetchFacilitiesBySport();
+    }
+  }, [localCode]);
 
   useEffect(() => {
     const mapScript = document.createElement('script');
@@ -131,10 +145,6 @@ export default function Map() {
       mapScript.removeEventListener('load', initializeMap);
     };
   }, [KAKAO_MAP_KEY]);
-
-  useEffect(() => {
-    fetchFacilitiesBySport();
-  }, [localCode]);
 
   useEffect(() => {
     if (!map || facilities.length === 0) return;
