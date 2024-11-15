@@ -14,7 +14,10 @@ export default function Details() {
         businessId={businessId as string}
         serialNumber={serialNumber as string}
       />
-      <ButtonContainer />
+      <ButtonContainer
+        businessId={businessId as string}
+        serialNumber={serialNumber as string}
+      />
     </>
   );
 }
