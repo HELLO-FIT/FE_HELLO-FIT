@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { getFavorites, FavoritesItem } from '@/apis/get/getFavorites';
 import styles from './LikeList.module.scss';
 import Schedule from '../Schedule';
@@ -11,6 +11,14 @@ export default function LikeList() {
   const [favorites, setFavorites] = useState<FavoritesItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { openModal } = useModal();
+
+  const showModal = useCallback(() => {
+    openModal({
+      content: '로그인',
+      onConfirm: () => (window.location.href = '/'),
+      onClose: () => (window.location.href = '/map'),
+    });
+  }, [openModal]);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -26,21 +34,13 @@ export default function LikeList() {
         setFavorites(data);
         setLoading(false);
       } catch (err) {
-        console.log('찜한 강좌를 가져오는데 실패했습니다.');
+        console.log('찜한 강좌를 가져오는데 실패했습니다.', err);
         setLoading(false);
       }
     };
 
     fetchFavorites();
-  }, []);
-
-  const showModal = () => {
-    openModal({
-      content: '로그인',
-      onConfirm: () => (window.location.href = '/'),
-      onClose: () => (window.location.href = '/map'),
-    });
-  };
+  }, [showModal]);
 
   if (loading) {
     return <LoadingSpinner />;
