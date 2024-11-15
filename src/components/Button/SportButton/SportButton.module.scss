@@ -19,7 +19,9 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 8px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 
   &:hover {
     background-color: $gray30;
@@ -40,8 +42,9 @@
 
 .label {
   margin-top: 8px;
-  @include C12M;
+  @include B14R;
   color: $gray90;
   text-align: center;
   transition: color 0.2s ease;
+  white-space: nowrap;
 }

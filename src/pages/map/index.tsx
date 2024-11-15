@@ -34,6 +34,13 @@ export default function Map() {
   const [userLocation, setUserLocation] = useState<any>(null);
   const [localCode, setLocalCode] = useState<string>('11110'); // 기본값으로 서울 종로구 설정
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
       setFacilities([]); // 기존 시설 목록 초기화
