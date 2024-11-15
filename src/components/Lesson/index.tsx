@@ -34,19 +34,20 @@ export default function Lesson() {
   );
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
 
-  // 초기 데이터 로드
+  // 초기 데이터 로드 (localCode가 없으면 기본값으로 '11110' 설정)
   useEffect(() => {
     const fetchInitialFacilities = async () => {
+      const initialLocalCode = selectedLocalCode || localStorage.getItem('localCode') || '11110';
+      if (!selectedLocalCode) setSelectedLocalCode(initialLocalCode);
+
       try {
         const params: GetFacilitiesParams = {
-          localCode: selectedLocalCode,
+          localCode: initialLocalCode,
         };
 
         const fetchedFacilities = await getFacilities(params);
-        setFacilities(
-          filterFacilitiesBySport(fetchedFacilities, selectedSport)
-        );
-        setCurrentOptions(localCodes[selectedCityCode]);
+        setFacilities(filterFacilitiesBySport(fetchedFacilities, selectedSport));
+        setCurrentOptions(localCodes[selectedCityCode] || {});
       } catch {
         console.error('초기 시설 데이터를 불러오는 데 실패했습니다.');
       }
@@ -73,6 +74,7 @@ export default function Lesson() {
   const handleValueChange = (key: string) => {
     if (isNextStep) {
       setSelectedLocalCode(key);
+      localStorage.setItem('localCode', key); // 로컬 스토리지에 로컬 코드 저장 => 확인 
     } else {
       setSelectedCityCode(key);
     }

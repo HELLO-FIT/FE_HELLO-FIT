@@ -32,7 +32,7 @@ export default function Map() {
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<any>(null);
-  const [localCode, setLocalCode] = useState<string | null>(null);
+  const [localCode, setLocalCode] = useState<string>('11110'); // 기본값을 서울 종로구 '11110'으로 설정
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -45,7 +45,7 @@ export default function Map() {
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
       const data = await getFacilities({
-        localCode: localCode || '11680', // 로컬 코드가 없으면 기본값으로 '11680' 사용
+        localCode: localCode || '11110', // 로컬 코드가 없으면 '11110' 사용
         itemName: sport || undefined,
       });
       setFacilities(data);
@@ -54,7 +54,6 @@ export default function Map() {
     }
   };
 
-  // 로컬 코드와 시설 데이터를 현재 위치 기반으로 설정
   const updateLocalCodeAndFetchFacilities = (
     latitude: number,
     longitude: number
@@ -65,7 +64,9 @@ export default function Map() {
       latitude,
       (result: any, status: string) => {
         if (status === window.kakao.maps.services.Status.OK && result[0].code) {
-          setLocalCode(result[0].code); // API에서 받은 로컬 코드로 상태 업데이트
+          const newLocalCode = result[0].code || '11110'; // 실패 시 '11110'로 기본 설정
+          setLocalCode(newLocalCode);
+          localStorage.setItem('localCode', newLocalCode); // 로컬 스토리지에 지역 코드 저장
           fetchFacilitiesBySport(); // 새로 설정된 로컬 코드에 맞춰 시설 데이터 로드
         }
       }
@@ -89,7 +90,6 @@ export default function Map() {
         const kakaoMap = new window.kakao.maps.Map(mapContainer, mapOption);
         setMap(kakaoMap);
 
-        // 사용자 위치 표시와 로컬 코드 설정
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             position => {
