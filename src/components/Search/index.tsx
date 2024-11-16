@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import {
-  Facility,
-  getFacilities,
-  GetFacilitiesParams,
+  NomalFacility,
+  getNomalFacilities,
+  GetNomalFacilitiesParams,
 } from '@/apis/get/getFacilities';
 import styles from './Search.module.scss';
 import SearchBar from './SearchBar';
@@ -16,17 +16,19 @@ import { selectedLocalCodeState } from '@/states/filterState';
 export default function Search() {
   const router = useRouter();
   const { query } = router.query;
-  const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [filteredFacilities, setFilteredFacilities] = useState<Facility[]>([]);
+  const [facilities, setFacilities] = useState<NomalFacility[]>([]);
+  const [filteredFacilities, setFilteredFacilities] = useState<NomalFacility[]>(
+    []
+  );
   const selectedLocalCode = useRecoilValue(selectedLocalCodeState);
 
   useEffect(() => {
     const fetchFacilities = async () => {
       try {
-        const params: GetFacilitiesParams = {
+        const params: GetNomalFacilitiesParams = {
           localCode: selectedLocalCode,
         };
-        const fetchedFacilities = await getFacilities(params);
+        const fetchedFacilities = await getNomalFacilities(params);
         setFacilities(fetchedFacilities);
       } catch (error) {
         console.error('시설 데이터를 불러오는 데 실패했습니다:', error);

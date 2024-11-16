@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
-  Facility,
-  getFacilities,
-  GetFacilitiesParams,
+  NomalFacility,
+  getNomalFacilities,
+  GetNomalFacilitiesParams,
 } from '@/apis/get/getFacilities';
 import {
   selectedCityCodeState,
@@ -22,7 +22,7 @@ import { sportsList } from '@/constants/sportsList';
 import IconComponent from '../Asset/Icon';
 
 export default function Lesson() {
-  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [facilities, setFacilities] = useState<NomalFacility[]>([]);
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
   }>({});
@@ -48,11 +48,11 @@ export default function Lesson() {
       setSelectedCityCode(defaultCityCode);
 
       try {
-        const params: GetFacilitiesParams = {
+        const params: GetNomalFacilitiesParams = {
           localCode: storedLocalCode,
         };
 
-        const fetchedFacilities = await getFacilities(params);
+        const fetchedFacilities = await getNomalFacilities(params);
         setFacilities(
           filterFacilitiesBySport(fetchedFacilities, selectedSport)
         );
@@ -96,11 +96,11 @@ export default function Lesson() {
     setIsNextStep(false);
 
     try {
-      const params: GetFacilitiesParams = {
+      const params: GetNomalFacilitiesParams = {
         localCode: selectedLocalCode,
       };
 
-      const fetchedFacilities = await getFacilities(params);
+      const fetchedFacilities = await getNomalFacilities(params);
       setFacilities(filterFacilitiesBySport(fetchedFacilities, selectedSport));
     } catch {
       console.error('데이터를 불러오는 데 실패했습니다.');
@@ -109,9 +109,9 @@ export default function Lesson() {
 
   // 스포츠 필터링
   const filterFacilitiesBySport = (
-    facilities: Facility[],
+    facilities: NomalFacility[],
     sport: string
-  ): Facility[] => {
+  ): NomalFacility[] => {
     if (!sport) return facilities;
     return facilities.filter(facility =>
       facility.items.some(item => item.trim() === sport.trim())

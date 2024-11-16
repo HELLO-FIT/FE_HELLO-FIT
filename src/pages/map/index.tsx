@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import { getFacilities, Facility } from '@/apis/get/getFacilities';
+import { getNomalFacilities, NomalFacility } from '@/apis/get/getFacilities';
 import {
-  getFacilityDetails,
-  FacilityDetails,
+  getNomalFacilityDetails,
+  NomalFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 import styles from './map.module.scss';
 
@@ -22,9 +22,9 @@ interface KakaoMapResult {
 }
 
 export default function Map() {
-  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [facilities, setFacilities] = useState<NomalFacility[]>([]);
   const [selectedFacility, setSelectedFacility] =
-    useState<FacilityDetails | null>(null);
+    useState<NomalFacilityDetails | null>(null);
   const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>(
     'sports'
   );
@@ -44,7 +44,7 @@ export default function Map() {
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
       setFacilities([]); // 기존 시설 목록 초기화
-      const data = await getFacilities({
+      const data = await getNomalFacilities({
         localCode: localCode || '11110', // 로컬 코드가 없으면 기본값 사용 (서울 종로구)
         itemName: sport || undefined,
       });
@@ -190,7 +190,7 @@ export default function Map() {
               setSelectedMarker(marker);
 
               try {
-                const details = await getFacilityDetails(
+                const details = await getNomalFacilityDetails(
                   facility.businessId,
                   facility.serialNumber
                 );

@@ -9,7 +9,7 @@ interface FacilitySelectorParams {
   facilityName?: string;
   localCode?: string;
   itemName?: string;
-  [key: string]: string | undefined; 
+  [key: string]: string | undefined;
 }
 
 // 시설 목록 셀렉터

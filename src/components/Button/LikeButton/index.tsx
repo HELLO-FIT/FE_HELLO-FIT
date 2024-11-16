@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import { LikeButtonProps } from './LikeButton.types';
-import { putFavorite } from '@/apis/put/putFavorite';
+import { putNomalFavorite } from '@/apis/put/putFavorite';
 import { getFavorites } from '@/apis/get/getFavorites';
 import { useModal } from '@/utils/modalUtils';
 
@@ -42,7 +42,7 @@ export default function LikeButton({
     }
 
     try {
-      const result = await putFavorite(businessId, serialNumber);
+      const result = await putNomalFavorite(businessId, serialNumber);
 
       if (result.success) {
         setIsLiked(!isLiked);
