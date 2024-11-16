@@ -56,7 +56,7 @@ export default function Lesson() {
         setFacilities(
           filterFacilitiesBySport(fetchedFacilities, selectedSport)
         );
-        setCurrentOptions(localCodes[defaultCityCode] || {});
+        setCurrentOptions(localCodes[storedLocalCode] || {});
       } catch {
         console.error('초기 데이터를 불러오는 데 실패했습니다.');
       }
