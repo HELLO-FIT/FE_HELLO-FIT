@@ -2,7 +2,7 @@
 
 .container {
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 56px);
   padding: 0 20px;
   background-color: $gray10;
 }

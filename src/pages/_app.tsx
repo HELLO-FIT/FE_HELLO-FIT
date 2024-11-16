@@ -13,6 +13,7 @@ import {
 import Modal from '@/components/Modal';
 import { authState } from '@/states/authState';
 import { useEffect } from 'react';
+import TabNav from '@/components/Layout/TabNav';
 
 const queryClient = new QueryClient();
 
@@ -76,8 +77,10 @@ export default function App({ Component, pageProps }: AppProps) {
     '/details/[businessId]/[serialNumber]/map',
     '/setting',
     '/search',
+    '/popular',
   ].includes(router.pathname);
   const withoutHeader = ['/', '/login'].includes(router.pathname);
+  const tabNav = ['/lesson', '/popular'].includes(router.pathname);
 
   return (
     <RecoilRoot>
@@ -86,9 +89,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <div className="body">
           <div
-            className={`appContainer ${!hideGNB ? 'withGNB' : ''} ${
-              withoutHeader ? 'withoutHeader' : ''
-            }`}
+            className={`appContainer ${!hideGNB && 'withGNB'} ${
+              withoutHeader && 'withoutHeader'
+            } ${tabNav && 'tabNav'}`}
           >
             {!hideHeader && <Header />}
             <Component {...pageProps} />

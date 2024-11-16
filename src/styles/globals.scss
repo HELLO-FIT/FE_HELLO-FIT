@@ -223,6 +223,10 @@ $mobile: 768px;
     padding-bottom: 60px;
   }
 
+  &.tabNav {
+    padding-top: 92px;
+  }
+
   @media (max-width: $mobile) {
     width: 100vw;
     border: none;
