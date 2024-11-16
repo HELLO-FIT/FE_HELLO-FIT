@@ -1,0 +1,22 @@
+@import '@/styles/globals.scss';
+
+.container {
+  width: 100%;
+  min-height: calc(100vh - 92px);
+  padding: 4px 20px 20px;
+  background-color: $gray10;
+  display: flex;
+  flex-direction: column;
+}
+
+.totalText {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  @include B14M;
+  color: $gray70;
+
+  .totalTextColor {
+    color: $blue60;
+  }
+}
