@@ -1,5 +1,6 @@
 import { ChipsProps, ChipState } from './Chips.types';
 import styles from './Chips.module.scss';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 export default function Chips({ chipState, text }: ChipsProps) {
   const getChipClass = (state: ChipState) => {
@@ -10,6 +11,8 @@ export default function Chips({ chipState, text }: ChipsProps) {
         return styles.unchecked; // 체크되지 않은 칩
       case 'sports':
         return styles.sports; // 운동 종목 칩
+      case 'count':
+        return styles.count; // 누적 수강 수
       case 'label':
       default:
         return styles.label; // 기본 라벨 칩
@@ -18,7 +21,7 @@ export default function Chips({ chipState, text }: ChipsProps) {
 
   return (
     <div className={`${styles.container} ${getChipClass(chipState)}`}>
-      {text}
+      {chipState === 'count' ? `누적 수강 ${formatCurrency(text)}` : text}
     </div>
   );
 }

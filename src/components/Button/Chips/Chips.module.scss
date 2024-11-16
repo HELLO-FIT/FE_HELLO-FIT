@@ -39,3 +39,13 @@
   background-color: $blue10;
   @include B14M;
 }
+
+.count {
+  display: flex;
+  padding: 3px 6px;
+  align-items: center;
+  border-radius: 4px;
+  background-color: $gray10;
+  @include C10M;
+  color: $gray70;
+}
