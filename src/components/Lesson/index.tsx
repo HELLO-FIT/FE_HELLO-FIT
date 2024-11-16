@@ -35,29 +35,37 @@ export default function Lesson() {
   );
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
 
-  // 초기 데이터 로드 (localCode가 없으면 기본값으로 '11110' 설정)
+  // 초기 데이터 로드
   useEffect(() => {
-    const fetchInitialFacilities = async () => {
-      const initialLocalCode = selectedLocalCode || localStorage.getItem('localCode') || '11110';
-      if (!selectedLocalCode) setSelectedLocalCode(initialLocalCode);
+    const fetchInitialData = async () => {
+      const storedLocalCode = localStorage.getItem('localCode') || '11110';
+      const defaultCityCode =
+        Object.keys(localCodes).find(cityCode =>
+          Object.keys(localCodes[cityCode]).includes(storedLocalCode)
+        ) || '11'; // 기본 cityCode
+
+      setSelectedLocalCode(storedLocalCode);
+      setSelectedCityCode(defaultCityCode);
 
       try {
         const params: GetFacilitiesParams = {
-          localCode: initialLocalCode,
+          localCode: storedLocalCode,
         };
 
         const fetchedFacilities = await getFacilities(params);
-        setFacilities(filterFacilitiesBySport(fetchedFacilities, selectedSport));
-        setCurrentOptions(localCodes[selectedCityCode] || {});
+        setFacilities(
+          filterFacilitiesBySport(fetchedFacilities, selectedSport)
+        );
+        setCurrentOptions(localCodes[defaultCityCode] || {});
       } catch {
-        console.error('초기 시설 데이터를 불러오는 데 실패했습니다.');
+        console.error('초기 데이터를 불러오는 데 실패했습니다.');
       }
     };
 
-    fetchInitialFacilities();
-  }, [selectedLocalCode, selectedSport, selectedCityCode]);
+    fetchInitialData();
+  }, []);
 
-  // 지역 데이터 필터링
+  // 지역 변경 시 필터 업데이트
   useEffect(() => {
     if (selectedCityCode && localCodes[selectedCityCode]) {
       setCurrentOptions(localCodes[selectedCityCode]);
@@ -66,21 +74,23 @@ export default function Lesson() {
     }
   }, [selectedCityCode]);
 
+  // 필터 값 변경 처리
+  const handleValueChange = (key: string) => {
+    if (isNextStep) {
+      setSelectedLocalCode(key);
+    } else {
+      setSelectedCityCode(key);
+    }
+  };
+
+  // '다음' 버튼 클릭 처리
   const handleNextClick = () => {
     if (selectedCityCode) {
       setIsNextStep(true);
     }
   };
 
-  const handleValueChange = (key: string) => {
-    if (isNextStep) {
-      setSelectedLocalCode(key);
-      localStorage.setItem('localCode', key); // 로컬 스토리지에 로컬 코드 저장 => 확인 
-    } else {
-      setSelectedCityCode(key);
-    }
-  };
-
+  // '선택 완료' 버튼 클릭 처리
   const handleCompleteClick = async () => {
     if (!selectedCityCode || !selectedLocalCode) return;
     setIsNextStep(false);
@@ -93,10 +103,11 @@ export default function Lesson() {
       const fetchedFacilities = await getFacilities(params);
       setFacilities(filterFacilitiesBySport(fetchedFacilities, selectedSport));
     } catch {
-      console.error('시설 데이터를 불러오는 데 실패했습니다.');
+      console.error('데이터를 불러오는 데 실패했습니다.');
     }
   };
 
+  // 스포츠 필터링
   const filterFacilitiesBySport = (
     facilities: Facility[],
     sport: string
@@ -107,6 +118,7 @@ export default function Lesson() {
     );
   };
 
+  // 선택한 지역 placeholder
   const selectedRegion =
     selectedCityCode &&
     selectedLocalCode &&
@@ -114,7 +126,7 @@ export default function Lesson() {
     localCodes[selectedCityCode] &&
     localCodes[selectedCityCode][selectedLocalCode]
       ? `${cityCodes[selectedCityCode]} ${localCodes[selectedCityCode][selectedLocalCode]}`
-      : '지역';
+      : `${cityCodes[selectedCityCode] || '-'} ${localCodes[selectedCityCode]?.[selectedLocalCode] || '-'}`;
 
   return (
     <div className={styles.container}>
