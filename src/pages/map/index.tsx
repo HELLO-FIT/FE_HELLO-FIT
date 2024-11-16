@@ -66,9 +66,12 @@ export default function Map() {
       (result: any, status: string) => {
         if (status === window.kakao.maps.services.Status.OK && result[0].code) {
           const fullLocalCode = result[0].code.trim();
-          const shortLocalCode = fullLocalCode.slice(0, 5);
+          let shortLocalCode = fullLocalCode.slice(0, 5);
 
           if (shortLocalCode.length === 5) {
+            // 1의 자리를 0으로 변경
+            shortLocalCode = `${shortLocalCode.slice(0, 4)}0`;
+
             setLocalCode(shortLocalCode);
             localStorage.setItem('localCode', shortLocalCode);
           } else {
