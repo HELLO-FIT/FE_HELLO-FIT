@@ -20,6 +20,7 @@ import Link from 'next/link';
 import ImageComponent from '../Asset/Image';
 import { sportsList } from '@/constants/sportsList';
 import IconComponent from '../Asset/Icon';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function Lesson() {
   const [facilities, setFacilities] = useState<NomalFacility[]>([]);
@@ -27,6 +28,7 @@ export default function Lesson() {
     [key: string]: string;
   }>({});
   const [isNextStep, setIsNextStep] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedCityCode, setSelectedCityCode] = useRecoilState(
     selectedCityCodeState
   );
@@ -38,6 +40,7 @@ export default function Lesson() {
   // 초기 데이터 로드
   useEffect(() => {
     const fetchInitialData = async () => {
+      setIsLoading(true);
       const storedLocalCode = localStorage.getItem('localCode') || '11110';
       const defaultCityCode =
         Object.keys(localCodes).find(cityCode =>
@@ -59,6 +62,8 @@ export default function Lesson() {
         setCurrentOptions(localCodes[storedLocalCode] || {});
       } catch {
         console.error('초기 데이터를 불러오는 데 실패했습니다.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -95,6 +100,7 @@ export default function Lesson() {
     if (!selectedCityCode || !selectedLocalCode) return;
     setIsNextStep(false);
 
+    setIsLoading(true);
     try {
       const params: GetNomalFacilitiesParams = {
         localCode: selectedLocalCode,
@@ -104,6 +110,8 @@ export default function Lesson() {
       setFacilities(filterFacilitiesBySport(fetchedFacilities, selectedSport));
     } catch {
       console.error('데이터를 불러오는 데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -126,71 +134,79 @@ export default function Lesson() {
     localCodes[selectedCityCode] &&
     localCodes[selectedCityCode][selectedLocalCode]
       ? `${cityCodes[selectedCityCode]} ${localCodes[selectedCityCode][selectedLocalCode]}`
-      : `${cityCodes[selectedCityCode] || '-'} ${localCodes[selectedCityCode]?.[selectedLocalCode] || '-'}`;
+      : `${cityCodes[selectedCityCode] || '-'} ${
+          localCodes[selectedCityCode]?.[selectedLocalCode] || '-'
+        }`;
 
   return (
     <div className={styles.container}>
-      <SearchBar />
-      <div className={styles.popularBtn}>
-        <div className={styles.leftContainer}>
-          <ImageComponent
-            name="popularImage"
-            width={46}
-            height={44}
-            alt="인기 강좌 버튼 이미지"
-          />
-          <div className={styles.titleContainer}>
-            <p className={styles.buttonSubtitle}>살펴보세요!</p>
-            <p className={styles.buttonTitle}>우리 동네 인기 스포츠 강좌</p>
-          </div>
-        </div>
-      </div>
-      <div className={styles.locationSelectors}>
-        <LocalFilter
-          options={isNextStep ? currentOptions : cityCodes}
-          value={isNextStep ? selectedLocalCode : selectedCityCode}
-          onChange={handleValueChange}
-          title={isNextStep ? '시군구 선택 (2/2)' : '시도 선택 (1/2)'}
-          placeholder={selectedRegion}
-          onNextClick={handleNextClick}
-          onCompleteClick={handleCompleteClick}
-          isNextStep={isNextStep}
-        />
-        <SportsFilter
-          options={sportsList}
-          value={selectedSport}
-          onChange={setSelectedSport}
-        />
-      </div>
-      <div className={styles.checkboxContainer}>
-        <div className={styles.totalText}>
-          총<p className={styles.totalTextColor}>{facilities.length}</p>시설
-        </div>
-      </div>
-      {facilities.length > 0 ? (
-        <div className={styles.listContainer}>
-          {facilities.map(facility => (
-            <Link
-              key={`${facility.businessId}-${facility.serialNumber}`}
-              href={`/details/${facility.businessId}/${facility.serialNumber}`}
-            >
-              <Schedule facility={facility} />
-            </Link>
-          ))}
-        </div>
+      {isLoading ? (
+        <LoadingSpinner />
       ) : (
-        <div className={styles.resultContainer}>
-          <IconComponent
-            name="noResult"
-            width={48}
-            height={48}
-            alt="결과 없음"
-          />
-          <div className={styles.textContainer}>
-            <p className={styles.mainText}>해당하는 시설이 없어요.</p>
-            <p className={styles.subText}>종목을 변경해주세요.</p>
+        <>
+          <SearchBar />
+          <div className={styles.popularBtn}>
+            <div className={styles.leftContainer}>
+              <ImageComponent
+                name="popularImage"
+                width={46}
+                height={44}
+                alt="인기 강좌 버튼 이미지"
+              />
+              <div className={styles.titleContainer}>
+                <p className={styles.buttonSubtitle}>살펴보세요!</p>
+                <p className={styles.buttonTitle}>우리 동네 인기 스포츠 강좌</p>
+              </div>
+            </div>
           </div>
-        </div>
+          <div className={styles.locationSelectors}>
+            <LocalFilter
+              options={isNextStep ? currentOptions : cityCodes}
+              value={isNextStep ? selectedLocalCode : selectedCityCode}
+              onChange={handleValueChange}
+              title={isNextStep ? '시군구 선택 (2/2)' : '시도 선택 (1/2)'}
+              placeholder={selectedRegion}
+              onNextClick={handleNextClick}
+              onCompleteClick={handleCompleteClick}
+              isNextStep={isNextStep}
+            />
+            <SportsFilter
+              options={sportsList}
+              value={selectedSport}
+              onChange={setSelectedSport}
+            />
+          </div>
+          <div className={styles.checkboxContainer}>
+            <div className={styles.totalText}>
+              총<p className={styles.totalTextColor}>{facilities.length}</p>시설
+            </div>
+          </div>
+          {facilities.length > 0 ? (
+            <div className={styles.listContainer}>
+              {facilities.map(facility => (
+                <Link
+                  key={`${facility.businessId}-${facility.serialNumber}`}
+                  href={`/details/${facility.businessId}/${facility.serialNumber}`}
+                >
+                  <Schedule facility={facility} />
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.resultContainer}>
+              <IconComponent
+                name="noResult"
+                width={48}
+                height={48}
+                alt="결과 없음"
+              />
+              <div className={styles.textContainer}>
+                <p className={styles.mainText}>해당하는 시설이 없어요.</p>
+                <p className={styles.subText}>종목을 변경해주세요.</p>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
