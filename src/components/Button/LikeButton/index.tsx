@@ -35,7 +35,7 @@ export default function LikeButton({
   }, [businessId, serialNumber]);
 
   const handleClick = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
     if (!token) {
       showModal();
       return;
