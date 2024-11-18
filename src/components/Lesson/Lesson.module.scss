@@ -11,22 +11,15 @@
 
 .popularBtn {
   width: 100%;
-  padding: 16px 20px;
+  padding: 24px 33px;
   margin: 20px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
-  border-radius: 12px;
-  border: 1px solid $gray20;
-  background-color: $white;
+  border-radius: 10px;
+  background-color: $blue5;
   cursor: pointer;
-
-  .leftContainer {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
 
   .titleContainer {
     display: flex;
@@ -34,13 +27,27 @@
   }
 
   .buttonSubtitle {
-    @include C12M;
-    color: $gray50;
+    @include MEDIUM;
+    color: $gray90;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 140%;
+    letter-spacing: -0.24px;
+    text-transform: capitalize;
   }
 
   .buttonTitle {
-    @include T14B;
+    display: flex;
+    align-items: center;
+    gap: 2px;
     color: $gray90;
+    font-family: 'Pretendard-Regular', sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 140%;
+    letter-spacing: -0.32px;
+    text-transform: capitalize;
   }
 }
 

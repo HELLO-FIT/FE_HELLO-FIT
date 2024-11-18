@@ -74,20 +74,19 @@ export default function Lesson() {
         <>
           <Link href="/popular">
             <div className={styles.popularBtn}>
-              <div className={styles.leftContainer}>
-                <ImageComponent
-                  name="popularImage"
-                  width={46}
-                  height={44}
-                  alt="인기 강좌 버튼 이미지"
-                />
-                <div className={styles.titleContainer}>
-                  <p className={styles.buttonSubtitle}>살펴보세요!</p>
-                  <p className={styles.buttonTitle}>
-                    우리 동네 인기 스포츠 강좌
-                  </p>
+              <div className={styles.titleContainer}>
+                <p className={styles.buttonSubtitle}>시설 고르기가 어렵다면?</p>
+                <div className={styles.buttonTitle}>
+                  인기 스포츠 시설 추천
+                  <IconComponent name="arrow_right" size="m" alt="arrow icon" />
                 </div>
               </div>
+              <ImageComponent
+                name="popularImage"
+                width={97}
+                height={64}
+                alt="인기 강좌 버튼 이미지"
+              />
             </div>
           </Link>
           <SearchBar />

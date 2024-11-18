@@ -106,6 +106,9 @@ export const ICONS = {
     m: '/icon/m/icon-X.svg',
     s: '/icon/s/icon-X.svg',
   },
+  arrow_right: {
+    m: '/icon/m/icon-arrow-right.svg',
+  },
   // GNB 아이콘
   bellEmpty: '/icon/custom/GNB/bell-empty.svg',
   bellFull: '/icon/custom/GNB/bell-full.svg',
