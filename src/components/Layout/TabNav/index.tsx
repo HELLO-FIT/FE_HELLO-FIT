@@ -106,6 +106,7 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
           onNextClick={() => setIsNextStep(true)}
           onCompleteClick={() => setIsNextStep(false)}
           isNextStep={isNextStep}
+          placeholderType="lesson"
         />
         {showmenu && (
           <div className={styles.btnContainer} onClick={handleMenuClick}>

@@ -41,6 +41,12 @@ export const ICONS = {
     l: '/icon/l/icon-down.svg',
     m: '/icon/m/icon-down.svg',
   },
+  upBlack: {
+    m: '/icon/m/up-black.svg',
+  },
+  downBlack: {
+    m: '/icon/m/down-black.svg',
+  },
   image: {
     l: '/icon/l/icon-image.svg',
     m: '/icon/m/icon-image.svg',
