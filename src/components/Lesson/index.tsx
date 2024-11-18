@@ -90,14 +90,12 @@ export default function Lesson() {
             </div>
           </Link>
           <SearchBar />
-          <div className={styles.locationSelectors}>
+          <div className={styles.checkboxContainer}>
             <SportsFilter
               options={sportsList}
               value={selectedSport}
               onChange={setSelectedSport}
             />
-          </div>
-          <div className={styles.checkboxContainer}>
             <div className={styles.totalText}>
               총<p className={styles.totalTextColor}>{facilities.length}</p>시설
             </div>
