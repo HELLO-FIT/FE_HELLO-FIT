@@ -20,7 +20,11 @@ import { sportsList } from '@/constants/sportsList';
 import IconComponent from '../Asset/Icon';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
-export default function Lesson() {
+interface LessonProps {
+  onPopularClick: () => void;
+}
+
+export default function Lesson({ onPopularClick }: LessonProps) {
   const [facilities, setFacilities] = useState<NomalFacility[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedCityCode] = useRecoilState(selectedCityCodeState);
@@ -68,23 +72,21 @@ export default function Lesson() {
         <LoadingSpinner />
       ) : (
         <>
-          <Link href="/popular">
-            <div className={styles.popularBtn}>
-              <div className={styles.titleContainer}>
-                <p className={styles.buttonSubtitle}>시설 고르기가 어렵다면?</p>
-                <div className={styles.buttonTitle}>
-                  인기 스포츠 시설 추천
-                  <IconComponent name="arrow_right" size="m" alt="arrow icon" />
-                </div>
+          <div className={styles.popularBtn} onClick={onPopularClick}>
+            <div className={styles.titleContainer}>
+              <p className={styles.buttonSubtitle}>시설 고르기가 어렵다면?</p>
+              <div className={styles.buttonTitle}>
+                인기 스포츠 시설 추천
+                <IconComponent name="arrow_right" size="m" alt="arrow icon" />
               </div>
-              <ImageComponent
-                name="popularImage"
-                width={97}
-                height={64}
-                alt="인기 강좌 버튼 이미지"
-              />
             </div>
-          </Link>
+            <ImageComponent
+              name="popularImage"
+              width={97}
+              height={64}
+              alt="인기 강좌 버튼 이미지"
+            />
+          </div>
           <SearchBar />
           <div className={styles.checkboxContainer}>
             <SportsFilter

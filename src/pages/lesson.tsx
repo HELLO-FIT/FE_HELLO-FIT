@@ -9,7 +9,11 @@ export default function LessonPage() {
   const auth = useRecoilValue(authState);
   const [selectedTab, setSelectedTab] = useState<'lesson' | 'popular'>(
     'lesson'
-  ); // 상태 관리
+  );
+
+  const handlePopularBtnClick = () => {
+    setSelectedTab('popular');
+  };
 
   return (
     <>
@@ -20,7 +24,11 @@ export default function LessonPage() {
           setSelectedTab={setSelectedTab}
         />
       )}
-      {selectedTab === 'lesson' ? <Lesson /> : <Popular />}
+      {selectedTab === 'lesson' ? (
+        <Lesson onPopularClick={handlePopularBtnClick} />
+      ) : (
+        <Popular />
+      )}
     </>
   );
 }
