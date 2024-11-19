@@ -1,15 +1,26 @@
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authState } from '@/states/authState';
 import Lesson from '@/components/Lesson';
 import TabNav from '@/components/Layout/TabNav';
+import Popular from '@/components/Lesson/Popular';
 
 export default function LessonPage() {
   const auth = useRecoilValue(authState);
+  const [selectedTab, setSelectedTab] = useState<'lesson' | 'popular'>(
+    'lesson'
+  ); // 상태 관리
 
   return (
     <>
-      <TabNav showmenu={auth.isLoggedIn} />
-      <Lesson />
+      {auth.isLoggedIn && (
+        <TabNav
+          showmenu={auth.isLoggedIn}
+          tab={selectedTab}
+          setSelectedTab={setSelectedTab}
+        />
+      )}
+      {selectedTab === 'lesson' ? <Lesson /> : <Popular />}
     </>
   );
 }

@@ -1,20 +1,22 @@
-import IconComponent from '@/components/Asset/Icon';
-import styles from './TabNav.module.scss';
-import LocalFilter from '@/components/Lesson/LocalFilter';
 import { useRouter } from 'next/router';
-import { getNomalPopularParams } from '@/apis/get/getPopular';
-import { cityCodes, localCodes } from '@/constants/localCode';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   selectedCityCodeState,
   selectedLocalCodeState,
 } from '@/states/filterState';
-import { TabNavProps } from './TabNav.types';
+import { cityCodes, localCodes } from '@/constants/localCode';
+import IconComponent from '@/components/Asset/Icon';
+import LocalFilter from '@/components/Lesson/LocalFilter';
+import styles from './TabNav.module.scss';
 import Tooltip from '@/components/Tooltip/Tooltip';
+import { TabNavProps } from './TabNav.types';
 
-export default function TabNav({ showmenu = true }: TabNavProps) {
-  const router = useRouter();
+export default function TabNav({
+  showmenu = true,
+  tab = 'lesson',
+  setSelectedTab,
+}: TabNavProps) {
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
   }>({});
@@ -25,14 +27,20 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
   const [selectedLocalCode, setSelectedLocalCode] = useRecoilState(
     selectedLocalCodeState
   );
+  const router = useRouter();
 
-  const handleTabClick = (path: string) => {
-    router.push(path);
-  };
+  // 지역 코드가 변경되면 options 업데이트
+  useEffect(() => {
+    if (selectedCityCode && localCodes[selectedCityCode]) {
+      setCurrentOptions(localCodes[selectedCityCode]);
+    } else {
+      setCurrentOptions({});
+    }
+  }, [selectedCityCode]);
 
   // 초기 데이터 로드
   useEffect(() => {
-    const fetchInitialData = async () => {
+    const fetchInitialData = () => {
       const storedLocalCode = localStorage.getItem('localCode') || '11110';
       const defaultCityCode =
         Object.keys(localCodes).find(cityCode =>
@@ -41,29 +49,15 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
 
       setSelectedLocalCode(storedLocalCode);
       setSelectedCityCode(defaultCityCode);
-
-      try {
-        const params: getNomalPopularParams = {
-          localCode: storedLocalCode,
-        };
-
-        setCurrentOptions(localCodes[storedLocalCode] || {});
-      } catch {
-        console.error('초기 데이터를 불러오는 데 실패했습니다.');
-      }
+      setCurrentOptions(localCodes[storedLocalCode] || {});
     };
 
     fetchInitialData();
   }, [setSelectedCityCode, setSelectedLocalCode]);
 
-  // 지역 변경 시 필터 업데이트
-  useEffect(() => {
-    if (selectedCityCode && localCodes[selectedCityCode]) {
-      setCurrentOptions(localCodes[selectedCityCode]);
-    } else {
-      setCurrentOptions({});
-    }
-  }, [selectedCityCode]);
+  const handleTabClick = (tab: 'lesson' | 'popular') => {
+    setSelectedTab(tab);
+  };
 
   const handleMenuClick = () => {
     router.push('/setting');
@@ -109,15 +103,15 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
       </div>
       <div className={styles.tabs}>
         <button
-          className={`${styles.button} ${router.pathname === '/lesson' ? styles.active : ''}`}
-          onClick={() => handleTabClick('/lesson')}
+          className={`${styles.button} ${tab === 'lesson' ? styles.active : ''}`}
+          onClick={() => handleTabClick('lesson')}
         >
           전체
         </button>
         <Tooltip text="시설을 추천해드려요!">
           <button
-            className={`${styles.button} ${router.pathname === '/popular' ? styles.active : ''}`}
-            onClick={() => handleTabClick('/popular')}
+            className={`${styles.button} ${tab === 'popular' ? styles.active : ''}`}
+            onClick={() => handleTabClick('popular')}
           >
             인기
           </button>
