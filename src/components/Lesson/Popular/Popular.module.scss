@@ -29,12 +29,12 @@
 
   .bestContainer {
     display: flex;
-    overflow-x: auto;
     gap: 16px;
     padding: 8px 0;
+    cursor: grab;
 
-    &::-webkit-scrollbar {
-      display: none;
+    &:active {
+      cursor: grabbing;
     }
 
     .facilityCard {

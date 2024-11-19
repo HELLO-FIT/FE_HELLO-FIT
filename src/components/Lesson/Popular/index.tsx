@@ -21,6 +21,8 @@ import Chips from '@/components/Button/Chips';
 import SportsImageComponent from '@/components/Asset/SportsImage';
 import { SPORTSIMAGES } from '@/constants/asset';
 import { formatCurrency } from '@/utils/formatCurrency';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 
 export default function Popular() {
   const [facilities, setFacilities] = useState<NomalPopular[]>([]);
@@ -99,32 +101,54 @@ export default function Popular() {
               인기 시설 TOP 5
             </div>
             <div className={styles.bestContainer}>
-              {topFacilities.map((facility, index) => (
-                <Link
-                  key={`${facility.businessId}-${facility.serialNumber}`}
-                  href={`/details/${facility.businessId}/${facility.serialNumber}`}
-                >
-                  <div className={styles.facilityCard}>
-                    <SportsImageComponent
-                      name={facility.items[0] as keyof typeof SPORTSIMAGES}
-                      width={152}
-                      height={110}
-                      alt={facility.items[0]}
-                      rank={index + 1}
-                    />
-                    <div className={styles.nameItems}>
-                      <p className={styles.facilityName}>{facility.name}</p>
-                      <p className={styles.facilityItems}>
-                        {facility.items[0]}
-                      </p>
-                    </div>
-                    <Chips
-                      chipState="top"
-                      text={`누적 수강 ${formatCurrency(facility.totalParticipantCount)}`}
-                    />
-                  </div>
-                </Link>
-              ))}
+              <Swiper
+                spaceBetween={12}
+                loop={true}
+                pagination={{ clickable: true }}
+                breakpoints={{
+                  // 모바일
+                  0: {
+                    slidesPerView: 2,
+                  },
+                  390: {
+                    slidesPerView: 2.2,
+                  },
+                  430: {
+                    slidesPerView: 2.5,
+                  },
+                  // PC
+                  1024: {
+                    slidesPerView: 3.5,
+                  },
+                }}
+              >
+                {topFacilities.map((facility, index) => (
+                  <SwiperSlide className={styles.facilityCard}>
+                    <Link
+                      key={`${facility.businessId}-${facility.serialNumber}`}
+                      href={`/details/${facility.businessId}/${facility.serialNumber}`}
+                    >
+                      <SportsImageComponent
+                        name={facility.items[0] as keyof typeof SPORTSIMAGES}
+                        width={152}
+                        height={110}
+                        alt={facility.items[0]}
+                        rank={index + 1}
+                      />
+                      <div className={styles.nameItems}>
+                        <p className={styles.facilityName}>{facility.name}</p>
+                        <p className={styles.facilityItems}>
+                          {facility.items[0]}
+                        </p>
+                      </div>
+                      <Chips
+                        chipState="top"
+                        text={`누적 수강 ${formatCurrency(facility.totalParticipantCount)}`}
+                      />
+                    </Link>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </div>
           </div>
           <div className={styles.midContainer} />
