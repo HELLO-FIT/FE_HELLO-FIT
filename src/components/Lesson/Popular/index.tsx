@@ -16,13 +16,18 @@ import IconComponent from '@/components/Asset/Icon';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SportsFilter from '../SportsFilter';
 import { sportsList } from '@/constants/sportsList';
-import { localCodes } from '@/constants/localCode';
+import { cityCodes, localCodes } from '@/constants/localCode';
+import Chips from '@/components/Button/Chips';
+import SportsImageComponent from '@/components/Asset/SportsImage';
+import { SPORTSIMAGES } from '@/constants/asset';
+import { formatCurrency } from '@/utils/formatCurrency';
 
 export default function Popular() {
   const [facilities, setFacilities] = useState<NomalPopular[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedLocalCode] = useRecoilState(selectedLocalCodeState);
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
+  const topFacilities = facilities.slice(0, 5);
 
   useEffect(() => {
     const fetchFacilities = async () => {
@@ -35,9 +40,7 @@ export default function Popular() {
         };
 
         const fetchedFacilities = await getNomalPopular(params);
-        setFacilities(
-          filterFacilitiesBySport(fetchedFacilities, selectedSport)
-        );
+        setFacilities(fetchedFacilities);
       } catch {
         console.error('데이터를 불러오는 데 실패했습니다.');
       } finally {
@@ -46,9 +49,9 @@ export default function Popular() {
     };
 
     fetchFacilities();
-  }, [selectedLocalCode, selectedSport]);
+  }, [selectedLocalCode]);
 
-  // 스포츠 필터링
+  // 스포츠 필터링 함수
   const filterFacilitiesBySport = (
     facilities: NomalPopular[],
     sport: string
@@ -59,16 +62,27 @@ export default function Popular() {
     );
   };
 
-  const parseLocalCode = (code: string): string => {
-    const localCode = code;
+  const filteredFacilities = filterFacilitiesBySport(facilities, selectedSport);
 
-    const localName = localCodes[localCode];
+  const parseLocalCode = (localCode: string): string => {
+    const cityCode = localCode.slice(0, 2);
 
+    const city = localCodes[cityCode];
+    if (!city) {
+      return '알 수 없는 지역';
+    }
+
+    const cityName = cityCodes[cityCode];
+    if (!city) {
+      return '알 수 없는 지역';
+    }
+
+    const localName = city[localCode];
     if (!localName) {
       return '알 수 없는 지역';
     }
 
-    return `${localName}`;
+    return `${cityName} ${localName}`;
   };
 
   return (
@@ -78,8 +92,42 @@ export default function Popular() {
       ) : (
         <>
           <div className={styles.topContainer}>
-            <h2>{parseLocalCode(selectedLocalCode)}</h2>
+            <div className={styles.titleContainer}>
+              <h2 className={styles.title}>
+                {parseLocalCode(selectedLocalCode)}
+              </h2>
+              인기 시설 TOP 5
+            </div>
+            <div className={styles.bestContainer}>
+              {topFacilities.map((facility, index) => (
+                <Link
+                  key={`${facility.businessId}-${facility.serialNumber}`}
+                  href={`/details/${facility.businessId}/${facility.serialNumber}`}
+                >
+                  <div className={styles.facilityCard}>
+                    <SportsImageComponent
+                      name={facility.items[0] as keyof typeof SPORTSIMAGES}
+                      width={152}
+                      height={110}
+                      alt={facility.items[0]}
+                      rank={index + 1}
+                    />
+                    <div className={styles.nameItems}>
+                      <p className={styles.facilityName}>{facility.name}</p>
+                      <p className={styles.facilityItems}>
+                        {facility.items[0]}
+                      </p>
+                    </div>
+                    <Chips
+                      chipState="top"
+                      text={`누적 수강 ${formatCurrency(facility.totalParticipantCount)}`}
+                    />
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
+          <div className={styles.midContainer} />
           <div className={styles.bottomContainer}>
             <div className={styles.checkboxContainer}>
               <div className={styles.filterContainer}>
@@ -89,7 +137,10 @@ export default function Popular() {
                   onChange={setSelectedSport}
                 />
                 <div className={styles.totalText}>
-                  총<p className={styles.totalTextColor}>{facilities.length}</p>
+                  총
+                  <p className={styles.totalTextColor}>
+                    {filteredFacilities.length}
+                  </p>
                   시설
                 </div>
               </div>
@@ -98,9 +149,9 @@ export default function Popular() {
                 <IconComponent name="down" size="s" alt="sort arrow" />
               </div>
             </div>
-            {facilities.length > 0 ? (
+            {filteredFacilities.length > 0 ? (
               <div className={styles.listContainer}>
-                {facilities.map(facility => (
+                {filteredFacilities.map(facility => (
                   <Link
                     key={`${facility.businessId}-${facility.serialNumber}`}
                     href={`/details/${facility.businessId}/${facility.serialNumber}`}

@@ -2,8 +2,8 @@
 
 .container {
   width: 100%;
-  min-height: calc(100vh - 121px);
-  padding: 4px 20px 20px;
+  min-height: calc(100vh - 157px);
+  padding: 0px 20px 20px;
   background-color: $white;
   display: flex;
   flex-direction: column;
@@ -12,7 +12,7 @@
 .popularBtn {
   width: 100%;
   padding: 24px 33px;
-  margin: 20px 0;
+  margin: 16px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;

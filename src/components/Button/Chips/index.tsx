@@ -13,6 +13,8 @@ export default function Chips({ chipState, text }: ChipsProps) {
         return styles.sports; // 운동 종목 칩
       case 'count':
         return styles.count; // 누적 수강 수
+      case 'top':
+        return styles.top; // 인기 TOP5의 누적 수강 수
       case 'label':
       default:
         return styles.label; // 기본 라벨 칩

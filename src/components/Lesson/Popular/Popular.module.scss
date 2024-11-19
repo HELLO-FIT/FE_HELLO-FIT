@@ -2,17 +2,74 @@
 
 .container {
   width: 100%;
-  min-height: calc(100vh - 92px);
-  background-color: $gray10;
+  min-height: calc(100vh - 157px);
+  background-color: $white;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .topContainer {
   width: 100%;
   padding: 20px 20px 32px;
-  background-color: $white;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+
+  .titleContainer {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    @include T16B;
+    color: $gray90;
+
+    .title {
+      color: $blue60;
+    }
+  }
+
+  .bestContainer {
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    padding: 8px 0;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .facilityCard {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 148px;
+
+      .nameItems {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        margin-top: 8px;
+      }
+
+      .facilityName {
+        @include T14B;
+        color: $gray90;
+        max-width: 100px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .facilityItems {
+        @include C12M;
+        color: $gray60;
+      }
+    }
+  }
+}
+
+.midContainer {
+  height: 10px;
+  background-color: $gray10;
 }
 
 .bottomContainer {
