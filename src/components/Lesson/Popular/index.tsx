@@ -82,14 +82,20 @@ export default function Popular() {
           </div>
           <div className={styles.bottomContainer}>
             <div className={styles.checkboxContainer}>
-              <SportsFilter
-                options={sportsList}
-                value={selectedSport}
-                onChange={setSelectedSport}
-              />
-              <div className={styles.totalText}>
-                총<p className={styles.totalTextColor}>{facilities.length}</p>
-                시설
+              <div className={styles.filterContainer}>
+                <SportsFilter
+                  options={sportsList}
+                  value={selectedSport}
+                  onChange={setSelectedSport}
+                />
+                <div className={styles.totalText}>
+                  총<p className={styles.totalTextColor}>{facilities.length}</p>
+                  시설
+                </div>
+              </div>
+              <div className={styles.sort}>
+                인기순
+                <IconComponent name="down" size="s" alt="sort arrow" />
               </div>
             </div>
             {facilities.length > 0 ? (
