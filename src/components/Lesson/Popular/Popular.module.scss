@@ -48,15 +48,15 @@
         gap: 4px;
         align-items: center;
         margin-top: 8px;
+        max-width: 130px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       .facilityName {
         @include T14B;
         color: $gray90;
-        max-width: 100px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
       }
 
       .facilityItems {

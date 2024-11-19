@@ -156,7 +156,9 @@ export default function Popular() {
                       <div className={styles.nameItems}>
                         <p className={styles.facilityName}>{facility.name}</p>
                         <p className={styles.facilityItems}>
-                          {facility.items[0]}
+                          {facility.items.length > 1
+                            ? `${facility.items[0]} 외`
+                            : facility.items[0]}
                         </p>
                       </div>
                       <Chips
