@@ -108,7 +108,7 @@ export default function TabNav({
         >
           전체
         </button>
-        <Tooltip text="시설을 추천해드려요!">
+        <Tooltip text="시설을 추천해드려요!" position="left">
           <button
             className={`${styles.button} ${tab === 'popular' ? styles.active : ''}`}
             onClick={() => handleTabClick('popular')}
