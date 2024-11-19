@@ -123,7 +123,10 @@ export default function Popular() {
                 }}
               >
                 {topFacilities.map((facility, index) => (
-                  <SwiperSlide className={styles.facilityCard}>
+                  <SwiperSlide
+                    className={styles.facilityCard}
+                    key={`${facility.businessId}-${facility.serialNumber}`}
+                  >
                     <Link
                       key={`${facility.businessId}-${facility.serialNumber}`}
                       href={`/details/${facility.businessId}/${facility.serialNumber}`}
