@@ -62,7 +62,7 @@ export default function CourseDetails({
       </section>
       <div className={styles.infoContainer}>
         <div>
-          <label className={styles.title}>위치</label>
+          <label className={styles.title}>시설 위치</label>
           <div className={styles.mapContainer}>
             <DetailsMap address={facility.address} radius={true} />
           </div>
