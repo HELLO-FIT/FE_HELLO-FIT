@@ -13,7 +13,6 @@ import {
 import Modal from '@/components/Modal';
 import { authState } from '@/states/authState';
 import { useEffect } from 'react';
-import TabNav from '@/components/Layout/TabNav';
 
 const queryClient = new QueryClient();
 

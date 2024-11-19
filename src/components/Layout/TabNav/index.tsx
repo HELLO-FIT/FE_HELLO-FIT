@@ -2,11 +2,7 @@ import IconComponent from '@/components/Asset/Icon';
 import styles from './TabNav.module.scss';
 import LocalFilter from '@/components/Lesson/LocalFilter';
 import { useRouter } from 'next/router';
-import {
-  getNomalPopular,
-  getNomalPopularParams,
-  NomalPopular,
-} from '@/apis/get/getPopular';
+import { getNomalPopularParams } from '@/apis/get/getPopular';
 import { cityCodes, localCodes } from '@/constants/localCode';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -19,7 +15,6 @@ import Tooltip from '@/components/Tooltip/Tooltip';
 
 export default function TabNav({ showmenu = true }: TabNavProps) {
   const router = useRouter();
-  const [facilities, setFacilities] = useState<NomalPopular[]>([]);
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
   }>({});
@@ -52,8 +47,6 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
           localCode: storedLocalCode,
         };
 
-        const fetchedFacilities = await getNomalPopular(params);
-        setFacilities(fetchedFacilities);
         setCurrentOptions(localCodes[storedLocalCode] || {});
       } catch {
         console.error('초기 데이터를 불러오는 데 실패했습니다.');
@@ -61,7 +54,7 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
     };
 
     fetchInitialData();
-  }, []);
+  }, [setSelectedCityCode, setSelectedLocalCode]);
 
   // 지역 변경 시 필터 업데이트
   useEffect(() => {

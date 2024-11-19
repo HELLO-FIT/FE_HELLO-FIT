@@ -23,12 +23,8 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 export default function Lesson() {
   const [facilities, setFacilities] = useState<NomalFacility[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectedCityCode, setSelectedCityCode] = useRecoilState(
-    selectedCityCodeState
-  );
-  const [selectedLocalCode, setSelectedLocalCode] = useRecoilState(
-    selectedLocalCodeState
-  );
+  const [selectedCityCode] = useRecoilState(selectedCityCodeState);
+  const [selectedLocalCode] = useRecoilState(selectedLocalCodeState);
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
 
   useEffect(() => {

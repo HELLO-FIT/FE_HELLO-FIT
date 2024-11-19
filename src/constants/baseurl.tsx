@@ -1,7 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
 
 const BASE_URL = axios.create({
-  baseURL: 'https://api.hellofit.site:3000',
+  baseURL: 'https://api.hellofit.site',
 });
 
 BASE_URL.interceptors.request.use(
