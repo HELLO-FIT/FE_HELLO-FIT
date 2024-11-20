@@ -2,24 +2,74 @@
 
 .container {
   width: 100%;
-  min-height: calc(100vh - 56px);
+  min-height: calc(100vh - 121px);
   padding: 0 20px;
   background-color: $gray10;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
   width: 100%;
   padding: 12px 0;
-  @include C12M;
-  color: $gray50;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  cursor: pointer;
+
+  .removeAll {
+    @include C12M;
+    color: $gray50;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+  }
+}
+
+.titleCounterWrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  .title {
+    @include T16B;
+    color: $gray90;
+  }
+
+  .counter {
+    @include T16B;
+    color: $blue60;
+  }
 }
 
 .notiWrapper {
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-grow: 1;
+
+  .textContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mainText {
+    color: $gray90;
+    @include T16B;
+  }
+
+  .subText {
+    color: $gray60;
+    @include B14R;
+  }
 }

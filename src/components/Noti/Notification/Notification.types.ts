@@ -1,11 +1,11 @@
 export interface NotificationProps {
   isRead: boolean;
   onClick: () => void;
+  onDelete: () => void;
   notification: {
-    id: number;
+    id: string;
     title: string;
     content: string;
-    time: string;
-    isRead: boolean;
+    time: Date;
   };
 }

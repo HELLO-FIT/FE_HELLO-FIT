@@ -17,9 +17,15 @@ export default function LessonPage() {
 
   return (
     <>
-      {auth.isLoggedIn && (
+      {auth.isLoggedIn ? (
         <TabNav
-          showmenu={auth.isLoggedIn}
+          showmenu={true}
+          tab={selectedTab}
+          setSelectedTab={setSelectedTab}
+        />
+      ) : (
+        <TabNav
+          showmenu={false}
           tab={selectedTab}
           setSelectedTab={setSelectedTab}
         />

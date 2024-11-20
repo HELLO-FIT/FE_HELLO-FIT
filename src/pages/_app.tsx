@@ -59,7 +59,6 @@ export default function App({ Component, pageProps }: AppProps) {
   const hideGNB = [
     '/',
     '/login',
-    '/noti',
     '/details/[businessId]/[serialNumber]',
     '/details/[businessId]/[serialNumber]/map',
     '/setting',

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
-import Notification from '@/components/Noti/Notification';
 import CustomButton from '@/components/Button/CustomButton';
 import SportButton from '@/components/Button/SportButton';
 import SportButtonList from '@/components/MapHome/SportButtonList';
@@ -96,22 +95,6 @@ export default function Preview() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Toggle Button</h2>
         <ToggleButton />
-      </section>
-
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Notification</h2>
-        <Notification
-          key={1}
-          isRead={false}
-          onClick={() => null}
-          notification={{
-            id: 1,
-            title: '삼성라이온즈 우승',
-            content: '“게시글 내용 첫줄 15글자”',
-            time: '1시간 전',
-            isRead: false,
-          }}
-        />
       </section>
 
       <section className={styles.section}>

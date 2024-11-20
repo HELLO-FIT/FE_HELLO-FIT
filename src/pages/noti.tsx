@@ -1,10 +1,10 @@
-import Subheader from '@/components/Layout/Subheader';
+import SubheaderWithLogo from '@/components/Layout/SubheaderWithLogo';
 import Noti from '@/components/Noti/Noti';
 
 export default function noti() {
   return (
     <>
-      <Subheader subheaderText="알림" />
+      <SubheaderWithLogo />
       <Noti />
     </>
   );
