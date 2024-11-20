@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Notification from './Notification';
 import styles from './Noti.module.scss';
@@ -18,7 +18,22 @@ export default function Noti() {
   const router = useRouter();
   const { openModal } = useModal();
 
+  const showLoginModal = useCallback(() => {
+    openModal({
+      content: '로그인',
+      onConfirm: () => (window.location.href = '/'),
+      onClose: () => (window.location.href = '/map'),
+    });
+  }, [openModal]);
+
   useEffect(() => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      showLoginModal();
+      return;
+    }
+
     async function fetchNotifications() {
       try {
         const data = await getNotifications();
@@ -30,7 +45,7 @@ export default function Noti() {
       }
     }
     fetchNotifications();
-  }, []);
+  }, [showLoginModal]);
 
   // 읽음 처리
   const markAsRead = async (id: string) => {
