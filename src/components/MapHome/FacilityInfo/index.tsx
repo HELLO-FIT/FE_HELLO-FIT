@@ -73,18 +73,25 @@ export default function FacilityInfo({
         <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
       </div>
       <div className={styles.content}>
+  
         <div className={styles.header}>
-          <div className={styles.backIconWrapper} onClick={onBackClick}>
-            <IconComponent name="closeCircle" size="m" alt="Back to PopularSports" />
-          </div>
           <h1>{facility.name}</h1>
-          <div
-            className={styles.rightIconWrapper}
-            onClick={onMoveToDetail}
-          >
-            <IconComponent name="rightBold" size="m" alt="Move to Facility Detail" />
+          <div className={styles.rightIconWrapper} onClick={onMoveToDetail}>
+            <IconComponent
+              name="rightBold"
+              size="m"
+              alt="Move to Facility Detail"
+            />
+          </div>
+          <div className={styles.closeIconWrapper} onClick={onBackClick}>
+            <IconComponent
+              name="closeCircle"
+              size="m"
+              alt="Back to PopularSports"
+            />
           </div>
         </div>
+
         <div className={styles.chipsContainer}>
           <Chips chipState="sports" text={facility.items[0]} />
         </div>
