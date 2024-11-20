@@ -78,34 +78,34 @@
     padding: 0;
     cursor: grab;
   }
+}
 
-  .optionList {
-    max-height: 300px;
-    overflow-y: auto;
-    margin: 24px 0;
+.optionList {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .option {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+    @include B14M;
+    color: $gray70;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
 
-    .option {
-      padding-bottom: 12px;
-      border-bottom: 1px solid #f1f1f1;
-      cursor: pointer;
-      @include B14M;
-      color: $gray70;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-right: 10px;
-
-      &:hover {
-        color: $blue50;
-      }
+    &:hover {
+      color: $blue50;
     }
+  }
 
-    .selected {
-      color: $blue60;
-    }
+  .selected {
+    color: $blue60;
   }
 }
 
@@ -127,6 +127,53 @@
   background: $blue60;
 }
 
+.optionListSP {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .option {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+    @include B14M;
+    color: $gray70;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
+
+    &:hover {
+      color: $green60;
+    }
+  }
+
+  .selected {
+    color: $green80;
+  }
+}
+
+.optionListSP::-webkit-scrollbar {
+  width: 6px;
+}
+
+.optionListSP::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.optionListSP::-webkit-scrollbar-thumb {
+  background: $green70;
+  border-radius: 10px;
+}
+
+.optionListSP::-webkit-scrollbar-thumb:hover {
+  background: $green80;
+}
+
 .actionButton {
   width: 100%;
   height: 52px;
@@ -142,6 +189,11 @@
 
 .enabled {
   background-color: $blue60;
+  cursor: pointer;
+}
+
+.enabledSP {
+  background-color: $green60;
   cursor: pointer;
 }
 

@@ -1,6 +1,8 @@
 import styles from './CourseCard.module.scss';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { CourseCardProps } from './CourseCard.types';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 
 export default function CourseCard({
   courseName,
@@ -11,11 +13,19 @@ export default function CourseCard({
   price,
   isSpecial = false,
 }: CourseCardProps) {
+  const toggle = useRecoilValue(toggleState);
+
   return (
     <section className={styles.box}>
       <p className={styles.labelValue}>
         <span className={styles.label}>강좌명</span>
-        <span className={styles.highlight}>{courseName}</span>
+        <span
+          className={
+            toggle === 'general' ? styles.highlight : styles.highlightSP
+          }
+        >
+          {courseName}
+        </span>
       </p>
       <p className={styles.labelValue}>
         <span className={styles.label}>강사</span>

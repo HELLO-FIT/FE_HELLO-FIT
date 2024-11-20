@@ -2,8 +2,11 @@ import styles from './Schedule.module.scss';
 import IconComponent from '../Asset/Icon';
 import { ScheduleProps } from './Schedule.types';
 import Chips from '../Button/Chips';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 
 export default function Schedule({ facility, isPopular }: ScheduleProps) {
+  const toggle = useRecoilValue(toggleState);
   const currentMonth = new Date().getMonth() + 1;
 
   return (
@@ -11,7 +14,11 @@ export default function Schedule({ facility, isPopular }: ScheduleProps) {
       <div>
         <h2 className={styles.storeName}>{facility.name}</h2>
         <div className={styles.information}>
-          <p className={styles.location}>
+          <p
+            className={
+              toggle === 'general' ? styles.location : styles.locationSP
+            }
+          >
             {facility.cityName} {facility.localName}
           </p>
           <IconComponent name="scheduleEllipse" width={2} height={2} />

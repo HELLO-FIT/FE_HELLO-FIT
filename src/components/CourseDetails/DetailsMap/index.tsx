@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { DetailsMapProps, GeocoderResult } from './DetailsMap.types';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 
 export default function DetailsMap({
   address,
@@ -7,6 +9,7 @@ export default function DetailsMap({
 }: DetailsMapProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
+  const toggle = useRecoilValue(toggleState);
 
   useEffect(() => {
     const mapScript = document.createElement('script');
@@ -36,7 +39,10 @@ export default function DetailsMap({
                 result[0].x
               );
 
-              const imageSrc = '/image/address-marker-normal.svg';
+              const imageSrc =
+                toggle === 'general'
+                  ? '/image/address-marker-normal.svg'
+                  : '/image/address-marker-special.svg';
               const imageSize = new window.kakao.maps.Size(40, 40);
               const imageOption = {
                 offset: new window.kakao.maps.Point(20, 40),
@@ -71,7 +77,10 @@ export default function DetailsMap({
                 position.coords.longitude
               );
 
-              const imageSrc = '/image/my-location.svg'; // 사용자 현재 위치 마커 이미지
+              const imageSrc =
+                toggle === 'general'
+                  ? '/image/my-location.svg'
+                  : '/image/my-location-special.svg';
               const imageSize = new window.kakao.maps.Size(40, 40);
               const imageOption = {
                 offset: new window.kakao.maps.Point(20, 40),

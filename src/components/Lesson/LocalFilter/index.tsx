@@ -3,6 +3,9 @@ import styles from './LocalFilter.module.scss';
 import { LocalFilterProps } from './LocalFilter.types';
 import IconComponent from '@/components/Asset/Icon';
 import useOutsideClick from '@/hooks/useOutsideClick';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
+import classNames from 'classnames';
 
 export default function LocalFilter({
   options,
@@ -17,6 +20,7 @@ export default function LocalFilter({
 }: LocalFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
+  const toggle = useRecoilValue(toggleState);
 
   useOutsideClick(filterRef, () => setIsOpen(false));
 
@@ -64,7 +68,11 @@ export default function LocalFilter({
               />
             </div>
             <h2 className={styles.title}>{title}</h2>
-            <div className={styles.optionList}>
+            <div
+              className={
+                toggle === 'general' ? styles.optionList : styles.optionListSP
+              }
+            >
               {Object.entries(options).map(([key, label]) => (
                 <div
                   key={key}
@@ -75,16 +83,22 @@ export default function LocalFilter({
                 >
                   {label}
                   {value === key && (
-                    <IconComponent name="check" size="m" alt="selected check" />
+                    <IconComponent
+                      name={toggle === 'general' ? 'check' : 'checkSP'}
+                      size="m"
+                      alt="selected check"
+                    />
                   )}
                 </div>
               ))}
             </div>
             {!isNextStep && (
               <button
-                className={`${styles.actionButton} ${
-                  value ? styles.enabled : styles.disabled
-                }`}
+                className={classNames(styles.actionButton, {
+                  [styles.enabled]: toggle === 'general' && value,
+                  [styles.enabledSP]: toggle !== 'general' && value,
+                  [styles.disabled]: !value,
+                })}
                 disabled={!value}
                 onClick={onNextClick}
               >
@@ -93,9 +107,11 @@ export default function LocalFilter({
             )}
             {isNextStep && (
               <button
-                className={`${styles.actionButton} ${
-                  value ? styles.enabled : styles.disabled
-                }`}
+                className={classNames(styles.actionButton, {
+                  [styles.enabledSP]: toggle === 'general' && value,
+                  [styles.enabledSP]: toggle !== 'general' && value,
+                  [styles.disabled]: !value,
+                })}
                 disabled={!value}
                 onClick={handleCompleteClick}
               >

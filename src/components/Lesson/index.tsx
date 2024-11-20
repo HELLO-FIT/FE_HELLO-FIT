@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   NomalFacility,
   getNomalFacilities,
@@ -19,6 +19,8 @@ import ImageComponent from '../Asset/Image';
 import { sportsList } from '@/constants/sportsList';
 import IconComponent from '../Asset/Icon';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { toggleState } from '@/states/toggleState';
+import classNames from 'classnames';
 
 interface LessonProps {
   onPopularClick: () => void;
@@ -30,6 +32,7 @@ export default function Lesson({ onPopularClick }: LessonProps) {
   const [selectedCityCode] = useRecoilState(selectedCityCodeState);
   const [selectedLocalCode] = useRecoilState(selectedLocalCodeState);
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
+  const toggle = useRecoilValue(toggleState);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,7 +75,13 @@ export default function Lesson({ onPopularClick }: LessonProps) {
         <LoadingSpinner />
       ) : (
         <>
-          <div className={styles.popularBtn} onClick={onPopularClick}>
+          <div
+            className={classNames({
+              [styles.popularBtn]: toggle === 'general',
+              [styles.popularBtnSP]: toggle !== 'general',
+            })}
+            onClick={onPopularClick}
+          >
             <div className={styles.titleContainer}>
               <p className={styles.buttonSubtitle}>시설 고르기가 어렵다면?</p>
               <div className={styles.buttonTitle}>
@@ -95,7 +104,17 @@ export default function Lesson({ onPopularClick }: LessonProps) {
               onChange={setSelectedSport}
             />
             <div className={styles.totalText}>
-              총<p className={styles.totalTextColor}>{facilities.length}</p>시설
+              총
+              <p
+                className={
+                  toggle === 'general'
+                    ? styles.totalTextColor
+                    : styles.totalTextColorSP
+                }
+              >
+                {facilities.length}
+              </p>
+              시설
             </div>
           </div>
           {facilities.length > 0 ? (

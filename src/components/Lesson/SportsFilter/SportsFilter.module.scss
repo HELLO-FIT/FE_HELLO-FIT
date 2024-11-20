@@ -35,10 +35,36 @@
   }
 }
 
+.selectedValueSP {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid $gray20;
+  background-color: $white;
+  color: $gray60;
+  @include B14M;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    border: 1px solid $green30;
+  }
+}
+
 .selectedDropdown {
   border: 1px solid $blue20;
   background-color: $blue5;
   color: $blue60;
+}
+
+.selectedDropdownSP {
+  border: 1px solid $green30;
+  background-color: $green5;
+  color: $green80;
 }
 
 .bottomSheet {
@@ -68,34 +94,34 @@
     padding: 0;
     cursor: grab;
   }
+}
 
-  .optionList {
-    max-height: 300px;
-    overflow-y: auto;
-    margin: 24px 0;
+.optionList {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .option {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+    @include B14M;
+    color: $gray70;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
 
-    .option {
-      padding-bottom: 12px;
-      border-bottom: 1px solid #f1f1f1;
-      cursor: pointer;
-      @include B14M;
-      color: $gray70;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-right: 10px;
-
-      &:hover {
-        color: $blue50;
-      }
+    &:hover {
+      color: $blue50;
     }
+  }
 
-    .selected {
-      color: $blue60;
-    }
+  .selected {
+    color: $blue60;
   }
 }
 
@@ -115,6 +141,53 @@
 
 .optionList::-webkit-scrollbar-thumb:hover {
   background: $blue60;
+}
+
+.optionListSP {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .option {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+    @include B14M;
+    color: $gray70;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
+
+    &:hover {
+      color: $green60;
+    }
+  }
+
+  .selected {
+    color: $green80;
+  }
+}
+
+.optionListSP::-webkit-scrollbar {
+  width: 6px;
+}
+
+.optionListSP::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.optionListSP::-webkit-scrollbar-thumb {
+  background: $green70;
+  border-radius: 10px;
+}
+
+.optionListSP::-webkit-scrollbar-thumb:hover {
+  background: $green80;
 }
 
 @keyframes slideUp {

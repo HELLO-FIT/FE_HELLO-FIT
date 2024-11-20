@@ -3,6 +3,9 @@ import styles from './SportsFilter.module.scss';
 import { SportsFilterProps } from './SportsFilter.types';
 import IconComponent from '@/components/Asset/Icon';
 import useOutsideClick from '@/hooks/useOutsideClick';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
+import classNames from 'classnames';
 
 export default function SportsFilter({
   options,
@@ -11,6 +14,7 @@ export default function SportsFilter({
 }: SportsFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
+  const toggle = useRecoilValue(toggleState);
 
   useOutsideClick(filterRef, () => setIsOpen(false));
 
@@ -26,7 +30,12 @@ export default function SportsFilter({
   return (
     <div className={styles.container}>
       <div
-        className={`${styles.selectedValue} ${value ? styles.selectedDropdown : ''}`}
+        className={classNames({
+          [styles.selectedValue]: toggle === 'general',
+          [styles.selectedValueSP]: toggle !== 'general',
+          [styles.selectedDropdown]: value && toggle === 'general',
+          [styles.selectedDropdownSP]: value && toggle !== 'general',
+        })}
         onClick={() => setIsOpen(!isOpen)}
       >
         {value || '종목 선택'}
@@ -48,18 +57,26 @@ export default function SportsFilter({
               />
             </div>
             <h2 className={styles.title}>스포츠 종목 선택</h2>
-            <div className={styles.optionList}>
+            <div
+              className={
+                toggle === 'general' ? styles.optionList : styles.optionListSP
+              }
+            >
               {options.map(option => (
                 <div
                   key={option}
-                  className={`${styles.option} ${
-                    value === option ? styles.selected : ''
-                  }`}
+                  className={classNames(styles.option, {
+                    [styles.selected]: value === option,
+                  })}
                   onClick={() => handleOptionClick(option)}
                 >
                   {option}
                   {value === option && (
-                    <IconComponent name="check" size="m" alt="selected check" />
+                    <IconComponent
+                      name={toggle === 'general' ? 'check' : 'checkSP'}
+                      size="m"
+                      alt="selected check"
+                    />
                   )}
                 </div>
               ))}

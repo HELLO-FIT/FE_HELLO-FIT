@@ -17,6 +17,14 @@
   background-color: $blue5;
 }
 
+.checkedSP {
+  padding: 7px 12px;
+  @include B14M;
+  color: $green80;
+  border: 1px solid $green30;
+  background-color: $green5;
+}
+
 .unchecked {
   padding: 7px 12px;
   @include B14M;
@@ -27,7 +35,7 @@
 
 .label {
   padding: 6px 10px;
-  color: $blue60;
+  color: $gray90;
   background-color: $white;
   @include C12M;
 }
@@ -37,6 +45,14 @@
   border-radius: 8px;
   color: $blue60;
   background-color: $blue10;
+  @include B14M;
+}
+
+.sportsSP {
+  padding: 0px 8px;
+  border-radius: 8px;
+  color: $green80;
+  background-color: $green10;
   @include B14M;
 }
 
@@ -58,4 +74,14 @@
   background-color: $blue5;
   @include C10B;
   color: $blue60;
+}
+
+.topSP {
+  display: flex;
+  padding: 3px 6px;
+  align-items: center;
+  border-radius: 4px;
+  background-color: $green10;
+  @include C10B;
+  color: $green80;
 }

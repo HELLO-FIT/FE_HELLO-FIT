@@ -12,6 +12,8 @@ import DetailsMap from './DetailsMap';
 import CourseCard from './CourseCard';
 import InfoCard from './InfoCard';
 import LoadingSpinner from '../LoadingSpinner';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 
 export default function CourseDetails({
   businessId,
@@ -19,6 +21,7 @@ export default function CourseDetails({
 }: CourseDetailsProps) {
   const [facility, setFacility] = useState<NomalFacilityDetails | null>(null);
   const router = useRouter();
+  const toggle = useRecoilValue(toggleState);
 
   useEffect(() => {
     if (businessId) {
@@ -68,7 +71,13 @@ export default function CourseDetails({
           </div>
           <div className={styles.addressWrapper} onClick={handleMapClick}>
             <div className={styles.address}>
-              <IconComponent name="addressMarker" width={16} height={16} />
+              <IconComponent
+                name={
+                  toggle === 'general' ? 'addressMarker' : 'addressMarkerSP'
+                }
+                width={16}
+                height={16}
+              />
               {facility.address}
             </div>
             <div className={styles.rightIcon}>

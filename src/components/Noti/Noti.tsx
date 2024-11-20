@@ -11,11 +11,14 @@ import { deleteNotifications } from '@/apis/delete/deleteNotifications';
 import LoadingSpinner from '../LoadingSpinner';
 import { useModal } from '@/utils/modalUtils';
 import IconComponent from '../Asset/Icon';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 
 export default function Noti() {
   const [notifications, setNotifications] = useState<NotificationsItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+  const toggle = useRecoilValue(toggleState);
   const { openModal } = useModal();
 
   const showLoginModal = useCallback(() => {
@@ -131,7 +134,13 @@ export default function Noti() {
           <header className={styles.header}>
             <div className={styles.titleCounterWrapper}>
               <h2 className={styles.title}>알림</h2>
-              <p className={styles.counter}>{notifications.length}</p>
+              <p
+                className={
+                  toggle === 'general' ? styles.counter : styles.counterSP
+                }
+              >
+                {notifications.length}
+              </p>
             </div>
             <button onClick={showModal} className={styles.removeAll}>
               모두 지우기

@@ -6,6 +6,7 @@ import { toggleState } from '@/states/toggleState';
 import styles from './GNB.module.scss';
 import { ICONS } from '@/constants/asset';
 import IconComponent from '@/components/Asset/Icon';
+import classNames from 'classnames';
 
 export default function GNB() {
   const router = useRouter();
@@ -84,7 +85,12 @@ export default function GNB() {
                 width={24}
                 height={24}
               />
-              <p className={`${isActive ? labelColor : styles.label}`}>
+              <p
+                className={classNames({
+                  [styles.label]: !isActive,
+                  [labelColor]: isActive,
+                })}
+              >
                 {item.label}
               </p>
             </div>
