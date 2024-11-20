@@ -3,9 +3,13 @@ import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import { getNomalFacilities, NomalFacility } from '@/apis/get/getFacilities';
-import { getNomalFacilityDetails, NomalFacilityDetails } from '@/apis/get/getFacilityDetails';
+import {
+  getNomalFacilityDetails,
+  NomalFacilityDetails,
+} from '@/apis/get/getFacilityDetails';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
+import classNames from 'classnames';
 import styles from './map.module.scss';
 
 /* eslint-disable */
@@ -72,7 +76,6 @@ export default function Map() {
           if (shortLocalCode.length === 5) {
             // 1의 자리를 0으로 변경
             shortLocalCode = `${shortLocalCode.slice(0, 4)}0`;
-
             setLocalCode(shortLocalCode);
             localStorage.setItem('localCode', shortLocalCode);
           } else {
@@ -155,18 +158,6 @@ export default function Map() {
 
     const markers: any[] = [];
 
-    const defaultMarkerImage = new window.kakao.maps.MarkerImage(
-      '/image/marker.svg',
-      new window.kakao.maps.Size(28, 28),
-      { offset: new window.kakao.maps.Point(20, 40) }
-    );
-
-    const selectedMarkerImage = new window.kakao.maps.MarkerImage(
-      '/image/address-marker-normal.svg',
-      new window.kakao.maps.Size(28, 28),
-      { offset: new window.kakao.maps.Point(20, 40) }
-    );
-
     facilities.forEach(facility => {
       const geocoder = new window.kakao.maps.services.Geocoder();
       geocoder.addressSearch(
@@ -178,10 +169,27 @@ export default function Map() {
               parseFloat(result[0].x)
             );
 
+            const defaultMarkerImage = new window.kakao.maps.MarkerImage(
+              toggle === 'special'
+                ? '/image/marker-special.svg'
+                : '/image/marker.svg',
+              new window.kakao.maps.Size(28, 28),
+              { offset: new window.kakao.maps.Point(14, 14) }
+            );
+
+            const selectedMarkerImage = new window.kakao.maps.MarkerImage(
+              toggle === 'special'
+                ? '/image/address-marker-special.svg'
+                : '/image/address-marker-normal.svg',
+              new window.kakao.maps.Size(28, 28),
+              { offset: new window.kakao.maps.Point(14, 14) }
+            );
+
             const marker = new window.kakao.maps.Marker({
               map: map,
               position: coords,
               image: defaultMarkerImage,
+              title: facility.name,
             });
             markers.push(marker);
 
@@ -214,7 +222,7 @@ export default function Map() {
     return () => {
       markers.forEach(marker => marker.setMap(null));
     };
-  }, [map, facilities]);
+  }, [map, facilities, toggle]);
 
   const moveToUserLocation = () => {
     if (map && userLocation) {
@@ -239,10 +247,7 @@ export default function Map() {
         style={{ width: '100%', height: '100vh', position: 'relative' }}
       ></div>
       {indicatorMode === 'sports' ? (
-        <PopularSports
-          onSelectSport={fetchFacilitiesBySport}
-          mode={toggle} 
-        />
+        <PopularSports onSelectSport={fetchFacilitiesBySport} mode={toggle} />
       ) : (
         selectedFacility && (
           <FacilityInfo
