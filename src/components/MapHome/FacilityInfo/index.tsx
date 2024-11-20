@@ -8,11 +8,13 @@ import styles from './FacilityInfo.module.scss';
 interface FacilityInfoProps {
   facility: NomalFacilityDetails | null;
   onBackClick: () => void;
+  onMoveToDetail: () => void;
 }
 
 export default function FacilityInfo({
   facility,
   onBackClick,
+  onMoveToDetail,
 }: FacilityInfoProps) {
   const initialPosition = -50;
   const maxDragDistance = 150;
@@ -71,12 +73,17 @@ export default function FacilityInfo({
         <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
       </div>
       <div className={styles.content}>
-        {/* h1과 backIconWrapper를 함께 감싼 header div 생성 */}
         <div className={styles.header}>
           <div className={styles.backIconWrapper} onClick={onBackClick}>
-            <IconComponent name="left" size="l" alt="Back to PopularSports" />
+            <IconComponent name="closeCircle" size="m" alt="Back to PopularSports" />
           </div>
           <h1>{facility.name}</h1>
+          <div
+            className={styles.rightIconWrapper}
+            onClick={onMoveToDetail}
+          >
+            <IconComponent name="rightBold" size="m" alt="Move to Facility Detail" />
+          </div>
         </div>
         <div className={styles.chipsContainer}>
           <Chips chipState="sports" text={facility.items[0]} />

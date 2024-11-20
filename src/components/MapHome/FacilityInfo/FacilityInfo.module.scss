@@ -26,10 +26,10 @@
   .header {
     display: flex;
     align-items: center;
+    justify-content: space-between; 
     margin-bottom: 12px;
 
     .backIconWrapper {
-      margin-right: 8px;
       cursor: pointer;
     }
 
@@ -37,6 +37,10 @@
       @include B20R;
       @include BOLD;
       color: $gray90;
+    }
+
+    .rightIconWrapper {
+      cursor: pointer;
     }
   }
 

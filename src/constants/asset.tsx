@@ -97,6 +97,9 @@ export const ICONS = {
     m: '/icon/m/icon-right.svg',
     s: '/icon/s/icon-right.svg',
   },
+  rightBold: {
+    m: '/icon/m/icon-right-bold.svg',
+  },
   search: {
     l: '/icon/l/icon-search.svg',
     m: '/icon/m/icon-search.svg',
@@ -153,6 +156,7 @@ export const ICONS = {
   marker: '/icon/custom/marker.svg',
   addressMarker: '/icon/custom/address-marker.svg',
   noResult: '/icon/custom/icon-no-result.svg',
+  closeCircle: '/icon/custom/icon-close-circle.svg',
 };
 
 export const IMAGES = {

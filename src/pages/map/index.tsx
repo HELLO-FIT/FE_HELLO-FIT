@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
 import classNames from 'classnames';
 import styles from './map.module.scss';
+import { useRouter } from 'next/router';
 
 /* eslint-disable */
 declare global {
@@ -38,6 +39,7 @@ export default function Map() {
   const [localCode, setLocalCode] = useState<string | null>(null);
 
   const toggle = useRecoilValue(toggleState);
+  const router = useRouter();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -252,7 +254,14 @@ export default function Map() {
         selectedFacility && (
           <FacilityInfo
             facility={selectedFacility}
-            onBackClick={handleBackClick}
+            onBackClick={() => setIndicatorMode('sports')} 
+            onMoveToDetail={() => {
+              if (selectedFacility) {
+                router.push(
+                  `/details/${selectedFacility.businessId}/${selectedFacility.serialNumber}`
+                );
+              }
+            }}
           />
         )
       )}
