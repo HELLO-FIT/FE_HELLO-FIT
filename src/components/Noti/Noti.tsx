@@ -45,10 +45,10 @@ export default function Noti() {
           )
         );
       } else {
-        alert(response.message);
+        console.log(response.message);
       }
     } catch (error) {
-      alert('읽음 처리 중 오류가 발생했습니다.');
+      console.error('읽음 처리 중 오류가 발생했습니다.', error);
     }
   };
 
@@ -61,10 +61,10 @@ export default function Noti() {
           prevNotifications.filter(notification => notification.id !== id)
         );
       } else {
-        alert(response.message);
+        console.log(response.message);
       }
     } catch (error) {
-      alert('삭제 처리 중 오류가 발생했습니다.');
+      console.error('삭제 처리 중 오류가 발생했습니다.', error);
     }
   };
 
@@ -78,10 +78,10 @@ export default function Noti() {
       if (responses.every(res => res.success)) {
         setNotifications([]);
       } else {
-        alert('일부 알림 삭제에 실패했습니다.');
+        console.log('일부 알림 삭제에 실패했습니다.');
       }
     } catch (error) {
-      alert('모두 삭제 처리 중 오류가 발생했습니다.');
+      console.error('모두 삭제 처리 중 오류가 발생했습니다.', error);
     }
   };
 
