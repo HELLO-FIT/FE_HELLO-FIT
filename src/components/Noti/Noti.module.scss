@@ -13,7 +13,7 @@
   width: 100%;
   padding: 12px 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 
   .removeAll {
@@ -23,6 +23,22 @@
     background: none;
     border: none;
     outline: none;
+  }
+}
+
+.titleCounterWrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  .title {
+    @include T16B;
+    color: $gray90;
+  }
+
+  .counter {
+    @include T16B;
+    color: $blue60;
   }
 }
 

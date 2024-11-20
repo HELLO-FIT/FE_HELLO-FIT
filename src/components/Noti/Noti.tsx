@@ -111,13 +111,17 @@ export default function Noti() {
 
   return (
     <div className={styles.container}>
-      {unreadNotifications.length > 0 || readNotifications.length > 0 ? (
+      {notifications.length > 0 ? (
         <>
-          <div className={styles.header}>
+          <header className={styles.header}>
+            <div className={styles.titleCounterWrapper}>
+              <h2 className={styles.title}>알림</h2>
+              <p className={styles.counter}>{notifications.length}</p>
+            </div>
             <button onClick={showModal} className={styles.removeAll}>
               모두 지우기
             </button>
-          </div>
+          </header>
           <div className={styles.notiWrapper}>
             {unreadNotifications.map(notification => (
               <Notification

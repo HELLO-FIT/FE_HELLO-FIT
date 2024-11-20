@@ -23,11 +23,12 @@ export default function SubheaderWithLogo({
       <div className={styles.btnContainer} onClick={handleLogoClick}>
         <IconComponent name="logoBlue" width={60} height={34} />
       </div>
-      {showMenu && (
-        <div className={styles.btnContainer} onClick={handleMenuClick}>
-          <IconComponent name="menu" size="l" />
-        </div>
-      )}
+      <div
+        className={`${styles.btnContainer} ${showMenu ? styles.show : ''}`}
+        onClick={handleMenuClick}
+      >
+        {showMenu && <IconComponent name="menu" size="l" />}
+      </div>
     </header>
   );
 }
