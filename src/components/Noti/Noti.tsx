@@ -1,65 +1,179 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Notification from './Notification';
 import styles from './Noti.module.scss';
-import { NotificationData } from './Noti.types';
-
-const data: NotificationData[] = [
-  {
-    id: 1,
-    title: '어쩌고저쩌고저쩌고',
-    content: '“게시글 내용 첫줄 15글자”',
-    time: '28분 전',
-    isRead: false,
-  },
-  {
-    id: 2,
-    title: '조혜진 짱',
-    content: '“게시글 내용 첫줄 15글자”',
-    time: '28분 전',
-    isRead: false,
-  },
-  {
-    id: 3,
-    title: '삼성라이온즈 우승',
-    content: '“게시글 내용 첫줄 15글자”',
-    time: '1시간 전',
-    isRead: true,
-  },
-  {
-    id: 4,
-    title: '알림 4',
-    content: '“게시글 내용 첫줄 15글자”',
-    time: '1시간 전',
-    isRead: true,
-  },
-];
+import { putNotifications } from '@/apis/put/putNotifications';
+import {
+  getNotifications,
+  NotificationsItem,
+} from '@/apis/get/getNotifications';
+import { deleteNotifications } from '@/apis/delete/deleteNotifications';
+import LoadingSpinner from '../LoadingSpinner';
+import { useModal } from '@/utils/modalUtils';
+import IconComponent from '../Asset/Icon';
 
 export default function Noti() {
-  const [notifications, setNotifications] = useState<NotificationData[]>(data);
+  const [notifications, setNotifications] = useState<NotificationsItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
+  const { openModal } = useModal();
 
-  const markAsRead = (id: number) => {
-    setNotifications(prevNotifications =>
-      prevNotifications.map(notification =>
-        notification.id === id
-          ? { ...notification, isRead: true }
-          : notification
-      )
-    );
+  useEffect(() => {
+    async function fetchNotifications() {
+      try {
+        const data = await getNotifications();
+        setNotifications(data);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchNotifications();
+  }, []);
+
+  // 읽음 처리
+  const markAsRead = async (id: string) => {
+    try {
+      const response = await putNotifications(id);
+      if (response.success) {
+        setNotifications(prevNotifications =>
+          prevNotifications.map(notification =>
+            notification.id === id
+              ? { ...notification, isViewed: true }
+              : notification
+          )
+        );
+      } else {
+        alert(response.message);
+      }
+    } catch (error) {
+      alert('읽음 처리 중 오류가 발생했습니다.');
+    }
   };
+
+  // 삭제 처리
+  const removeNotification = async (id: string) => {
+    try {
+      const response = await deleteNotifications(id);
+      if (response.success) {
+        setNotifications(prevNotifications =>
+          prevNotifications.filter(notification => notification.id !== id)
+        );
+      } else {
+        alert(response.message);
+      }
+    } catch (error) {
+      alert('삭제 처리 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 모두 삭제 처리
+  const removeAllNotifications = async () => {
+    try {
+      const deletePromises = notifications.map(notification =>
+        deleteNotifications(notification.id)
+      );
+      const responses = await Promise.all(deletePromises);
+      if (responses.every(res => res.success)) {
+        setNotifications([]);
+      } else {
+        alert('일부 알림 삭제에 실패했습니다.');
+      }
+    } catch (error) {
+      alert('모두 삭제 처리 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 알림 클릭
+  const handleNotificationClick = (
+    businessId: string,
+    serialNumber?: string
+  ) => {
+    const targetUrl = `/details/${businessId}/${serialNumber || ''}`;
+    router.push(targetUrl);
+  };
+
+  // 읽은 알림 아래로 정렬하기 위해 분류
+  const unreadNotifications = notifications.filter(noti => !noti.isViewed);
+  const readNotifications = notifications.filter(noti => noti.isViewed);
+
+  const showModal = () => {
+    openModal({
+      content: '모든 알림을 삭제',
+      onConfirm: removeAllNotifications,
+    });
+  };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>모두 지우기</div>
-      <div className={styles.notiWrapper}>
-        {notifications.map(notification => (
-          <Notification
-            key={notification.id}
-            isRead={notification.isRead}
-            onClick={() => markAsRead(notification.id)}
-            notification={notification}
+      {unreadNotifications.length > 0 || readNotifications.length > 0 ? (
+        <>
+          <div className={styles.header}>
+            <button onClick={showModal} className={styles.removeAll}>
+              모두 지우기
+            </button>
+          </div>
+          <div className={styles.notiWrapper}>
+            {unreadNotifications.map(notification => (
+              <Notification
+                key={notification.id}
+                isRead={notification.isViewed}
+                onClick={() => {
+                  markAsRead(notification.id);
+                  handleNotificationClick(
+                    notification.businessId,
+                    notification.serialNumber
+                  );
+                }}
+                onDelete={() => removeNotification(notification.id)}
+                notification={{
+                  id: notification.id,
+                  title: notification.facilityName,
+                  content: notification.courseNames.join(' | '),
+                  time: notification.createdAt,
+                }}
+              />
+            ))}
+            {readNotifications.map(notification => (
+              <Notification
+                key={notification.id}
+                isRead={notification.isViewed}
+                onClick={() =>
+                  handleNotificationClick(
+                    notification.businessId,
+                    notification.serialNumber
+                  )
+                }
+                onDelete={() => removeNotification(notification.id)}
+                notification={{
+                  id: notification.id,
+                  title: notification.facilityName,
+                  content: notification.courseNames.join(' | '),
+                  time: notification.createdAt,
+                }}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className={styles.resultContainer}>
+          <IconComponent
+            name="emptyNoti"
+            width={48}
+            height={48}
+            alt="알림 없음"
           />
-        ))}
-      </div>
+          <div className={styles.textContainer}>
+            <p className={styles.mainText}>현재 알림 내역이 없어요.</p>
+            <p className={styles.subText}>관련 소식을 빠르게 들고올게요.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

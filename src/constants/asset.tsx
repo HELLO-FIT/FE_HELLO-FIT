@@ -153,6 +153,7 @@ export const ICONS = {
   marker: '/icon/custom/marker.svg',
   addressMarker: '/icon/custom/address-marker.svg',
   noResult: '/icon/custom/icon-no-result.svg',
+  emptyNoti: '/icon/custom/icon-empty-noti.svg',
 };
 
 export const IMAGES = {
