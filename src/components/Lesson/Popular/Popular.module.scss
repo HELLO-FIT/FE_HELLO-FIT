@@ -48,15 +48,15 @@
         gap: 4px;
         align-items: center;
         margin-top: 8px;
+        max-width: 130px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       .facilityName {
         @include T14B;
         color: $gray90;
-        max-width: 100px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
       }
 
       .facilityItems {
@@ -111,6 +111,22 @@
   align-items: center;
   gap: 2px;
   cursor: pointer;
+}
+
+.dropdown {
+  cursor: pointer;
+  position: absolute;
+  margin-right: 20px;
+  right: 0;
+  margin-top: 10px;
+  padding: 10px 15px;
+  background-color: $white;
+  border-radius: 5px;
+  border: 1px solid $gray40;
+
+  &:hover {
+    background-color: $gray20;
+  }
 }
 
 .listContainer {

@@ -8,16 +8,17 @@ export default function ButtonContainer({
   businessId,
   serialNumber,
 }: LikeButtonProps) {
+  const handleRedirect = () => {
+    window.open('https://svoucher.kspo.or.kr/main.do', '_blank');
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.likeButton}>
         <LikeButton businessId={businessId} serialNumber={serialNumber} />
       </div>
       <div className={styles.customButton}>
-        <CustomButton
-          label="신청하러 가기"
-          onClick={() => alert('신청이 완료되었습니다!')}
-        />
+        <CustomButton label="신청하러 가기" onClick={handleRedirect} />
       </div>
     </div>
   );

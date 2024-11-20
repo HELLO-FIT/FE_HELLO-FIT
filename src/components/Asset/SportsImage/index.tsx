@@ -17,13 +17,17 @@ export default function SportsImageComponent({
   height = 110,
   rank,
 }: ImageComponentProps) {
-  const imageSrc = SPORTSIMAGES[name] || SPORTSIMAGES['기타종목'];
+  const categoryImages = SPORTSIMAGES[name] || SPORTSIMAGES['기타종목'];
+
+  const randomImage =
+    categoryImages[Math.floor(Math.random() * categoryImages.length)];
+
   const badgeSrc = IMAGES[`badge${rank}` as keyof typeof IMAGES];
 
   return (
     <div style={{ position: 'relative', width, height }}>
       <Image
-        src={imageSrc}
+        src={randomImage}
         alt={alt}
         width={width}
         height={height}

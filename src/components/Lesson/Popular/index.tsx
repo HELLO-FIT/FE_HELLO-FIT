@@ -4,7 +4,7 @@ import {
   NomalPopular,
 } from '@/apis/get/getPopular';
 import styles from './Popular.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   selectedLocalCodeState,
@@ -23,12 +23,16 @@ import { SPORTSIMAGES } from '@/constants/asset';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import useOutsideClick from '@/hooks/useOutsideClick';
 
 export default function Popular() {
   const [facilities, setFacilities] = useState<NomalPopular[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedLocalCode] = useRecoilState(selectedLocalCodeState);
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedSort, setSelectedSort] = useState('인기순');
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const topFacilities = facilities.slice(0, 5);
 
   useEffect(() => {
@@ -87,6 +91,17 @@ export default function Popular() {
     return `${cityName} ${localName}`;
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(prevState => !prevState);
+  };
+
+  const handleSelectSort = (sort: string) => {
+    setSelectedSort(sort);
+    setIsDropdownOpen(false);
+  };
+
+  useOutsideClick(dropdownRef, toggleDropdown);
+
   return (
     <div className={styles.container}>
       {isLoading ? (
@@ -141,7 +156,9 @@ export default function Popular() {
                       <div className={styles.nameItems}>
                         <p className={styles.facilityName}>{facility.name}</p>
                         <p className={styles.facilityItems}>
-                          {facility.items[0]}
+                          {facility.items.length > 1
+                            ? `${facility.items[0]} 외`
+                            : facility.items[0]}
                         </p>
                       </div>
                       <Chips
@@ -171,9 +188,24 @@ export default function Popular() {
                   시설
                 </div>
               </div>
-              <div className={styles.sort}>
-                인기순
-                <IconComponent name="down" size="s" alt="sort arrow" />
+              <div className={styles.sortContainer}>
+                <div className={styles.sort} onClick={toggleDropdown}>
+                  <span className={styles.selectedSort}>{selectedSort}</span>
+                  <IconComponent
+                    name={isDropdownOpen ? 'up' : 'down'}
+                    size="s"
+                    alt="sort arrow"
+                  />
+                </div>
+                {isDropdownOpen && (
+                  <div
+                    className={styles.dropdown}
+                    onClick={() => handleSelectSort('인기순')}
+                    ref={dropdownRef}
+                  >
+                    <div className={styles.sort}>인기순</div>
+                  </div>
+                )}
               </div>
             </div>
             {filteredFacilities.length > 0 ? (
