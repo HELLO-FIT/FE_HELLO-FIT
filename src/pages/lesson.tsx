@@ -1,15 +1,34 @@
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authState } from '@/states/authState';
-import SubheaderWithLogo from '@/components/Layout/SubheaderWithLogo';
 import Lesson from '@/components/Lesson';
+import TabNav from '@/components/Layout/TabNav';
+import Popular from '@/components/Lesson/Popular';
 
 export default function LessonPage() {
   const auth = useRecoilValue(authState);
+  const [selectedTab, setSelectedTab] = useState<'lesson' | 'popular'>(
+    'lesson'
+  );
+
+  const handlePopularBtnClick = () => {
+    setSelectedTab('popular');
+  };
 
   return (
     <>
-      <SubheaderWithLogo showMenu={auth.isLoggedIn} />
-      <Lesson />
+      {auth.isLoggedIn && (
+        <TabNav
+          showmenu={auth.isLoggedIn}
+          tab={selectedTab}
+          setSelectedTab={setSelectedTab}
+        />
+      )}
+      {selectedTab === 'lesson' ? (
+        <Lesson onPopularClick={handlePopularBtnClick} />
+      ) : (
+        <Popular />
+      )}
     </>
   );
 }

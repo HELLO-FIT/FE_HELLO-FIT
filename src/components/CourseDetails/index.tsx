@@ -1,28 +1,30 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import styles from './CourseDetails.module.scss';
-import { FacilityDetails } from '@/apis/get/getFacilityDetails';
+import {
+  getNomalFacilityDetails,
+  NomalFacilityDetails,
+} from '@/apis/get/getFacilityDetails';
 import { CourseDetailsProps } from './CourseDetails.types';
 import Chips from '../Button/Chips';
 import IconComponent from '../Asset/Icon';
 import DetailsMap from './DetailsMap';
 import CourseCard from './CourseCard';
 import InfoCard from './InfoCard';
-import { getFacilityDetails } from '@/apis/get/getFacilityDetails';
 import LoadingSpinner from '../LoadingSpinner';
 
 export default function CourseDetails({
   businessId,
   serialNumber,
 }: CourseDetailsProps) {
-  const [facility, setFacility] = useState<FacilityDetails | null>(null);
+  const [facility, setFacility] = useState<NomalFacilityDetails | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     if (businessId) {
       const fetchFacilityDetails = async () => {
         try {
-          const facilityData = await getFacilityDetails(
+          const facilityData = await getNomalFacilityDetails(
             businessId,
             serialNumber
           );
@@ -60,7 +62,7 @@ export default function CourseDetails({
       </section>
       <div className={styles.infoContainer}>
         <div>
-          <label className={styles.title}>위치</label>
+          <label className={styles.title}>시설 위치</label>
           <div className={styles.mapContainer}>
             <DetailsMap address={facility.address} radius={true} />
           </div>

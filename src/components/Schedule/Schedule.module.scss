@@ -7,7 +7,7 @@
   justify-content: space-between;
   background-color: $white;
   border-radius: 12px;
-  border: solid 1px $gray20;
+  border: solid 1.2px $gray20;
   padding: 16px 20px;
   cursor: pointer;
 }
@@ -36,4 +36,8 @@
   .location {
     color: $blue60;
   }
+}
+
+.count {
+  margin-right: 4px;
 }

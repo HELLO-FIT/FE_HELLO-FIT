@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import Chips from '@/components/Button/Chips';
-import { FacilityDetails } from '@/apis/get/getFacilityDetails';
+import { NomalFacilityDetails } from '@/apis/get/getFacilityDetails';
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 import styles from './FacilityInfo.module.scss';
 
 interface FacilityInfoProps {
-  facility: FacilityDetails | null;
+  facility: NomalFacilityDetails | null;
   onBackClick: () => void;
 }
 

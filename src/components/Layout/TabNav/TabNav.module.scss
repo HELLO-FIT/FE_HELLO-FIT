@@ -1,0 +1,45 @@
+@import '@/styles/globals';
+
+.container {
+  width: 100%;
+  max-width: 598px;
+  background-color: $white;
+  position: fixed;
+  top: 0;
+  z-index: 20;
+}
+
+.headerContainer {
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0 20px;
+}
+
+.btnContainer {
+  cursor: pointer;
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid $gray10;
+  padding: 4px 20px 0;
+
+  .button {
+    padding-bottom: 6px;
+    background-color: $white;
+    color: $gray50;
+    border: none;
+    @include T16B;
+    cursor: pointer;
+
+    &.active {
+      border-bottom: 2px solid $blue60;
+      color: $blue60;
+      padding-bottom: 4px;
+    }
+  }
+}
