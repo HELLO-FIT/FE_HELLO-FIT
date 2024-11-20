@@ -65,7 +65,9 @@ export default function GNB() {
   return (
     <nav className={styles.gnb}>
       {navItems.map(item => {
-        const isActive = router.asPath === item.href;
+        const isActive =
+          router.asPath === item.href ||
+          (item.href === '/lesson' && router.asPath.startsWith('/popular'));
 
         const iconName = isActive
           ? iconState === 'special'

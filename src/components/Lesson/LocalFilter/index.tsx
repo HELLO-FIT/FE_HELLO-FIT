@@ -13,6 +13,7 @@ export default function LocalFilter({
   onNextClick,
   onCompleteClick,
   isNextStep,
+  placeholderType,
 }: LocalFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -33,15 +34,23 @@ export default function LocalFilter({
   return (
     <div className={styles.container}>
       <div
-        className={`${styles.selectedValue} ${value ? styles.selectedDropdown : ''}`}
+        className={`${placeholderType !== 'lesson' && value ? styles.selectedDropdown : ''} ${placeholderType === 'lesson' ? styles.lesson : styles.selectedValue}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         {placeholder}
-        <IconComponent
-          name={isOpen ? 'up' : 'down'}
-          size="m"
-          alt="dropdown arrow"
-        />
+        {placeholderType === 'lesson' ? (
+          <IconComponent
+            name={isOpen ? 'upBlack' : 'downBlack'}
+            size="m"
+            alt="dropdown arrow"
+          />
+        ) : (
+          <IconComponent
+            name={isOpen ? 'up' : 'down'}
+            size="m"
+            alt="dropdown arrow"
+          />
+        )}
       </div>
       {isOpen && (
         <>

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import { getFacilities, Facility } from '@/apis/get/getFacilities';
-import { getFacilityDetails, FacilityDetails } from '@/apis/get/getFacilityDetails';
+import { getNomalFacilities, NomalFacility } from '@/apis/get/getFacilities';
+import { getNomalFacilityDetails, NomalFacilityDetails } from '@/apis/get/getFacilityDetails';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
 import styles from './map.module.scss';
@@ -21,9 +21,12 @@ interface KakaoMapResult {
 }
 
 export default function Map() {
-  const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] = useState<FacilityDetails | null>(null);
-  const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>('sports');
+  const [facilities, setFacilities] = useState<NomalFacility[]>([]);
+  const [selectedFacility, setSelectedFacility] =
+    useState<NomalFacilityDetails | null>(null);
+  const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>(
+    'sports'
+  );
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
@@ -42,7 +45,7 @@ export default function Map() {
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
       setFacilities([]); // 기존 시설 목록 초기화
-      const data = await getFacilities({
+      const data = await getNomalFacilities({
         localCode: localCode || '11110', // 로컬 코드가 없으면 기본값 사용 (서울 종로구)
         itemName: sport || undefined,
       });
@@ -64,9 +67,12 @@ export default function Map() {
       (result: any, status: string) => {
         if (status === window.kakao.maps.services.Status.OK && result[0].code) {
           const fullLocalCode = result[0].code.trim();
-          const shortLocalCode = fullLocalCode.slice(0, 5);
+          let shortLocalCode = fullLocalCode.slice(0, 5);
 
           if (shortLocalCode.length === 5) {
+            // 1의 자리를 0으로 변경
+            shortLocalCode = `${shortLocalCode.slice(0, 4)}0`;
+
             setLocalCode(shortLocalCode);
             localStorage.setItem('localCode', shortLocalCode);
           } else {
@@ -188,7 +194,7 @@ export default function Map() {
               setSelectedMarker(marker);
 
               try {
-                const details = await getFacilityDetails(
+                const details = await getNomalFacilityDetails(
                   facility.businessId,
                   facility.serialNumber
                 );

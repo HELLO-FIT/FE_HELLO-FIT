@@ -1,12 +1,11 @@
 // 금액 단위 , 구분
-export function formatCurrency(amount: string | number): string {
-  const numericAmount =
-    typeof amount === 'string' ? parseFloat(amount) : amount;
-
-  if (isNaN(numericAmount)) {
-    console.error(`Invalid amount: ${amount}`);
-    return '0';
+export function formatCurrency(amount: string | number | undefined): string {
+  if (typeof amount === 'number') {
+    return amount.toLocaleString('ko-KR');
   }
-
-  return numericAmount.toLocaleString('ko-KR');
+  if (typeof amount === 'string') {
+    const numberValue = parseFloat(amount);
+    return !isNaN(numberValue) ? numberValue.toLocaleString('ko-KR') : amount;
+  }
+  return '';
 }

@@ -40,6 +40,16 @@
   color: $blue60;
 }
 
+.lesson {
+  color: $gray90;
+  @include T18B;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
 .bottomSheet {
   position: fixed;
   bottom: 0;

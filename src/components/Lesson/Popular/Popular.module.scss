@@ -1,0 +1,146 @@
+@import '@/styles/globals.scss';
+
+.container {
+  width: 100%;
+  min-height: calc(100vh - 157px);
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
+}
+
+.topContainer {
+  width: 100%;
+  padding: 20px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+
+  .titleContainer {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    @include T16B;
+    color: $gray90;
+
+    .title {
+      color: $blue60;
+    }
+  }
+
+  .bestContainer {
+    display: flex;
+    gap: 16px;
+    padding: 8px 0;
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    .facilityCard {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 148px;
+
+      .nameItems {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        margin-top: 8px;
+      }
+
+      .facilityName {
+        @include T14B;
+        color: $gray90;
+        max-width: 100px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .facilityItems {
+        @include C12M;
+        color: $gray60;
+      }
+    }
+  }
+}
+
+.midContainer {
+  height: 10px;
+  background-color: $gray10;
+}
+
+.bottomContainer {
+  padding: 16px 20px;
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filterContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.totalText {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  @include B14M;
+  color: $gray70;
+
+  .totalTextColor {
+    color: $blue60;
+  }
+}
+
+.sort {
+  @include C12M;
+  color: $gray70;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-grow: 1;
+
+  .textContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mainText {
+    color: $gray90;
+    @include T16B;
+  }
+
+  .subText {
+    color: $gray60;
+    @include B14R;
+  }
+}

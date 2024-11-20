@@ -3,19 +3,19 @@ import DetailsMap from '../DetailsMap';
 import styles from './LargeMap.module.scss';
 import { LargeMapProps } from './LargeMap.types';
 import {
-  getFacilityDetails,
-  FacilityDetails,
+  getNomalFacilityDetails,
+  NomalFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function LargeMap({ businessId, serialNumber }: LargeMapProps) {
-  const [facility, setFacility] = useState<FacilityDetails | null>(null);
+  const [facility, setFacility] = useState<NomalFacilityDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchFacilityDetails = async () => {
       try {
-        const data = await getFacilityDetails(businessId, serialNumber);
+        const data = await getNomalFacilityDetails(businessId, serialNumber);
         setFacility(data);
       } catch {
         console.log('시설 정보를 가져오는 데 실패했습니다.');

@@ -1,6 +1,12 @@
-export type ChipState = 'checked' | 'unchecked' | 'label' | 'sports';
+export type ChipState =
+  | 'checked'
+  | 'unchecked'
+  | 'label'
+  | 'sports'
+  | 'count'
+  | 'top';
 
 export interface ChipsProps {
-  text: string;
+  text: string | number | undefined;
   chipState: ChipState;
 }
