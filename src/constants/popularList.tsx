@@ -5,7 +5,7 @@ type Sport = {
   label: string;
 };
 
-// 미등록 아이콘은 일단 logoBlue 처리
+// 미등록 아이콘은 일단 로고 처리
 // 일반 스포츠 데이터
 export const generalSports: Sport[] = [
   { iconName: 'logoBlue', label: '태권도' },
@@ -18,8 +18,8 @@ export const generalSports: Sport[] = [
 // 특수 스포츠 데이터
 export const specialSports: Sport[] = [
   { iconName: 'health', label: '헬스' },
-  { iconName: 'logoBlue', label: '탁구' },
-  { iconName: 'logoBlue', label: '태권도' },
-  { iconName: 'logoBlue', label: '볼링' },
-  { iconName: 'logoBlue', label: '수영' },
+  { iconName: 'logoGreen', label: '탁구' },
+  { iconName: 'logoGreen', label: '태권도' },
+  { iconName: 'logoGreen', label: '볼링' },
+  { iconName: 'logoGreen', label: '수영' },
 ];
