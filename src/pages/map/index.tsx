@@ -3,10 +3,9 @@ import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import { getFacilities, Facility } from '@/apis/get/getFacilities';
-import {
-  getFacilityDetails,
-  FacilityDetails,
-} from '@/apis/get/getFacilityDetails';
+import { getFacilityDetails, FacilityDetails } from '@/apis/get/getFacilityDetails';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 import styles from './map.module.scss';
 
 /* eslint-disable */
@@ -23,16 +22,15 @@ interface KakaoMapResult {
 
 export default function Map() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [selectedFacility, setSelectedFacility] =
-    useState<FacilityDetails | null>(null);
-  const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>(
-    'sports'
-  );
+  const [selectedFacility, setSelectedFacility] = useState<FacilityDetails | null>(null);
+  const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>('sports');
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<any>(null);
   const [localCode, setLocalCode] = useState<string | null>(null);
+
+  const toggle = useRecoilValue(toggleState);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -235,7 +233,10 @@ export default function Map() {
         style={{ width: '100%', height: '100vh', position: 'relative' }}
       ></div>
       {indicatorMode === 'sports' ? (
-        <PopularSports onSelectSport={fetchFacilitiesBySport} />
+        <PopularSports
+          onSelectSport={fetchFacilitiesBySport}
+          mode={toggle} 
+        />
       ) : (
         selectedFacility && (
           <FacilityInfo

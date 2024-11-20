@@ -2,13 +2,15 @@ import React, { useState, useRef } from 'react';
 import DropDown from '@/components/DropDown';
 import SportButtonList from '@/components/MapHome/SportButtonList';
 import IconComponent from '@/components/Asset/Icon';
+import { generalSports, specialSports } from '@/constants/popularList'; 
 import styles from './PopularSports.module.scss';
 
 interface PopularSportsProps {
   onSelectSport: (sport: string) => void;
+  mode: 'general' | 'special'; 
 }
 
-export default function PopularSports({ onSelectSport }: PopularSportsProps) {
+export default function PopularSports({ onSelectSport, mode }: PopularSportsProps) {
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -70,7 +72,10 @@ export default function PopularSports({ onSelectSport }: PopularSportsProps) {
           />
         </header>
         <h2 className={styles.title}>인기 스포츠</h2>
-        <SportButtonList onSelectSport={onSelectSport} />
+        <SportButtonList
+          sports={mode === 'general' ? generalSports : specialSports}
+          onSelectSport={onSelectSport}
+        />
       </div>
     </div>
   );
