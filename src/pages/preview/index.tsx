@@ -62,7 +62,7 @@ export default function Preview() {
     amenities: ['장애인 화장실', '장애인 주차구역', '휠체어 경사로'],
   };
 
-  const [selectedSport, setSelectedSport] = useState<string | null>(null);
+  const [selectedSport] = useState<string | null>(null);
 
   return (
     <div className={styles.previewPage}>
