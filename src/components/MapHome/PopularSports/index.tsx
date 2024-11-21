@@ -5,15 +5,18 @@ import { generalSports, specialSports } from '@/constants/popularList';
 import { cityCodes, localCodes } from '@/constants/localCode';
 import styles from './PopularSports.module.scss';
 import IconComponent from '@/components/Asset/Icon';
+import { getFullRegionName } from '@/utils/getFullRegionName';
 
 interface PopularSportsProps {
   onSelectSport: (sport: string) => void;
   mode: 'general' | 'special';
+  onRegionSelect?: (region: string, fullRegionName: string) => void; // 선택된 지역의 이름과 전체 주소 전달
 }
 
 export default function PopularSports({
   onSelectSport,
   mode,
+  onRegionSelect,
 }: PopularSportsProps) {
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -57,10 +60,17 @@ export default function PopularSports({
   const handleCompleteClick = () => {
     if (selectedCityCode && selectedLocalCode) {
       setIsNextStep(false);
-      const region = `${cityCodes[selectedCityCode]} ${
-        localCodes[selectedCityCode][selectedLocalCode]
-      }`;
-      setSelectedRegion(region);
+      const fullRegionName = getFullRegionName(
+        selectedCityCode,
+        selectedLocalCode
+      ); // 수정
+      const shortRegionName = `${cityCodes[selectedCityCode]} ${localCodes[selectedCityCode][selectedLocalCode]}`;
+      setSelectedRegion(shortRegionName);
+
+      // 상위로 fullRegionName 전달
+      if (onRegionSelect) {
+        onRegionSelect(selectedLocalCode, fullRegionName);
+      }
     }
   };
 

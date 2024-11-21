@@ -9,7 +9,6 @@ import {
 } from '@/apis/get/getFacilityDetails';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
-import classNames from 'classnames';
 import styles from './map.module.scss';
 import { useRouter } from 'next/router';
 
@@ -52,7 +51,7 @@ export default function Map() {
     try {
       setFacilities([]); // 기존 시설 목록 초기화
       const data = await getNomalFacilities({
-        localCode: localCode || '11110', // 로컬 코드가 없으면 기본값 사용 (서울 종로구)
+        localCode: localCode || '11110', // 기본값 서울 종로구
         itemName: sport || undefined,
       });
       setFacilities(data);
@@ -61,7 +60,6 @@ export default function Map() {
     }
   };
 
-  // 위치 정보를 통해 지역 코드를 업데이트하고 해당 지역의 시설을 불러오는 함수
   const updateLocalCodeAndFetchFacilities = (
     latitude: number,
     longitude: number
@@ -73,18 +71,53 @@ export default function Map() {
       (result: any, status: string) => {
         if (status === window.kakao.maps.services.Status.OK && result[0].code) {
           const fullLocalCode = result[0].code.trim();
-          let shortLocalCode = fullLocalCode.slice(0, 5);
+          const shortLocalCode = `${fullLocalCode.slice(0, 4)}0`;
 
-          if (shortLocalCode.length === 5) {
-            // 1의 자리를 0으로 변경
-            shortLocalCode = `${shortLocalCode.slice(0, 4)}0`;
-            setLocalCode(shortLocalCode);
-            localStorage.setItem('localCode', shortLocalCode);
-          } else {
-            console.error('Invalid local code length:', shortLocalCode);
-          }
+          setLocalCode(shortLocalCode);
+          localStorage.setItem('localCode', shortLocalCode);
         } else {
           console.error('Failed to fetch region code:', status);
+        }
+      }
+    );
+  };
+
+  const handleRegionSelect = (localCode: string, fullRegionName: string) => {
+    if (!fullRegionName) {
+      console.error('유효하지 않은 지역 이름:', localCode, fullRegionName);
+      return;
+    }
+
+    console.log('Kakao Maps API에 전달할 지역 이름:', fullRegionName);
+
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.addressSearch(
+      fullRegionName,
+      (result: KakaoMapResult[], status: string) => {
+        if (
+          status === window.kakao.maps.services.Status.OK &&
+          result.length > 0
+        ) {
+          const { y: latitude, x: longitude } = result[0];
+          const coords = new window.kakao.maps.LatLng(
+            parseFloat(latitude),
+            parseFloat(longitude)
+          );
+
+          if (map) {
+            map.setCenter(coords);
+          }
+
+          updateLocalCodeAndFetchFacilities(
+            parseFloat(latitude),
+            parseFloat(longitude)
+          );
+        } else {
+          console.error(
+            '지역 검색 실패 또는 결과 없음:',
+            status,
+            fullRegionName
+          );
         }
       }
     );
@@ -134,7 +167,6 @@ export default function Map() {
                 image: userMarkerImage,
                 title: '현재 위치',
               });
-
               updateLocalCodeAndFetchFacilities(
                 position.coords.latitude,
                 position.coords.longitude
@@ -170,7 +202,6 @@ export default function Map() {
               parseFloat(result[0].y),
               parseFloat(result[0].x)
             );
-
             const defaultMarkerImage = new window.kakao.maps.MarkerImage(
               toggle === 'special'
                 ? '/image/marker-special.svg'
@@ -202,7 +233,6 @@ export default function Map() {
 
               marker.setImage(selectedMarkerImage);
               setSelectedMarker(marker);
-
               try {
                 const details = await getNomalFacilityDetails(
                   facility.businessId,
@@ -214,8 +244,6 @@ export default function Map() {
                 console.error('Failed to fetch facility details:', error);
               }
             });
-          } else {
-            console.error('주소 검색 실패:', status);
           }
         }
       );
@@ -234,10 +262,6 @@ export default function Map() {
     }
   };
 
-  const handleBackClick = () => {
-    setIndicatorMode('sports');
-  };
-
   return (
     <>
       <Header />
@@ -249,12 +273,16 @@ export default function Map() {
         style={{ width: '100%', height: '100vh', position: 'relative' }}
       ></div>
       {indicatorMode === 'sports' ? (
-        <PopularSports onSelectSport={fetchFacilitiesBySport} mode={toggle} />
+        <PopularSports
+          onSelectSport={fetchFacilitiesBySport}
+          mode={toggle}
+          onRegionSelect={handleRegionSelect}
+        />
       ) : (
         selectedFacility && (
           <FacilityInfo
             facility={selectedFacility}
-            onBackClick={() => setIndicatorMode('sports')} 
+            onBackClick={() => setIndicatorMode('sports')}
             onMoveToDetail={() => {
               if (selectedFacility) {
                 router.push(
