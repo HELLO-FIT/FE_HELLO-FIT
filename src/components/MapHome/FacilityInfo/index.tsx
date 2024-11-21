@@ -63,14 +63,22 @@ export default function FacilityInfo({
     if (!facility || !facility.items || facility.items.length === 0)
       return '없음';
 
-    // 필터 조건에 맞는 종목 우선 표시
-    if (filterItem) {
-      const matchingItem = facility.items.find(item => item === filterItem);
-      if (matchingItem) return matchingItem;
+    // 필터 조건에 맞는 종목을 우선 반환
+    if (filterItem && facility.items.includes(filterItem)) {
+      return filterItem;
     }
 
-    // 필터 조건이 없으면 첫 번째 종목 반환
-    return facility.items[0];
+    // 필터 조건이 없으면 빈도를 계산하여 가장 높은 종목 반환
+    const frequency: Record<string, number> = {};
+    facility.items.forEach(item => {
+      frequency[item] = (frequency[item] || 0) + 1;
+    });
+
+    const mostFrequentItem = Object.entries(frequency).reduce((a, b) =>
+      a[1] > b[1] ? a : b
+    )[0];
+
+    return mostFrequentItem;
   };
 
   if (!facility) return null;
