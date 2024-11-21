@@ -64,11 +64,6 @@ export default function Preview() {
 
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
 
-  const handleSelectSport = (sport: string) => {
-    setSelectedSport(sport);
-    console.log(`Selected sport: ${sport}`);
-  };
-
   return (
     <div className={styles.previewPage}>
       <h1 className={styles.mainTitle}>Component Preview</h1>
