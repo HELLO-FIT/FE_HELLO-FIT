@@ -160,6 +160,7 @@ export const ICONS = {
   addressMarker: '/icon/custom/address-marker.svg',
   addressMarkerSP: '/icon/custom/address-marker-green.svg',
   noResult: '/icon/custom/icon-no-result.svg',
+  noResultSP: '/icon/custom/icon-no-result-green.svg',
   emptyNoti: '/icon/custom/icon-empty-noti.svg',
 };
 

@@ -37,18 +37,22 @@ export default function Noti() {
       return;
     }
 
-    async function fetchNotifications() {
-      try {
-        const data = await getNotifications();
-        setNotifications(data);
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      } finally {
-        setLoading(false);
+    if (notifications.length === 0) {
+      async function fetchNotifications() {
+        try {
+          const data = await getNotifications();
+          setNotifications(data);
+        } catch (error) {
+          console.error('Error fetching notifications:', error);
+        } finally {
+          setLoading(false);
+        }
       }
+      fetchNotifications();
+    } else {
+      setLoading(false);
     }
-    fetchNotifications();
-  }, [showLoginModal]);
+  }, [showLoginModal, notifications.length]);
 
   // 읽음 처리
   const markAsRead = async (id: string) => {
@@ -94,7 +98,7 @@ export default function Noti() {
       );
       const responses = await Promise.all(deletePromises);
       if (responses.every(res => res.success)) {
-        setNotifications([]);
+        setNotifications([]); // 삭제 후 알림 목록 비우기
       } else {
         console.log('일부 알림 삭제에 실패했습니다.');
       }

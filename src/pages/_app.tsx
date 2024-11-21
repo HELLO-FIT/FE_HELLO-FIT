@@ -61,6 +61,8 @@ export default function App({ Component, pageProps }: AppProps) {
     '/login',
     '/details/[businessId]/[serialNumber]',
     '/details/[businessId]/[serialNumber]/map',
+    '/details/[businessId]',
+    '/details/[businessId]/map',
     '/setting',
     '/search',
   ].includes(router.pathname);
@@ -73,6 +75,8 @@ export default function App({ Component, pageProps }: AppProps) {
     '/map',
     '/details/[businessId]/[serialNumber]',
     '/details/[businessId]/[serialNumber]/map',
+    '/details/[businessId]',
+    '/details/[businessId]/map',
     '/setting',
     '/search',
     '/popular',

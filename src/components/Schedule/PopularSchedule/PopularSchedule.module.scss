@@ -1,0 +1,47 @@
+@import '@/styles/globals.scss';
+
+.container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $white;
+  border-radius: 12px;
+  border: solid 1.2px $gray20;
+  padding: 16px 20px;
+  cursor: pointer;
+}
+
+.storeName {
+  @include T14B;
+  color: $gray90;
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.information {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  @include C12M;
+  color: $gray60;
+
+  .location {
+    color: $blue60;
+  }
+
+  .locationSP {
+    color: $green80;
+  }
+}
+
+.count {
+  margin-right: 4px;
+}

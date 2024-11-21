@@ -1,13 +1,13 @@
-import styles from './Schedule.module.scss';
-import IconComponent from '../Asset/Icon';
-import { ScheduleProps } from './Schedule.types';
-import { NomalFacility } from '@/apis/get/getFacilities';
+import styles from './PopularSchedule.module.scss';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
+import IconComponent from '@/components/Asset/Icon';
+import Chips from '@/components/Button/Chips';
+import { PopularScheduleProps } from './PopularSchedule.types';
 
-export default function Schedule({ facility }: ScheduleProps) {
+export default function PopularSchedule({ facility }: PopularScheduleProps) {
+  const toggle = useRecoilValue(toggleState);
   const currentMonth = new Date().getMonth() + 1;
-
-  const isNomalFacility = (facility: any): facility is NomalFacility =>
-    'serialNumber' in facility;
 
   return (
     <div className={styles.container}>
@@ -16,7 +16,7 @@ export default function Schedule({ facility }: ScheduleProps) {
         <div className={styles.information}>
           <p
             className={
-              isNomalFacility(facility) ? styles.location : styles.locationSP
+              toggle === 'general' ? styles.location : styles.locationSP
             }
           >
             {facility.cityName} {facility.localName}
@@ -30,6 +30,7 @@ export default function Schedule({ facility }: ScheduleProps) {
               {index < facility.items.length - 1 && ', '}
             </span>
           ))}
+          <Chips text={facility.totalParticipantCount} chipState="count" />
         </div>
       </div>
       <IconComponent name="right" size="l" />

@@ -25,6 +25,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import { toggleState } from '@/states/toggleState';
+import PopularSchedule from '@/components/Schedule/PopularSchedule';
 
 export default function Popular() {
   const [facilities, setFacilities] = useState<NomalPopular[]>([]);
@@ -225,7 +226,7 @@ export default function Popular() {
                     key={`${facility.businessId}-${facility.serialNumber}`}
                     href={`/details/${facility.businessId}/${facility.serialNumber}`}
                   >
-                    <Schedule facility={facility} isPopular />
+                    <PopularSchedule facility={facility} />
                   </Link>
                 ))}
               </div>

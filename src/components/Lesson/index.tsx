@@ -4,6 +4,9 @@ import {
   NomalFacility,
   getNomalFacilities,
   GetNomalFacilitiesParams,
+  SpecialFacility,
+  GetSpecialFacilitiesParams,
+  getSpecialFacilities,
 } from '@/apis/get/getFacilities';
 import {
   selectedCityCodeState,
@@ -27,7 +30,9 @@ interface LessonProps {
 }
 
 export default function Lesson({ onPopularClick }: LessonProps) {
-  const [facilities, setFacilities] = useState<NomalFacility[]>([]);
+  const [facilities, setFacilities] = useState<
+    NomalFacility[] | SpecialFacility[]
+  >([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedCityCode] = useRecoilState(selectedCityCodeState);
   const [selectedLocalCode] = useRecoilState(selectedLocalCodeState);
@@ -42,10 +47,22 @@ export default function Lesson({ onPopularClick }: LessonProps) {
           localCode: selectedLocalCode,
         };
 
-        const fetchedFacilities = await getNomalFacilities(params);
-        setFacilities(
-          filterFacilitiesBySport(fetchedFacilities, selectedSport)
-        );
+        if (toggle === 'general') {
+          // 일반 시설 데이터 가져오기
+          const fetchedFacilities = await getNomalFacilities(params);
+          setFacilities(
+            filterFacilitiesBySport(fetchedFacilities, selectedSport)
+          );
+        } else {
+          // 특수 시설 데이터 가져오기
+          const specialParams: GetSpecialFacilitiesParams = {
+            localCode: selectedLocalCode,
+            itemName: selectedSport,
+          };
+          const fetchedSpecialFacilities =
+            await getSpecialFacilities(specialParams);
+          setFacilities(fetchedSpecialFacilities);
+        }
       } catch {
         console.error('시설 데이터를 불러오는 데 실패했습니다.');
       } finally {
@@ -56,7 +73,7 @@ export default function Lesson({ onPopularClick }: LessonProps) {
     if (selectedCityCode && selectedLocalCode) {
       fetchData();
     }
-  }, [selectedCityCode, selectedLocalCode, selectedSport]);
+  }, [selectedCityCode, selectedLocalCode, selectedSport, toggle]);
 
   // 스포츠 필터링
   const filterFacilitiesBySport = (
@@ -121,8 +138,16 @@ export default function Lesson({ onPopularClick }: LessonProps) {
             <div className={styles.listContainer}>
               {facilities.map(facility => (
                 <Link
-                  key={`${facility.businessId}-${facility.serialNumber}`}
-                  href={`/details/${facility.businessId}/${facility.serialNumber}`}
+                  key={
+                    'serialNumber' in facility
+                      ? `${facility.businessId}-${facility.serialNumber}`
+                      : facility.businessId
+                  }
+                  href={
+                    'serialNumber' in facility
+                      ? `/details/${facility.businessId}/${facility.serialNumber}`
+                      : `/details/${facility.businessId}`
+                  }
                 >
                   <Schedule facility={facility} />
                 </Link>
@@ -131,7 +156,7 @@ export default function Lesson({ onPopularClick }: LessonProps) {
           ) : (
             <div className={styles.resultContainer}>
               <IconComponent
-                name="noResult"
+                name={toggle === 'general' ? 'noResult' : 'noResultSP'}
                 width={48}
                 height={48}
                 alt="결과 없음"

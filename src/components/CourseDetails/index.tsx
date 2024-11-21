@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import styles from './CourseDetails.module.scss';
 import {
   getNomalFacilityDetails,
+  getSpecialFacilityDetails,
   NomalFacilityDetails,
+  SpecialFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 import { CourseDetailsProps } from './CourseDetails.types';
 import Chips from '../Button/Chips';
@@ -14,26 +16,43 @@ import InfoCard from './InfoCard';
 import LoadingSpinner from '../LoadingSpinner';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
+import SpecialInfoCard from './SpecialInfoCard';
 
 export default function CourseDetails({
   businessId,
   serialNumber,
 }: CourseDetailsProps) {
-  const [facility, setFacility] = useState<NomalFacilityDetails | null>(null);
+  const [facility, setFacility] = useState<
+    NomalFacilityDetails | SpecialFacilityDetails | undefined
+  >(undefined);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const toggle = useRecoilValue(toggleState);
+
+  const isNomalFacility = (facility: any): facility is NomalFacilityDetails =>
+    facility && 'serialNumber' in facility;
 
   useEffect(() => {
     if (businessId) {
       const fetchFacilityDetails = async () => {
         try {
-          const facilityData = await getNomalFacilityDetails(
-            businessId,
-            serialNumber
-          );
+          setLoading(true);
+          let facilityData;
+
+          if (serialNumber) {
+            facilityData = await getNomalFacilityDetails(
+              businessId,
+              serialNumber
+            );
+          } else {
+            facilityData = await getSpecialFacilityDetails(businessId);
+          }
+
           setFacility(facilityData);
         } catch (error) {
           console.error('Error fetching facility details:', error);
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -43,14 +62,22 @@ export default function CourseDetails({
 
   const handleMapClick = () => {
     if (facility) {
-      router.push(
-        `/details/${facility.businessId}/${facility.serialNumber}/map`
-      );
+      if (isNomalFacility(facility)) {
+        router.push(
+          `/details/${facility.businessId}/${facility.serialNumber}/map`
+        );
+      } else {
+        router.push(`/details/${facility.businessId}/map`);
+      }
     }
   };
 
-  if (!facility) {
+  if (loading) {
     return <LoadingSpinner />;
+  }
+
+  if (!facility) {
+    return <div>시설 정보를 불러올 수 없습니다.</div>;
   }
 
   return (
@@ -59,7 +86,12 @@ export default function CourseDetails({
         <h1 className={styles.name}>{facility.name}</h1>
         <div className={styles.chipsContainer}>
           {facility.items.map((item, index) => (
-            <Chips key={index} chipState="sports" text={item} />
+            <Chips
+              key={index}
+              chipState="sports"
+              text={item}
+              serialNumber={serialNumber ? true : false}
+            />
           ))}
         </div>
       </section>
@@ -67,14 +99,16 @@ export default function CourseDetails({
         <div>
           <label className={styles.title}>시설 위치</label>
           <div className={styles.mapContainer}>
-            <DetailsMap address={facility.address} radius={true} />
+            <DetailsMap
+              address={facility.address}
+              radius={true}
+              isNormal={serialNumber ? true : false}
+            />
           </div>
           <div className={styles.addressWrapper} onClick={handleMapClick}>
             <div className={styles.address}>
               <IconComponent
-                name={
-                  toggle === 'general' ? 'addressMarker' : 'addressMarkerSP'
-                }
+                name={serialNumber ? 'addressMarker' : 'addressMarkerSP'}
                 width={16}
                 height={16}
               />
@@ -87,8 +121,21 @@ export default function CourseDetails({
         </div>
         <div className={styles.facilityInfo}>
           <label className={styles.title}>시설 정보</label>
-          <InfoCard contact={facility.phone} representative={facility.owner} />
+          {isNomalFacility(facility) ? (
+            <InfoCard
+              contact={facility.phone}
+              representative={facility.owner}
+            />
+          ) : (
+            <InfoCard contact={facility.phone} />
+          )}
         </div>
+        {!isNomalFacility(facility) && (
+          <div className={styles.facilityInfo}>
+            <label className={styles.title}>장애 지원 정보</label>
+            <SpecialInfoCard />
+          </div>
+        )}
         <div className={styles.labelSectionWrapper}>
           {facility.courses.map((course, index) => (
             <div key={index} className={styles.facilityInfo}>
@@ -99,11 +146,14 @@ export default function CourseDetails({
               </label>
               <CourseCard
                 courseName={course.courseName}
-                instructor={course.instructor}
+                instructor={
+                  'instructor' in course ? course.instructor : undefined
+                }
                 startTime={course.startTime}
                 endTime={course.endTime}
                 workday={course.workday}
                 price={course.price}
+                isNormal={serialNumber ? true : false}
               />
             </div>
           ))}

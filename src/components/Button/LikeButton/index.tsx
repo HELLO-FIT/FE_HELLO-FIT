@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import { LikeButtonProps } from './LikeButton.types';
-import { putNomalFavorite } from '@/apis/put/putFavorite';
+import { putNomalFavorite, putSpecialFavorite } from '@/apis/put/putFavorite';
 import { getFavorites } from '@/apis/get/getFavorites';
 import { useModal } from '@/utils/modalUtils';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 
 export default function LikeButton({
   businessId,
   serialNumber,
 }: LikeButtonProps) {
   const [isLiked, setIsLiked] = useState(false);
+  const toggle = useRecoilValue(toggleState);
   const { openModal } = useModal();
 
   useEffect(() => {
@@ -42,7 +45,17 @@ export default function LikeButton({
     }
 
     try {
-      const result = await putNomalFavorite(businessId, serialNumber);
+      let result;
+
+      if (toggle === 'general') {
+        if (!serialNumber) {
+          console.error('general 상태에서는 serialNumber가 필요합니다.');
+          return;
+        }
+        result = await putNomalFavorite(businessId, serialNumber);
+      } else {
+        result = await putSpecialFavorite(businessId);
+      }
 
       if (result.success) {
         setIsLiked(!isLiked);

@@ -1,8 +1,6 @@
 import styles from './CourseCard.module.scss';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { CourseCardProps } from './CourseCard.types';
-import { useRecoilValue } from 'recoil';
-import { toggleState } from '@/states/toggleState';
 
 export default function CourseCard({
   courseName,
@@ -11,26 +9,22 @@ export default function CourseCard({
   endTime,
   workday,
   price,
-  isSpecial = false,
+  isNormal = true,
 }: CourseCardProps) {
-  const toggle = useRecoilValue(toggleState);
-
   return (
     <section className={styles.box}>
       <p className={styles.labelValue}>
         <span className={styles.label}>강좌명</span>
-        <span
-          className={
-            toggle === 'general' ? styles.highlight : styles.highlightSP
-          }
-        >
+        <span className={isNormal ? styles.highlight : styles.highlightSP}>
           {courseName}
         </span>
       </p>
-      <p className={styles.labelValue}>
-        <span className={styles.label}>강사</span>
-        <span className={styles.value}>{instructor}</span>
-      </p>
+      {instructor && (
+        <p className={styles.labelValue}>
+          <span className={styles.label}>강사</span>
+          <span className={styles.value}>{instructor}</span>
+        </p>
+      )}
       <p className={styles.labelValue}>
         <span className={styles.label}>시간</span>
         <span className={styles.value}>
@@ -41,12 +35,6 @@ export default function CourseCard({
         <span className={styles.label}>요일</span>
         <span className={styles.value}>{workday}</span>
       </p>
-      {isSpecial && (
-        <p className={styles.labelValue}>
-          <span className={styles.label}>대상</span>
-          <span className={styles.value}>지체, 시각</span>
-        </p>
-      )}
       <p className={styles.labelValue}>
         <span className={styles.label}>가격</span>
         <span className={styles.value}>{formatCurrency(price)}</span>

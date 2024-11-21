@@ -9,4 +9,5 @@ export type ChipState =
 export interface ChipsProps {
   text: string | number | undefined;
   chipState: ChipState;
+  serialNumber: boolean;
 }
