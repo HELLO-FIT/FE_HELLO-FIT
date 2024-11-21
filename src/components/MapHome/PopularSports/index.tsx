@@ -10,13 +10,15 @@ import { getFullRegionName } from '@/utils/getFullRegionName';
 interface PopularSportsProps {
   onSelectSport: (sport: string) => void;
   mode: 'general' | 'special';
-  onRegionSelect?: (region: string, fullRegionName: string) => void; // 선택된 지역의 이름과 전체 주소 전달
+  onRegionSelect?: (region: string, fullRegionName: string) => void;
+  selectedRegion: string;
 }
 
 export default function PopularSports({
   onSelectSport,
   mode,
   onRegionSelect,
+  selectedRegion,
 }: PopularSportsProps) {
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -29,7 +31,6 @@ export default function PopularSports({
   const [isNextStep, setIsNextStep] = useState(false);
   const [selectedCityCode, setSelectedCityCode] = useState<string>('11');
   const [selectedLocalCode, setSelectedLocalCode] = useState<string>('');
-  const [selectedRegion, setSelectedRegion] = useState<string>('서울');
 
   // 시도 선택 시 구/군 옵션 설정
   useEffect(() => {
@@ -63,11 +64,10 @@ export default function PopularSports({
       const fullRegionName = getFullRegionName(
         selectedCityCode,
         selectedLocalCode
-      ); // 수정
+      );
       const shortRegionName = `${cityCodes[selectedCityCode]} ${localCodes[selectedCityCode][selectedLocalCode]}`;
-      setSelectedRegion(shortRegionName);
 
-      // 상위로 fullRegionName 전달
+      // 상위 컴포넌트로 fullRegionName 전달
       if (onRegionSelect) {
         onRegionSelect(selectedLocalCode, fullRegionName);
       }
@@ -115,12 +115,10 @@ export default function PopularSports({
       onMouseUp={handleDragEnd}
       onTouchEnd={handleDragEnd}
     >
-      {/* 드래그 인디케이터 */}
       <div className={styles.indicatorWrapper}>
         <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
       </div>
 
-      {/* 콘텐츠 */}
       <div className={styles.content}>
         <header className={styles.header}>
           <LocalFilter

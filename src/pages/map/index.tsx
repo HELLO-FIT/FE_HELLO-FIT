@@ -31,6 +31,7 @@ export default function Map() {
   const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>(
     'sports'
   );
+  const [selectedRegion, setSelectedRegion] = useState('지역'); 
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
@@ -75,6 +76,12 @@ export default function Map() {
 
           setLocalCode(shortLocalCode);
           localStorage.setItem('localCode', shortLocalCode);
+
+          // "특별시", "광역시", "특별자치시", "동" 제거
+          const simplifiedRegion = result[0].address_name
+            .replace(/(특별시|광역시|특별자치시)/g, '')
+            .replace(/ \S*동$/, ''); // 동으로 끝나는 부분 제거
+          setSelectedRegion(simplifiedRegion);
         } else {
           console.error('Failed to fetch region code:', status);
         }
@@ -112,6 +119,12 @@ export default function Map() {
             parseFloat(latitude),
             parseFloat(longitude)
           );
+
+          // "특별시", "광역시", "특별자치시", "동" 제거
+          const simplifiedRegion = fullRegionName
+            .replace(/(특별시|광역시|특별자치시)/g, '')
+            .replace(/ \S*동$/, ''); // 동으로 끝나는 부분 제거
+          setSelectedRegion(simplifiedRegion);
         } else {
           console.error(
             '지역 검색 실패 또는 결과 없음:',
@@ -257,31 +270,9 @@ export default function Map() {
   const moveToUserLocation = () => {
     if (map && userLocation) {
       map.setCenter(userLocation);
-
-      const geocoder = new window.kakao.maps.services.Geocoder();
-      geocoder.coord2RegionCode(
-        userLocation.getLng(),
+      updateLocalCodeAndFetchFacilities(
         userLocation.getLat(),
-        (result: any, status: string) => {
-          if (
-            status === window.kakao.maps.services.Status.OK &&
-            result[0]?.code
-          ) {
-            const fullLocalCode = result[0].code.trim();
-            const shortLocalCode = `${fullLocalCode.slice(0, 4)}0`;
-
-            setLocalCode(shortLocalCode);
-            localStorage.setItem('localCode', shortLocalCode);
-
-            // 지역 코드가 업데이트되면 시설 데이터 자동 갱신
-            console.log('지역 코드 업데이트 완료:', shortLocalCode);
-          } else {
-            console.error(
-              '현재 위치의 지역 코드를 가져오는 데 실패했습니다:',
-              status
-            );
-          }
-        }
+        userLocation.getLng()
       );
     } else {
       console.warn('Map or userLocation is not available');
@@ -303,6 +294,7 @@ export default function Map() {
           onSelectSport={fetchFacilitiesBySport}
           mode={toggle}
           onRegionSelect={handleRegionSelect}
+          selectedRegion={selectedRegion} // 추가
         />
       ) : (
         selectedFacility && (
