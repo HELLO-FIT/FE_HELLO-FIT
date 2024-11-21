@@ -31,7 +31,7 @@ export default function Map() {
   const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>(
     'sports'
   );
-  const [selectedRegion, setSelectedRegion] = useState('지역'); 
+  const [selectedRegion, setSelectedRegion] = useState('지역');
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
@@ -77,10 +77,12 @@ export default function Map() {
           setLocalCode(shortLocalCode);
           localStorage.setItem('localCode', shortLocalCode);
 
-          // "특별시", "광역시", "특별자치시", "동" 제거
-          const simplifiedRegion = result[0].address_name
-            .replace(/(특별시|광역시|특별자치시)/g, '')
-            .replace(/ \S*동$/, ''); // 동으로 끝나는 부분 제거
+          // "특별시", "광역시", "특별자치도", "특별자치시" 제거 후 "시", "군", "구"까지만 남기기
+          const simplifiedRegion =
+            result[0].address_name
+              .replace(/(특별시|광역시|특별자치도|특별자치시)/g, '')
+              .replace(/청$/, '') // "청" 제거 (예: 중구청 → 중구)
+              .match(/.+?(시|군|구)/)?.[0] || result[0].address_name;
           setSelectedRegion(simplifiedRegion);
         } else {
           console.error('Failed to fetch region code:', status);
@@ -120,10 +122,12 @@ export default function Map() {
             parseFloat(longitude)
           );
 
-          // "특별시", "광역시", "특별자치시", "동" 제거
-          const simplifiedRegion = fullRegionName
-            .replace(/(특별시|광역시|특별자치시)/g, '')
-            .replace(/ \S*동$/, ''); // 동으로 끝나는 부분 제거
+          // "특별시", "광역시", "특별자치도", "특별자치시" 제거 후 "시", "군", "구"까지만 남기기
+          const simplifiedRegion =
+            fullRegionName
+              .replace(/(특별시|광역시|특별자치도|특별자치시)/g, '')
+              .replace(/청$/, '') // "청" 제거 (예: 중구청 → 중구)
+              .match(/.+?(시|군|구)/)?.[0] || fullRegionName;
           setSelectedRegion(simplifiedRegion);
         } else {
           console.error(
@@ -294,7 +298,7 @@ export default function Map() {
           onSelectSport={fetchFacilitiesBySport}
           mode={toggle}
           onRegionSelect={handleRegionSelect}
-          selectedRegion={selectedRegion} // 추가
+          selectedRegion={selectedRegion} 
         />
       ) : (
         selectedFacility && (
