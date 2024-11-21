@@ -257,6 +257,32 @@ export default function Map() {
   const moveToUserLocation = () => {
     if (map && userLocation) {
       map.setCenter(userLocation);
+
+      const geocoder = new window.kakao.maps.services.Geocoder();
+      geocoder.coord2RegionCode(
+        userLocation.getLng(),
+        userLocation.getLat(),
+        (result: any, status: string) => {
+          if (
+            status === window.kakao.maps.services.Status.OK &&
+            result[0]?.code
+          ) {
+            const fullLocalCode = result[0].code.trim();
+            const shortLocalCode = `${fullLocalCode.slice(0, 4)}0`;
+
+            setLocalCode(shortLocalCode);
+            localStorage.setItem('localCode', shortLocalCode);
+
+            // 지역 코드가 업데이트되면 시설 데이터 자동 갱신
+            console.log('지역 코드 업데이트 완료:', shortLocalCode);
+          } else {
+            console.error(
+              '현재 위치의 지역 코드를 가져오는 데 실패했습니다:',
+              status
+            );
+          }
+        }
+      );
     } else {
       console.warn('Map or userLocation is not available');
     }
