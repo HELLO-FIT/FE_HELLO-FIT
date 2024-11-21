@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
@@ -32,11 +32,13 @@ export default function Map() {
     'sports'
   );
   const [selectedRegion, setSelectedRegion] = useState('지역');
+  const [filterItem, setFilterItem] = useState<string | null>(null);
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<any>(null);
   const [localCode, setLocalCode] = useState<string | null>(null);
+  const isDragging = useRef(false);
 
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
@@ -50,9 +52,10 @@ export default function Map() {
 
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
     try {
-      setFacilities([]); // 기존 시설 목록 초기화
+      setFacilities([]);
+      setFilterItem(sport);
       const data = await getNomalFacilities({
-        localCode: localCode || '11110', // 기본값 서울 종로구
+        localCode: localCode || '11110',
         itemName: sport || undefined,
       });
       setFacilities(data);
@@ -77,11 +80,10 @@ export default function Map() {
           setLocalCode(shortLocalCode);
           localStorage.setItem('localCode', shortLocalCode);
 
-          // "특별시", "광역시", "특별자치도", "특별자치시" 제거 후 "시", "군", "구"까지만 남기기
           const simplifiedRegion =
             result[0].address_name
               .replace(/(특별시|광역시|특별자치도|특별자치시)/g, '')
-              .replace(/청$/, '') // "청" 제거 (예: 중구청 → 중구)
+              .replace(/청$/, '')
               .match(/.+?(시|군|구)/)?.[0] || result[0].address_name;
           setSelectedRegion(simplifiedRegion);
         } else {
@@ -91,13 +93,19 @@ export default function Map() {
     );
   };
 
+  const handleMapDragStart = () => {
+    isDragging.current = true;
+  };
+
+  const handleMapDragEnd = () => {
+    isDragging.current = false;
+  };
+
   const handleRegionSelect = (localCode: string, fullRegionName: string) => {
     if (!fullRegionName) {
       console.error('유효하지 않은 지역 이름:', localCode, fullRegionName);
       return;
     }
-
-    console.log('Kakao Maps API에 전달할 지역 이름:', fullRegionName);
 
     const geocoder = new window.kakao.maps.services.Geocoder();
     geocoder.addressSearch(
@@ -122,11 +130,10 @@ export default function Map() {
             parseFloat(longitude)
           );
 
-          // "특별시", "광역시", "특별자치도", "특별자치시" 제거 후 "시", "군", "구"까지만 남기기
           const simplifiedRegion =
             fullRegionName
               .replace(/(특별시|광역시|특별자치도|특별자치시)/g, '')
-              .replace(/청$/, '') // "청" 제거 (예: 중구청 → 중구)
+              .replace(/청$/, '')
               .match(/.+?(시|군|구)/)?.[0] || fullRegionName;
           setSelectedRegion(simplifiedRegion);
         } else {
@@ -142,7 +149,7 @@ export default function Map() {
 
   useEffect(() => {
     if (localCode !== null) {
-      fetchFacilitiesBySport();
+      fetchFacilitiesBySport(filterItem);
     }
   }, [localCode]);
 
@@ -194,6 +201,9 @@ export default function Map() {
             }
           );
         }
+
+        kakaoMap.addListener('dragstart', handleMapDragStart);
+        kakaoMap.addListener('dragend', handleMapDragEnd);
       });
     };
 
@@ -298,12 +308,13 @@ export default function Map() {
           onSelectSport={fetchFacilitiesBySport}
           mode={toggle}
           onRegionSelect={handleRegionSelect}
-          selectedRegion={selectedRegion} 
+          selectedRegion={selectedRegion}
         />
       ) : (
         selectedFacility && (
           <FacilityInfo
             facility={selectedFacility}
+            filterItem={filterItem || undefined}
             onBackClick={() => setIndicatorMode('sports')}
             onMoveToDetail={() => {
               if (selectedFacility) {

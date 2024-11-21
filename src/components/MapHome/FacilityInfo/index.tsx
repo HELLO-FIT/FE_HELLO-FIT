@@ -9,12 +9,14 @@ interface FacilityInfoProps {
   facility: NomalFacilityDetails | null;
   onBackClick: () => void;
   onMoveToDetail: () => void;
+  filterItem?: string | null;
 }
 
 export default function FacilityInfo({
   facility,
   onBackClick,
   onMoveToDetail,
+  filterItem,
 }: FacilityInfoProps) {
   const initialPosition = -50;
   const maxDragDistance = 150;
@@ -56,6 +58,21 @@ export default function FacilityInfo({
     setPosition(initialPosition);
   }, [facility, initialPosition]);
 
+  // 종목 라벨 계산
+  const getLabelItem = () => {
+    if (!facility || !facility.items || facility.items.length === 0)
+      return '없음';
+
+    // 필터 조건에 맞는 종목 우선 표시
+    if (filterItem) {
+      const matchingItem = facility.items.find(item => item === filterItem);
+      if (matchingItem) return matchingItem;
+    }
+
+    // 필터 조건이 없으면 첫 번째 종목 반환
+    return facility.items[0];
+  };
+
   if (!facility) return null;
 
   return (
@@ -73,7 +90,6 @@ export default function FacilityInfo({
         <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
       </div>
       <div className={styles.content}>
-  
         <div className={styles.header}>
           <h1>{facility.name}</h1>
           <div className={styles.rightIconWrapper} onClick={onMoveToDetail}>
@@ -93,7 +109,7 @@ export default function FacilityInfo({
         </div>
 
         <div className={styles.chipsContainer}>
-          <Chips chipState="sports" text={facility.items[0]} />
+          <Chips chipState="sports" text={getLabelItem()} />
         </div>
         <p className={styles.addressInfo}>
           <IconComponent
