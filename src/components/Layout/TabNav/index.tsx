@@ -1,38 +1,35 @@
-import React, { useState, useEffect, useRef } from 'react';
-import LocalFilter from '@/components/Lesson/LocalFilter';
-import SportButtonList from '@/components/MapHome/SportButtonList';
-import { generalSports, specialSports } from '@/constants/popularList';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import {
+  selectedCityCodeState,
+  selectedLocalCodeState,
+} from '@/states/filterState';
 import { cityCodes, localCodes } from '@/constants/localCode';
-import styles from './PopularSports.module.scss';
 import IconComponent from '@/components/Asset/Icon';
-import { getFullRegionName } from '@/utils/getFullRegionName';
+import LocalFilter from '@/components/Lesson/LocalFilter';
+import styles from './TabNav.module.scss';
+import Tooltip from '@/components/Tooltip/Tooltip';
+import { TabNavProps } from './TabNav.types';
 
-interface PopularSportsProps {
-  onSelectSport: (sport: string) => void;
-  mode: 'general' | 'special';
-  onRegionSelect?: (region: string, fullRegionName: string) => void;
-  selectedRegion: string;
-}
-
-export default function PopularSports({
-  onSelectSport,
-  mode,
-  onRegionSelect,
-  selectedRegion,
-}: PopularSportsProps) {
-  const [position, setPosition] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const initialY = useRef(0);
-  const maxDragDistance = 140;
-
+export default function TabNav({
+  showmenu = true,
+  tab = 'lesson',
+  setSelectedTab,
+}: TabNavProps) {
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
   }>({});
-  const [isNextStep, setIsNextStep] = useState(false);
-  const [selectedCityCode, setSelectedCityCode] = useState<string>('11');
-  const [selectedLocalCode, setSelectedLocalCode] = useState<string>('');
+  const [isNextStep, setIsNextStep] = useState<boolean>(false);
+  const [selectedCityCode, setSelectedCityCode] = useRecoilState(
+    selectedCityCodeState
+  );
+  const [selectedLocalCode, setSelectedLocalCode] = useRecoilState(
+    selectedLocalCodeState
+  );
+  const router = useRouter();
 
-  // 시도 선택 시 구/군 옵션 설정
+  // 지역 코드가 변경되면 options 업데이트
   useEffect(() => {
     if (selectedCityCode && localCodes[selectedCityCode]) {
       setCurrentOptions(localCodes[selectedCityCode]);
@@ -41,7 +38,31 @@ export default function PopularSports({
     }
   }, [selectedCityCode]);
 
-  // 옵션 선택 핸들러
+  // 초기 데이터 로드
+  useEffect(() => {
+    const fetchInitialData = () => {
+      const storedLocalCode = localStorage.getItem('localCode') || '11110';
+      const defaultCityCode =
+        Object.keys(localCodes).find(cityCode =>
+          Object.keys(localCodes[cityCode]).includes(storedLocalCode)
+        ) || '11';
+
+      setSelectedLocalCode(storedLocalCode);
+      setSelectedCityCode(defaultCityCode);
+      setCurrentOptions(localCodes[storedLocalCode] || {});
+    };
+
+    fetchInitialData();
+  }, [setSelectedCityCode, setSelectedLocalCode]);
+
+  const handleTabClick = (tab: 'lesson' | 'popular') => {
+    setSelectedTab(tab);
+  };
+
+  const handleMenuClick = () => {
+    router.push('/setting');
+  };
+
   const handleValueChange = (key: string) => {
     if (isNextStep) {
       setSelectedLocalCode(key);
@@ -50,103 +71,52 @@ export default function PopularSports({
     }
   };
 
-  // "다음" 버튼 핸들러
-  const handleNextClick = () => {
-    if (selectedCityCode) {
-      setIsNextStep(true);
-    }
-  };
-
-  // "선택 완료" 버튼 핸들러
-  const handleCompleteClick = () => {
-    if (selectedCityCode && selectedLocalCode) {
-      setIsNextStep(false);
-      const fullRegionName = getFullRegionName(
-        selectedCityCode,
-        selectedLocalCode
-      );
-      const shortRegionName = `${cityCodes[selectedCityCode]} ${localCodes[selectedCityCode][selectedLocalCode]}`;
-
-      // 상위 컴포넌트로 fullRegionName 전달
-      if (onRegionSelect) {
-        onRegionSelect(selectedLocalCode, fullRegionName);
-      }
-    }
-  };
-
-  // 드래그 이벤트 핸들러
-  const handleDragStart = (
-    event: React.MouseEvent | React.TouchEvent,
-    isIndicator: boolean
-  ) => {
-    if (!isIndicator) return; // 인디케이터에서만 드래그 시작
-    setIsDragging(true);
-    initialY.current =
-      'touches' in event ? event.touches[0].clientY : event.clientY;
-  };
-
-  const handleDragMove = (event: React.MouseEvent | React.TouchEvent) => {
-    if (!isDragging) return;
-
-    const currentY =
-      'touches' in event ? event.touches[0].clientY : event.clientY;
-    const delta = currentY - initialY.current;
-
-    setPosition(prevPosition => {
-      const newPosition = prevPosition + delta;
-      return Math.max(Math.min(newPosition, maxDragDistance), 0);
-    });
-
-    initialY.current = currentY;
-  };
-
-  const handleDragEnd = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    setPosition(prevPosition =>
-      prevPosition < maxDragDistance / 2 ? maxDragDistance : 0
-    );
-  };
+  // 선택한 지역 placeholder
+  const selectedRegion =
+    selectedCityCode &&
+    selectedLocalCode &&
+    cityCodes[selectedCityCode] &&
+    localCodes[selectedCityCode] &&
+    localCodes[selectedCityCode][selectedLocalCode]
+      ? `${cityCodes[selectedCityCode]} ${localCodes[selectedCityCode][selectedLocalCode]}`
+      : `${cityCodes[selectedCityCode] || '-'} ${localCodes[selectedCityCode]?.[selectedLocalCode] || '-'}`;
 
   return (
-    <div
-      className={styles.popularSportsContainer}
-      style={{ transform: `translateY(${position}px)` }}
-      onMouseMove={isDragging ? handleDragMove : undefined}
-      onTouchMove={isDragging ? handleDragMove : undefined}
-      onMouseUp={handleDragEnd}
-      onTouchEnd={handleDragEnd}
-    >
-      <div
-        className={styles.indicatorWrapper}
-        onMouseDown={e => handleDragStart(e, true)} // 드래그 시작 플래그 전달
-        onTouchStart={e => handleDragStart(e, true)}
-      >
-        <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
+    <header className={styles.container}>
+      <div className={styles.headerContainer}>
+        <LocalFilter
+          options={isNextStep ? currentOptions : cityCodes}
+          value={isNextStep ? selectedLocalCode : selectedCityCode}
+          onChange={handleValueChange}
+          title={isNextStep ? '시군구 선택 (2/2)' : '시도 선택 (1/2)'}
+          placeholder={selectedRegion}
+          onNextClick={() => setIsNextStep(true)}
+          onCompleteClick={() => setIsNextStep(false)}
+          isNextStep={isNextStep}
+          placeholderType="lesson"
+        />
+        {showmenu && (
+          <div className={styles.btnContainer} onClick={handleMenuClick}>
+            <IconComponent name="menu" size="l" />
+          </div>
+        )}
       </div>
-
-      <div className={styles.content}>
-        <header className={styles.header}>
-          <LocalFilter
-            options={isNextStep ? currentOptions : cityCodes}
-            value={isNextStep ? selectedLocalCode : selectedCityCode}
-            onChange={handleValueChange}
-            title={isNextStep ? '구/군 선택 (2/2)' : '시/도 선택 (1/2)'}
-            placeholder={selectedRegion}
-            onNextClick={handleNextClick}
-            onCompleteClick={handleCompleteClick}
-            isNextStep={isNextStep}
-          />
-        </header>
-
-        <h2 className={styles.title}>인기 스포츠</h2>
-        <div className={styles.sportsList}>
-          <SportButtonList
-            sports={mode === 'general' ? generalSports : specialSports}
-            onSelectSport={onSelectSport}
-          />
-        </div>
+      <div className={styles.tabs}>
+        <button
+          className={`${styles.button} ${tab === 'lesson' ? styles.active : ''}`}
+          onClick={() => handleTabClick('lesson')}
+        >
+          전체
+        </button>
+        <Tooltip text="시설을 추천해드려요!" position="left">
+          <button
+            className={`${styles.button} ${tab === 'popular' ? styles.active : ''}`}
+            onClick={() => handleTabClick('popular')}
+          >
+            인기
+          </button>
+        </Tooltip>
       </div>
-    </div>
+    </header>
   );
 }
