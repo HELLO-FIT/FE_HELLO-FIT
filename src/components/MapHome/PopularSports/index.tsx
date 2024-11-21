@@ -65,7 +65,6 @@ export default function PopularSports({
         selectedCityCode,
         selectedLocalCode
       );
-      const shortRegionName = `${cityCodes[selectedCityCode]} ${localCodes[selectedCityCode][selectedLocalCode]}`;
 
       // 상위 컴포넌트로 fullRegionName 전달
       if (onRegionSelect) {

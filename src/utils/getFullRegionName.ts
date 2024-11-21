@@ -1,6 +1,9 @@
-import { cityCodes, localCodes } from "@/constants/localCode";
+import { cityCodes, localCodes } from '@/constants/localCode';
 
-export const getFullRegionName = (cityCode: string, localCode: string): string => {
+export const getFullRegionName = (
+  cityCode: string,
+  localCode: string
+): string => {
   const cityName = cityCodes[cityCode];
   const localName = localCodes[cityCode]?.[localCode];
 
@@ -16,7 +19,7 @@ export const getFullRegionName = (cityCode: string, localCode: string): string =
   if (cityName === '광주') return `광주광역시 ${localName}`;
   if (cityName === '대전') return `대전광역시 ${localName}`;
   if (cityName === '울산') return `울산광역시 ${localName}`;
-  if (cityName === '세종') return `세종특별자치시`;
+  if (cityName === '세종') return '세종특별자치시';
 
   return `${cityName} ${localName}`;
 };
