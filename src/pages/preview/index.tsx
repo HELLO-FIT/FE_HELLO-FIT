@@ -3,7 +3,6 @@ import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
 import CustomButton from '@/components/Button/CustomButton';
 import SportButton from '@/components/Button/SportButton';
-import SportButtonList from '@/components/MapHome/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/Search/SearchBar';
@@ -119,7 +118,6 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
-        <SportButtonList onSelectSport={handleSelectSport} sports={[]} />
         {selectedSport && (
           <p style={{ marginTop: '20px' }}>선택한 스포츠: {selectedSport}</p>
         )}
