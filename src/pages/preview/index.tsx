@@ -119,7 +119,7 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
-        <SportButtonList onSelectSport={handleSelectSport} />
+        <SportButtonList onSelectSport={handleSelectSport} sports={[]} />
         {selectedSport && (
           <p style={{ marginTop: '20px' }}>선택한 스포츠: {selectedSport}</p>
         )}
