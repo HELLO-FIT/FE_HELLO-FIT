@@ -24,4 +24,9 @@
   &:active {
     background-color: darken($blue60, 20%);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: $gray30;
+  }
 }

@@ -1,31 +1,78 @@
-import React, { useState, useRef } from 'react';
-import DropDown from '@/components/DropDown';
+import React, { useState, useEffect, useRef } from 'react';
+import LocalFilter from '@/components/Lesson/LocalFilter';
 import SportButtonList from '@/components/MapHome/SportButtonList';
-import IconComponent from '@/components/Asset/Icon';
-import { generalSports, specialSports } from '@/constants/popularList'; 
+import { generalSports, specialSports } from '@/constants/popularList';
+import { cityCodes, localCodes } from '@/constants/localCode';
 import styles from './PopularSports.module.scss';
+import IconComponent from '@/components/Asset/Icon';
 
 interface PopularSportsProps {
   onSelectSport: (sport: string) => void;
-  mode: 'general' | 'special'; 
+  mode: 'general' | 'special';
 }
 
-export default function PopularSports({ onSelectSport, mode }: PopularSportsProps) {
+export default function PopularSports({
+  onSelectSport,
+  mode,
+}: PopularSportsProps) {
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const initialY = useRef(0);
   const maxDragDistance = 140;
 
+  const [currentOptions, setCurrentOptions] = useState<{
+    [key: string]: string;
+  }>({});
+  const [isNextStep, setIsNextStep] = useState(false);
+  const [selectedCityCode, setSelectedCityCode] = useState<string>('11');
+  const [selectedLocalCode, setSelectedLocalCode] = useState<string>('');
+  const [selectedRegion, setSelectedRegion] = useState<string>('서울');
+
+  // 시도 선택 시 구/군 옵션 설정
+  useEffect(() => {
+    if (selectedCityCode && localCodes[selectedCityCode]) {
+      setCurrentOptions(localCodes[selectedCityCode]);
+    } else {
+      setCurrentOptions({});
+    }
+  }, [selectedCityCode]);
+
+  // 옵션 선택 핸들러
+  const handleValueChange = (key: string) => {
+    if (isNextStep) {
+      setSelectedLocalCode(key);
+    } else {
+      setSelectedCityCode(key);
+    }
+  };
+
+  // "다음" 버튼 핸들러
+  const handleNextClick = () => {
+    if (selectedCityCode) {
+      setIsNextStep(true);
+    }
+  };
+
+  // "선택 완료" 버튼 핸들러
+  const handleCompleteClick = () => {
+    if (selectedCityCode && selectedLocalCode) {
+      setIsNextStep(false);
+      const region = `${cityCodes[selectedCityCode]} ${
+        localCodes[selectedCityCode][selectedLocalCode]
+      }`;
+      setSelectedRegion(region);
+    }
+  };
+
+  // 드래그 이벤트 핸들러
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
-    if (isDropdownOpen) return;
     setIsDragging(true);
     initialY.current =
       'touches' in event ? event.touches[0].clientY : event.clientY;
   };
 
   const handleDragMove = (event: React.MouseEvent | React.TouchEvent) => {
-    if (!isDragging || isDropdownOpen) return;
+    if (!isDragging) return;
 
     const currentY =
       'touches' in event ? event.touches[0].clientY : event.clientY;
@@ -51,31 +98,40 @@ export default function PopularSports({ onSelectSport, mode }: PopularSportsProp
     <div
       className={styles.popularSportsContainer}
       style={{ transform: `translateY(${position}px)` }}
-      onMouseDown={isDropdownOpen ? undefined : handleDragStart}
-      onTouchStart={isDropdownOpen ? undefined : handleDragStart}
-      onMouseMove={isDragging && !isDropdownOpen ? handleDragMove : undefined}
-      onTouchMove={isDragging && !isDropdownOpen ? handleDragMove : undefined}
-      onMouseUp={isDragging ? handleDragEnd : undefined}
-      onTouchEnd={isDragging ? handleDragEnd : undefined}
+      onMouseDown={handleDragStart}
+      onTouchStart={handleDragStart}
+      onMouseMove={isDragging ? handleDragMove : undefined}
+      onTouchMove={isDragging ? handleDragMove : undefined}
+      onMouseUp={handleDragEnd}
+      onTouchEnd={handleDragEnd}
     >
-      <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
+      {/* 드래그 인디케이터 */}
+      <div className={styles.indicatorWrapper}>
+        <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
+      </div>
+
+      {/* 콘텐츠 */}
       <div className={styles.content}>
         <header className={styles.header}>
-          <DropDown
-            placeholder="지역"
-            options={['서울 송파구', '서울 종로구']}
-            onSelect={selectedLocation =>
-              console.log('선택된 위치:', selectedLocation)
-            }
-            onOpen={() => setIsDropdownOpen(true)}
-            onClose={() => setIsDropdownOpen(false)}
+          <LocalFilter
+            options={isNextStep ? currentOptions : cityCodes}
+            value={isNextStep ? selectedLocalCode : selectedCityCode}
+            onChange={handleValueChange}
+            title={isNextStep ? '구/군 선택 (2/2)' : '시/도 선택 (1/2)'}
+            placeholder={selectedRegion}
+            onNextClick={handleNextClick}
+            onCompleteClick={handleCompleteClick}
+            isNextStep={isNextStep}
           />
         </header>
+
         <h2 className={styles.title}>인기 스포츠</h2>
-        <SportButtonList
-          sports={mode === 'general' ? generalSports : specialSports}
-          onSelectSport={onSelectSport}
-        />
+        <div className={styles.sportsList}>
+          <SportButtonList
+            sports={mode === 'general' ? generalSports : specialSports}
+            onSelectSport={onSelectSport}
+          />
+        </div>
       </div>
     </div>
   );
