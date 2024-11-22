@@ -150,9 +150,9 @@ export default function Map() {
     const mapScript = document.createElement('script');
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services`;
-  
+
     document.head.appendChild(mapScript);
-  
+
     const initializeMap = () => {
       window.kakao.maps.load(() => {
         const mapContainer = document.getElementById('map');
@@ -162,7 +162,7 @@ export default function Map() {
         };
         const kakaoMap = new window.kakao.maps.Map(mapContainer, mapOption);
         setMap(kakaoMap);
-  
+
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             position => {
@@ -172,23 +172,24 @@ export default function Map() {
               );
               setUserLocation(userLatLng);
               kakaoMap.setCenter(userLatLng);
-  
+
               // `toggle` 상태에 따라 다른 마커 이미지 설정
               const userMarkerImage = new window.kakao.maps.MarkerImage(
-                toggle === 'special'
-                  ? '/image/my-location-special.svg'
-                  : '/image/my-location.svg',
+                classNames({
+                  '/image/my-location-special.svg': toggle === 'special',
+                  '/image/my-location.svg': toggle !== 'special',
+                }),
                 new window.kakao.maps.Size(40, 40),
                 { offset: new window.kakao.maps.Point(20, 40) }
               );
-  
+
               new window.kakao.maps.Marker({
                 map: kakaoMap,
                 position: userLatLng,
                 image: userMarkerImage,
                 title: '현재 위치',
               });
-  
+
               updateLocalCodeAndFetchFacilities(
                 position.coords.latitude,
                 position.coords.longitude
@@ -201,14 +202,13 @@ export default function Map() {
         }
       });
     };
-  
+
     mapScript.addEventListener('load', initializeMap);
-  
+
     return () => {
       mapScript.removeEventListener('load', initializeMap);
     };
-  }, [KAKAO_MAP_KEY, toggle]); 
-  
+  }, [KAKAO_MAP_KEY, toggle]);
 
   useEffect(() => {
     if (!map || facilities.length === 0) return;
@@ -228,17 +228,19 @@ export default function Map() {
 
             // 기본 및 선택된 마커 이미지
             const defaultMarkerImage = new window.kakao.maps.MarkerImage(
-              toggle === 'special'
-                ? '/image/marker-special.svg'
-                : '/image/marker.svg',
+              classNames({
+                '/image/marker-special.svg': toggle === 'special',
+                '/image/marker.svg': toggle !== 'special',
+              }),
               new window.kakao.maps.Size(28, 28),
               { offset: new window.kakao.maps.Point(14, 14) }
             );
 
             const selectedMarkerImage = new window.kakao.maps.MarkerImage(
-              toggle === 'special'
-                ? '/image/address-marker-special.svg'
-                : '/image/address-marker-normal.svg',
+              classNames({
+                '/image/address-marker-special.svg': toggle === 'special',
+                '/image/address-marker-normal.svg': toggle !== 'special',
+              }),
               new window.kakao.maps.Size(28, 28),
               { offset: new window.kakao.maps.Point(14, 14) }
             );
@@ -269,15 +271,7 @@ export default function Map() {
             window.kakao.maps.event.addListener(marker, 'click', async () => {
               // 이전 선택된 마커를 기본 이미지로 복원
               if (selectedMarker && selectedMarker !== marker) {
-                selectedMarker.setImage(
-                  new window.kakao.maps.MarkerImage(
-                    toggle === 'special'
-                      ? '/image/marker-special.svg'
-                      : '/image/marker.svg',
-                    new window.kakao.maps.Size(28, 28),
-                    { offset: new window.kakao.maps.Point(14, 14) }
-                  )
-                );
+                selectedMarker.setImage(defaultMarkerImage);
               }
 
               // 현재 선택된 마커를 선택 이미지로 변경
