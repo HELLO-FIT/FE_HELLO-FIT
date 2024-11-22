@@ -40,7 +40,7 @@ export default function Header() {
         <IconComponent name={logoName} width={60} height={34} />
       </div>
       <div className={styles.toggleButtonContainer}>
-        <Tooltip text="이용권에 따라 선택해주세요!">
+        <Tooltip text="이용권에 따라 선택해주세요!" position="right">
           <ToggleButton onButtonClick={handleButtonClick} />
         </Tooltip>
       </div>
