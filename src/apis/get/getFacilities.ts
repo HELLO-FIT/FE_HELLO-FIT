@@ -3,7 +3,7 @@ import BASE_URL from '@/constants/baseurl';
 /* 일반 회원 */
 export interface NomalFacility {
   businessId: string;
-  serialNumber?: string;
+  serialNumber: string;
   name: string;
   cityCode: string;
   cityName: string;

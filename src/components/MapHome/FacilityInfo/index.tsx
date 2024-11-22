@@ -117,7 +117,7 @@ export default function FacilityInfo({
         </div>
 
         <div className={styles.chipsContainer}>
-          <Chips chipState="sports" text={getLabelItem()} />
+          <Chips chipState="sports" text={getLabelItem()} serialNumber />
         </div>
         <p className={styles.addressInfo}>
           <IconComponent
