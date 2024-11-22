@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   NomalFacility,
   getNomalFacilities,
   GetNomalFacilitiesParams,
+  SpecialFacility,
+  GetSpecialFacilitiesParams,
+  getSpecialFacilities,
 } from '@/apis/get/getFacilities';
 import {
   selectedCityCodeState,
@@ -19,17 +22,29 @@ import ImageComponent from '../Asset/Image';
 import { sportsList } from '@/constants/sportsList';
 import IconComponent from '../Asset/Icon';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { toggleState } from '@/states/toggleState';
+import classNames from 'classnames';
+import SpecialFilter from './SpecialFilter';
+import { specialAmenityList, specialTypeList } from '@/constants/specialList';
 
 interface LessonProps {
   onPopularClick: () => void;
 }
 
 export default function Lesson({ onPopularClick }: LessonProps) {
-  const [facilities, setFacilities] = useState<NomalFacility[]>([]);
+  const [facilities, setFacilities] = useState<
+    NomalFacility[] | SpecialFacility[]
+  >([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedCityCode] = useRecoilState(selectedCityCodeState);
   const [selectedLocalCode] = useRecoilState(selectedLocalCodeState);
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
+  const toggle = useRecoilValue(toggleState);
+  const [specialFilterValue, setSpecialFilterValue] = useState<string>('');
+
+  const handleSpecialFilterChange = (type: string) => {
+    setSpecialFilterValue(type);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,10 +54,25 @@ export default function Lesson({ onPopularClick }: LessonProps) {
           localCode: selectedLocalCode,
         };
 
-        const fetchedFacilities = await getNomalFacilities(params);
-        setFacilities(
-          filterFacilitiesBySport(fetchedFacilities, selectedSport)
-        );
+        if (toggle === 'general') {
+          const fetchedFacilities = await getNomalFacilities(params);
+          setFacilities(
+            filterFacilitiesBySport(fetchedFacilities, selectedSport)
+          );
+        } else {
+          const specialParams: GetSpecialFacilitiesParams = {
+            localCode: selectedLocalCode,
+            itemName: selectedSport,
+          };
+
+          if (specialFilterValue && specialFilterValue !== '') {
+            specialParams.type = specialFilterValue;
+          }
+
+          const fetchedSpecialFacilities =
+            await getSpecialFacilities(specialParams);
+          setFacilities(fetchedSpecialFacilities);
+        }
       } catch {
         console.error('시설 데이터를 불러오는 데 실패했습니다.');
       } finally {
@@ -53,7 +83,13 @@ export default function Lesson({ onPopularClick }: LessonProps) {
     if (selectedCityCode && selectedLocalCode) {
       fetchData();
     }
-  }, [selectedCityCode, selectedLocalCode, selectedSport]);
+  }, [
+    selectedCityCode,
+    selectedLocalCode,
+    selectedSport,
+    toggle,
+    specialFilterValue,
+  ]);
 
   // 스포츠 필터링
   const filterFacilitiesBySport = (
@@ -72,7 +108,13 @@ export default function Lesson({ onPopularClick }: LessonProps) {
         <LoadingSpinner />
       ) : (
         <>
-          <div className={styles.popularBtn} onClick={onPopularClick}>
+          <div
+            className={classNames({
+              [styles.popularBtn]: toggle === 'general',
+              [styles.popularBtnSP]: toggle !== 'general',
+            })}
+            onClick={onPopularClick}
+          >
             <div className={styles.titleContainer}>
               <p className={styles.buttonSubtitle}>시설 고르기가 어렵다면?</p>
               <div className={styles.buttonTitle}>
@@ -94,16 +136,34 @@ export default function Lesson({ onPopularClick }: LessonProps) {
               value={selectedSport}
               onChange={setSelectedSport}
             />
+            {toggle === 'special' && (
+              <SpecialFilter
+                types={specialTypeList}
+                amenities={specialAmenityList}
+                value={specialFilterValue}
+                onChange={handleSpecialFilterChange}
+              />
+            )}
             <div className={styles.totalText}>
-              총<p className={styles.totalTextColor}>{facilities.length}</p>시설
+              총
+              <p
+                className={
+                  toggle === 'general'
+                    ? styles.totalTextColor
+                    : styles.totalTextColorSP
+                }
+              >
+                {facilities.length}
+              </p>
+              시설
             </div>
           </div>
           {facilities.length > 0 ? (
             <div className={styles.listContainer}>
               {facilities.map(facility => (
                 <Link
-                  key={`${facility.businessId}-${facility.serialNumber}`}
-                  href={`/details/${facility.businessId}/${facility.serialNumber}`}
+                  key={`${facility.businessId}-${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
+                  href={`/details/${facility.businessId}${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
                 >
                   <Schedule facility={facility} />
                 </Link>
@@ -112,7 +172,7 @@ export default function Lesson({ onPopularClick }: LessonProps) {
           ) : (
             <div className={styles.resultContainer}>
               <IconComponent
-                name="noResult"
+                name={toggle === 'general' ? 'noResult' : 'noResultSP'}
                 width={48}
                 height={48}
                 alt="결과 없음"

@@ -40,6 +40,11 @@
     @include T16B;
     color: $blue60;
   }
+
+  .counterSP {
+    @include T16B;
+    color: $green80;
+  }
 }
 
 .notiWrapper {

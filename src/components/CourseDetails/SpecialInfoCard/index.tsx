@@ -1,21 +1,13 @@
 import styles from './SpecialInfoCard.module.scss';
 import { SpecialInfoCardProps } from './SpecialInfoCard.types';
+import { specialAmenityList } from '@/constants/specialList';
 
-export default function SpecialInfoCard({
-  coach,
-  vehicle = false,
-  specialType,
-  amenities,
-}: SpecialInfoCardProps) {
+export default function SpecialInfoCard({ specialType }: SpecialInfoCardProps) {
   return (
     <section className={styles.box}>
       <div className={styles.labelValueText}>
         <span className={styles.label}>장애 특수 지도자</span>
-        <span className={styles.value}>{coach}명</span>
-      </div>
-      <div className={styles.labelValueText}>
-        <span className={styles.label}>차량 지원</span>
-        <span className={styles.value}>{vehicle ? '지원' : '없음'}</span>
+        <span className={styles.value}>{2}명</span>
       </div>
       <div className={styles.labelValue}>
         <span className={styles.label}>장애 유형</span>
@@ -30,9 +22,9 @@ export default function SpecialInfoCard({
       <div className={styles.labelValue}>
         <span className={styles.label}>편의 시설</span>
         <div className={styles.buttonContainer}>
-          {amenities.map((facility, index) => (
+          {specialAmenityList.map((amenity, index) => (
             <button key={index} className={styles.button}>
-              {facility}
+              {amenity}
             </button>
           ))}
         </div>

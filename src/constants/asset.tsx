@@ -14,6 +14,9 @@ export const ICONS = {
     m: '/icon/m/icon-check.svg',
     s: '/icon/s/icon-check.svg',
   },
+  checkSP: {
+    m: '/icon/m/icon-check-green.svg',
+  },
   circleAlertRed: {
     l: '/icon/l/icon-circle-alert-red.svg',
     m: '/icon/m/icon-circle-alert-red.svg',
@@ -81,6 +84,9 @@ export const ICONS = {
     l: '/icon/l/icon-notification.svg',
     m: '/icon/m/icon-notification.svg',
     s: '/icon/s/icon-notification.svg',
+  },
+  notificationSP: {
+    s: '/icon/s/icon-notification-green.svg',
   },
   redHeartBlank: {
     l: '/icon/l/icon-red-heart-blank.svg',
@@ -155,8 +161,11 @@ export const ICONS = {
   indicatorDot: '/icon/custom/indicator/icon-indicator-dot.svg',
   marker: '/icon/custom/marker.svg',
   addressMarker: '/icon/custom/address-marker.svg',
+  addressMarkerSP: '/icon/custom/address-marker-green.svg',
   noResult: '/icon/custom/icon-no-result.svg',
+  noResultSP: '/icon/custom/icon-no-result-green.svg',
   emptyNoti: '/icon/custom/icon-empty-noti.svg',
+  emptyNotiSP: '/icon/custom/icon-empty-noti-green.svg',
   closeCircle: '/icon/custom/icon-close-circle.svg',
 };
 

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   selectedCityCodeState,
   selectedLocalCodeState,
@@ -11,6 +11,8 @@ import LocalFilter from '@/components/Lesson/LocalFilter';
 import styles from './TabNav.module.scss';
 import Tooltip from '@/components/Tooltip/Tooltip';
 import { TabNavProps } from './TabNav.types';
+import { toggleState } from '@/states/toggleState';
+import classNames from 'classnames';
 
 export default function TabNav({
   showmenu = true,
@@ -28,6 +30,7 @@ export default function TabNav({
     selectedLocalCodeState
   );
   const router = useRouter();
+  const toggle = useRecoilValue(toggleState);
 
   // 지역 코드가 변경되면 options 업데이트
   useEffect(() => {
@@ -103,14 +106,20 @@ export default function TabNav({
       </div>
       <div className={styles.tabs}>
         <button
-          className={`${styles.button} ${tab === 'lesson' ? styles.active : ''}`}
+          className={classNames(styles.button, {
+            [styles.active]: tab === 'lesson' && toggle === 'general',
+            [styles.activeSP]: tab === 'lesson' && toggle === 'special',
+          })}
           onClick={() => handleTabClick('lesson')}
         >
           전체
         </button>
         <Tooltip text="시설을 추천해드려요!" position="left">
           <button
-            className={`${styles.button} ${tab === 'popular' ? styles.active : ''}`}
+            className={classNames(styles.button, {
+              [styles.active]: tab === 'popular' && toggle === 'general',
+              [styles.activeSP]: tab === 'popular' && toggle === 'special',
+            })}
             onClick={() => handleTabClick('popular')}
           >
             인기

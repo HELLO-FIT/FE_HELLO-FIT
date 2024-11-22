@@ -1,9 +1,9 @@
 export interface CourseCardProps {
   courseName: string;
-  instructor: string;
+  instructor?: string;
   startTime: string;
   endTime: string;
   workday: string;
   price: number;
-  isSpecial?: boolean;
+  isNormal?: boolean;
 }

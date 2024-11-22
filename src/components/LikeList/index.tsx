@@ -6,10 +6,13 @@ import Link from 'next/link';
 import LoadingSpinner from '../LoadingSpinner';
 import IconComponent from '../Asset/Icon';
 import { useModal } from '@/utils/modalUtils';
+import { toggleState } from '@/states/toggleState';
+import { useRecoilValue } from 'recoil';
 
 export default function LikeList() {
   const [favorites, setFavorites] = useState<FavoritesItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const toggle = useRecoilValue(toggleState);
   const { openModal } = useModal();
 
   const showModal = useCallback(() => {
@@ -25,22 +28,26 @@ export default function LikeList() {
 
     if (!token) {
       showModal();
+      setLoading(false);
       return;
     }
 
     const fetchFavorites = async () => {
       try {
+        setLoading(true);
         const data = await getFavorites();
         setFavorites(data);
-        setLoading(false);
       } catch (err) {
         console.log('찜한 강좌를 가져오는데 실패했습니다.', err);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchFavorites();
-  }, [showModal]);
+    if (loading) {
+      fetchFavorites();
+    }
+  }, [showModal, loading]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -50,14 +57,16 @@ export default function LikeList() {
     <div className={styles.container}>
       <header className={styles.headerContainer}>
         <h2 className={styles.title}>찜한 강좌</h2>
-        <p className={styles.counter}>{favorites.length}</p>
+        <p className={toggle === 'general' ? styles.counter : styles.counterSP}>
+          {favorites.length}
+        </p>
       </header>
       {favorites.length > 0 ? (
         <div className={styles.listContainer}>
           {favorites.map(facility => (
             <Link
-              key={`${facility.businessId}-${facility.serialNumber}`}
-              href={`/details/${facility.businessId}/${facility.serialNumber}`}
+              key={`${facility.businessId}-${facility.serialNumber || ''}`}
+              href={`/details/${facility.businessId}/${facility.serialNumber || ''}`}
             >
               <Schedule facility={facility} />
             </Link>

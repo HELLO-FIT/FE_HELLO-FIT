@@ -5,13 +5,12 @@ import {
 } from '@/apis/get/getPopular';
 import styles from './Popular.module.scss';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   selectedLocalCodeState,
   selectedSportState,
 } from '@/states/filterState';
 import Link from 'next/link';
-import Schedule from '@/components/Schedule';
 import IconComponent from '@/components/Asset/Icon';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SportsFilter from '../SportsFilter';
@@ -24,6 +23,8 @@ import { formatCurrency } from '@/utils/formatCurrency';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import useOutsideClick from '@/hooks/useOutsideClick';
+import { toggleState } from '@/states/toggleState';
+import PopularSchedule from '@/components/Schedule/PopularSchedule';
 
 export default function Popular() {
   const [facilities, setFacilities] = useState<NomalPopular[]>([]);
@@ -34,6 +35,7 @@ export default function Popular() {
   const [selectedSort, setSelectedSort] = useState('인기순');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const topFacilities = facilities.slice(0, 5);
+  const toggle = useRecoilValue(toggleState);
 
   useEffect(() => {
     const fetchFacilities = async () => {
@@ -110,7 +112,9 @@ export default function Popular() {
         <>
           <div className={styles.topContainer}>
             <div className={styles.titleContainer}>
-              <h2 className={styles.title}>
+              <h2
+                className={toggle === 'general' ? styles.title : styles.titleSP}
+              >
                 {parseLocalCode(selectedLocalCode)}
               </h2>
               인기 시설 TOP 5
@@ -164,6 +168,7 @@ export default function Popular() {
                       <Chips
                         chipState="top"
                         text={`누적 수강 ${formatCurrency(facility.totalParticipantCount)}`}
+                        serialNumber
                       />
                     </Link>
                   </SwiperSlide>
@@ -182,7 +187,13 @@ export default function Popular() {
                 />
                 <div className={styles.totalText}>
                   총
-                  <p className={styles.totalTextColor}>
+                  <p
+                    className={
+                      toggle === 'general'
+                        ? styles.totalTextColor
+                        : styles.totalTextColorSP
+                    }
+                  >
                     {filteredFacilities.length}
                   </p>
                   시설
@@ -215,7 +226,7 @@ export default function Popular() {
                     key={`${facility.businessId}-${facility.serialNumber}`}
                     href={`/details/${facility.businessId}/${facility.serialNumber}`}
                   >
-                    <Schedule facility={facility} isPopular />
+                    <PopularSchedule facility={facility} />
                   </Link>
                 ))}
               </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
 import CustomButton from '@/components/Button/CustomButton';
@@ -6,8 +6,7 @@ import SportButton from '@/components/Button/SportButton';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/Search/SearchBar';
-import Chips from '@/components/Button/Chips';
-import SpecialInfoCard from '@/components/CourseDetails/SpecialInfoCard';
+// import Chips from '@/components/Button/Chips';
 import DropDown from '@/components/DropDown';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
@@ -40,29 +39,27 @@ const locationOptions = [
   '서울 강동구',
 ];
 
-// 스포츠 종목 목업 데이터
-const sportsOptions = [
-  '축구',
-  '농구',
-  '배구',
-  '수영',
-  '테니스',
-  '야구',
-  '탁구',
-  '배드민턴',
-  '유도',
-  '골프',
-];
+// // 스포츠 종목 목업 데이터
+// const sportsOptions = [
+//   '축구',
+//   '농구',
+//   '배구',
+//   '수영',
+//   '테니스',
+//   '야구',
+//   '탁구',
+//   '배드민턴',
+//   '유도',
+//   '골프',
+// ];
 
 export default function Preview() {
-  const data = {
-    coach: 2,
-    vehicle: true,
-    specialType: ['지체', '시각', '언어'],
-    amenities: ['장애인 화장실', '장애인 주차구역', '휠체어 경사로'],
-  };
+  // const [selectedSport, setSelectedSport] = useState<string | null>(null);
 
-  const [selectedSport] = useState<string | null>(null);
+  // const handleSelectSport = (sport: string) => {
+  //   setSelectedSport(sport);
+  //   console.log(`Selected sport: ${sport}`);
+  // };
 
   return (
     <div className={styles.previewPage}>
@@ -110,13 +107,13 @@ export default function Preview() {
           isSelected={false}
         />
       </section>
-
+      {/* 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
         {selectedSport && (
           <p style={{ marginTop: '20px' }}>선택한 스포츠: {selectedSport}</p>
         )}
-      </section>
+      </section> */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>CheckBox</h2>
@@ -127,24 +124,14 @@ export default function Preview() {
         <h2 className={styles.sectionTitle}>SearchBar</h2>
         <SearchBar />
       </section>
-
+      {/* 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Chips</h2>
         <Chips text="장애인 화장실" chipState="label" />
         <Chips text="장애인 화장실" chipState="checked" />
         <Chips text="장애인 화장실" chipState="unchecked" />
         <Chips text="복싱" chipState="sports" />
-      </section>
-
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>SpecialInfoCard</h2>
-        <SpecialInfoCard
-          coach={data.coach}
-          vehicle={data.vehicle}
-          specialType={data.specialType}
-          amenities={data.amenities}
-        />
-      </section>
+      </section> */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Location DropDown</h2>
@@ -157,7 +144,7 @@ export default function Preview() {
         />
       </section>
 
-      <section className={styles.section}>
+      {/* <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sports DropDown</h2>
         <DropDown
           placeholder={'종목 선택'}
@@ -166,7 +153,7 @@ export default function Preview() {
             console.log('선택된 스포츠:', selectedSport)
           }
         />
-      </section>
+      </section> */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Loading Spinner</h2>

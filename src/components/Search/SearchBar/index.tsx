@@ -3,10 +3,13 @@ import { useRouter } from 'next/router';
 import IconComponent from '../../Asset/Icon';
 import styles from './SearchBar.module.scss';
 import { SearchBarProps } from './SearchBar.types';
+import { toggleState } from '@/states/toggleState';
+import { useRecoilValue } from 'recoil';
 
 export default function SearchBar({ searchCase }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
+  const toggle = useRecoilValue(toggleState);
 
   useEffect(() => {
     if (router.query.query) {
@@ -35,7 +38,9 @@ export default function SearchBar({ searchCase }: SearchBarProps) {
   };
 
   return (
-    <div className={styles.container}>
+    <div
+      className={toggle === 'general' ? styles.container : styles.containerSP}
+    >
       <IconComponent name="search" size="m" />
       <input
         className={styles.inputContainer}

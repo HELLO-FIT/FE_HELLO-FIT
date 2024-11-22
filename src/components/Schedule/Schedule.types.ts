@@ -1,6 +1,5 @@
-import { NomalFacility } from '@/apis/get/getFacilities';
+import { NomalFacility, SpecialFacility } from '@/apis/get/getFacilities';
 
 export interface ScheduleProps {
-  facility: NomalFacility;
-  isPopular?: boolean;
+  facility: NomalFacility | SpecialFacility;
 }
