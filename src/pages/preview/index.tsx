@@ -39,19 +39,19 @@ const locationOptions = [
   '서울 강동구',
 ];
 
-// 스포츠 종목 목업 데이터
-const sportsOptions = [
-  '축구',
-  '농구',
-  '배구',
-  '수영',
-  '테니스',
-  '야구',
-  '탁구',
-  '배드민턴',
-  '유도',
-  '골프',
-];
+// // 스포츠 종목 목업 데이터
+// const sportsOptions = [
+//   '축구',
+//   '농구',
+//   '배구',
+//   '수영',
+//   '테니스',
+//   '야구',
+//   '탁구',
+//   '배드민턴',
+//   '유도',
+//   '골프',
+// ];
 
 export default function Preview() {
   // const [selectedSport, setSelectedSport] = useState<string | null>(null);
