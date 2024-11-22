@@ -3,11 +3,10 @@ import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
 import CustomButton from '@/components/Button/CustomButton';
 import SportButton from '@/components/Button/SportButton';
-import SportButtonList from '@/components/MapHome/SportButtonList';
 import styles from './preview.module.scss';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/Search/SearchBar';
-import Chips from '@/components/Button/Chips';
+// import Chips from '@/components/Button/Chips';
 import DropDown from '@/components/DropDown';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
@@ -111,7 +110,6 @@ export default function Preview() {
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
-        <SportButtonList onSelectSport={handleSelectSport} />
         {selectedSport && (
           <p style={{ marginTop: '20px' }}>선택한 스포츠: {selectedSport}</p>
         )}
@@ -126,14 +124,14 @@ export default function Preview() {
         <h2 className={styles.sectionTitle}>SearchBar</h2>
         <SearchBar />
       </section>
-
+      {/* 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Chips</h2>
         <Chips text="장애인 화장실" chipState="label" />
         <Chips text="장애인 화장실" chipState="checked" />
         <Chips text="장애인 화장실" chipState="unchecked" />
         <Chips text="복싱" chipState="sports" />
-      </section>
+      </section> */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Location DropDown</h2>

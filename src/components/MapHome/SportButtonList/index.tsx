@@ -2,19 +2,14 @@ import React, { useState } from 'react';
 import SportButton from '@/components/Button/SportButton';
 import { ICONS } from '@/constants/asset';
 
-const sportsData: { iconName: keyof typeof ICONS; label: string }[] = [
-  { iconName: 'logoBlue', label: '태권도' },
-  { iconName: 'boxing', label: '복싱' },
-  { iconName: 'hapkido', label: '합기도' },
-  { iconName: 'health', label: '헬스' },
-  { iconName: 'pilates', label: '필라테스' },
-];
 
 interface SportButtonListProps {
-  onSelectSport: (sport: string) => void; 
+  sports: { iconName: keyof typeof ICONS; label: string }[]; // 정확한 타입 지정
+  onSelectSport: (sport: string) => void;
 }
 
 export default function SportButtonList({
+  sports,
   onSelectSport,
 }: SportButtonListProps) {
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
@@ -27,7 +22,7 @@ export default function SportButtonList({
 
   return (
     <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-      {sportsData.map((sport, index) => (
+      {sports.map((sport, index) => (
         <SportButton
           key={index}
           iconName={sport.iconName}
@@ -39,3 +34,4 @@ export default function SportButtonList({
     </div>
   );
 }
+
