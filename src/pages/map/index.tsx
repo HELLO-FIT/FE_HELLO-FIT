@@ -35,10 +35,10 @@ export default function Map() {
   const [filterItem, setFilterItem] = useState<string | null>(null);
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
   const [map, setMap] = useState<any>(null);
+  const [markers, setMarkers] = useState<any[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<any>(null);
   const [localCode, setLocalCode] = useState<string | null>(null);
-  const isDragging = useRef(false);
 
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
@@ -93,13 +93,6 @@ export default function Map() {
     );
   };
 
-  const handleMapDragStart = () => {
-    isDragging.current = true;
-  };
-
-  const handleMapDragEnd = () => {
-    isDragging.current = false;
-  };
 
   const handleRegionSelect = (localCode: string, fullRegionName: string) => {
     if (!fullRegionName) {
@@ -201,9 +194,6 @@ export default function Map() {
             }
           );
         }
-
-        kakaoMap.addListener('dragstart', handleMapDragStart);
-        kakaoMap.addListener('dragend', handleMapDragEnd);
       });
     };
 
@@ -216,9 +206,27 @@ export default function Map() {
 
   useEffect(() => {
     if (!map || facilities.length === 0) return;
-
-    const markers: any[] = [];
-
+  
+    const defaultMarkerImage = (toggle: string) =>
+      new window.kakao.maps.MarkerImage(
+        toggle === 'special'
+          ? '/image/marker-special.svg'
+          : '/image/marker.svg',
+        new window.kakao.maps.Size(28, 28),
+        { offset: new window.kakao.maps.Point(14, 14) }
+      );
+  
+    const selectedMarkerImage = (toggle: string) =>
+      new window.kakao.maps.MarkerImage(
+        toggle === 'special'
+          ? '/image/address-marker-special.svg'
+          : '/image/address-marker-normal.svg',
+        new window.kakao.maps.Size(28, 28),
+        { offset: new window.kakao.maps.Point(14, 14) }
+      );
+  
+    const newMarkers: any[] = [];
+  
     facilities.forEach(facility => {
       const geocoder = new window.kakao.maps.services.Geocoder();
       geocoder.addressSearch(
@@ -229,37 +237,42 @@ export default function Map() {
               parseFloat(result[0].y),
               parseFloat(result[0].x)
             );
-            const defaultMarkerImage = new window.kakao.maps.MarkerImage(
-              toggle === 'special'
-                ? '/image/marker-special.svg'
-                : '/image/marker.svg',
-              new window.kakao.maps.Size(28, 28),
-              { offset: new window.kakao.maps.Point(14, 14) }
-            );
-
-            const selectedMarkerImage = new window.kakao.maps.MarkerImage(
-              toggle === 'special'
-                ? '/image/address-marker-special.svg'
-                : '/image/address-marker-normal.svg',
-              new window.kakao.maps.Size(28, 28),
-              { offset: new window.kakao.maps.Point(14, 14) }
-            );
-
+  
+            // 마커 생성
             const marker = new window.kakao.maps.Marker({
               map: map,
               position: coords,
-              image: defaultMarkerImage,
+              image: defaultMarkerImage(toggle),
               title: facility.name,
             });
-            markers.push(marker);
-
-            window.kakao.maps.event.addListener(marker, 'click', async () => {
-              if (selectedMarker && selectedMarker !== marker) {
-                selectedMarker.setImage(defaultMarkerImage);
+  
+            newMarkers.push(marker);
+  
+            // 마커 이벤트 등록
+            window.kakao.maps.event.addListener(marker, 'mouseover', () => {
+              // 클릭된 마커가 아니면 hover 상태로 변경
+              if (!selectedMarker || selectedMarker !== marker) {
+                marker.setImage(defaultMarkerImage(toggle));
               }
-
-              marker.setImage(selectedMarkerImage);
+            });
+  
+            window.kakao.maps.event.addListener(marker, 'mouseout', () => {
+              // 클릭된 마커가 아니면 기본 상태로 변경
+              if (!selectedMarker || selectedMarker !== marker) {
+                marker.setImage(defaultMarkerImage(toggle));
+              }
+            });
+  
+            window.kakao.maps.event.addListener(marker, 'click', async () => {
+              // 이전 선택된 마커를 기본 이미지로 복원
+              if (selectedMarker && selectedMarker !== marker) {
+                selectedMarker.setImage(defaultMarkerImage(toggle));
+              }
+  
+              // 현재 선택된 마커를 선택 이미지로 변경
+              marker.setImage(selectedMarkerImage(toggle));
               setSelectedMarker(marker);
+  
               try {
                 const details = await getNomalFacilityDetails(
                   facility.businessId,
@@ -275,11 +288,16 @@ export default function Map() {
         }
       );
     });
-
+  
+    setMarkers(newMarkers);
+  
     return () => {
-      markers.forEach(marker => marker.setMap(null));
+      newMarkers.forEach(marker => marker.setMap(null));
     };
   }, [map, facilities, toggle]);
+  
+  
+  
 
   const moveToUserLocation = () => {
     if (map && userLocation) {
@@ -292,7 +310,6 @@ export default function Map() {
       console.warn('Map or userLocation is not available');
     }
   };
-
   return (
     <>
       <Header />
@@ -305,25 +322,25 @@ export default function Map() {
       ></div>
       {indicatorMode === 'sports' ? (
         <PopularSports
-          onSelectSport={fetchFacilitiesBySport}
-          mode={toggle}
-          onRegionSelect={handleRegionSelect}
-          selectedRegion={selectedRegion}
+        onSelectSport={fetchFacilitiesBySport}
+        mode={toggle}
+        onRegionSelect={handleRegionSelect}
+        selectedRegion={selectedRegion}
+      />
+    ) : (
+      selectedFacility && (
+        <FacilityInfo
+          facility={selectedFacility}
+          filterItem={filterItem || undefined}
+          onBackClick={() => setIndicatorMode('sports')}
+          onMoveToDetail={() => {
+            if (selectedFacility) {
+              router.push(
+                `/details/${selectedFacility.businessId}/${selectedFacility.serialNumber}`
+              );
+            }
+          }}
         />
-      ) : (
-        selectedFacility && (
-          <FacilityInfo
-            facility={selectedFacility}
-            filterItem={filterItem || undefined}
-            onBackClick={() => setIndicatorMode('sports')}
-            onMoveToDetail={() => {
-              if (selectedFacility) {
-                router.push(
-                  `/details/${selectedFacility.businessId}/${selectedFacility.serialNumber}`
-                );
-              }
-            }}
-          />
         )
       )}
     </>
