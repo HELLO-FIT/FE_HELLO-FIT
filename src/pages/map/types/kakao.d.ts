@@ -21,11 +21,7 @@ declare namespace kakao.maps {
   }
 
   class MarkerImage {
-    constructor(
-      src: string,
-      size: Size,
-      options?: { offset?: Point }
-    );
+    constructor(src: string, size: Size, options?: { offset?: Point });
   }
 
   class Size {
@@ -73,3 +69,4 @@ declare namespace kakao.maps {
 
   function load(callback: () => void): void;
 }
+/* eslint-enable */
