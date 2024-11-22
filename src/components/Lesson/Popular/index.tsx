@@ -11,7 +11,6 @@ import {
   selectedSportState,
 } from '@/states/filterState';
 import Link from 'next/link';
-import Schedule from '@/components/Schedule';
 import IconComponent from '@/components/Asset/Icon';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import SportsFilter from '../SportsFilter';
@@ -169,6 +168,7 @@ export default function Popular() {
                       <Chips
                         chipState="top"
                         text={`누적 수강 ${formatCurrency(facility.totalParticipantCount)}`}
+                        serialNumber
                       />
                     </Link>
                   </SwiperSlide>

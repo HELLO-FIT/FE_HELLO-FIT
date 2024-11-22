@@ -21,7 +21,7 @@ export default function SpecialFilter({
     if (value !== selectedTypes) {
       setSelectedTypes(value || undefined);
     }
-  }, [value]);
+  }, [value, selectedTypes]);
 
   const handleOptionClick = (option: string, type: 'type' | 'amenity') => {
     if (type === 'type') {

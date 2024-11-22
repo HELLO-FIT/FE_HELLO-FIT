@@ -30,7 +30,7 @@ export default function LargeMap({ businessId, serialNumber }: LargeMapProps) {
 
         setFacility(data);
       } catch (error) {
-        console.log('시설 정보를 가져오는 데 실패했습니다.');
+        console.log('시설 정보를 가져오는 데 실패했습니다.', error);
       } finally {
         setLoading(false);
       }

@@ -1,13 +1,14 @@
 import styles from './Schedule.module.scss';
 import IconComponent from '../Asset/Icon';
 import { ScheduleProps } from './Schedule.types';
-import { NomalFacility } from '@/apis/get/getFacilities';
+import { NomalFacility, SpecialFacility } from '@/apis/get/getFacilities';
 
 export default function Schedule({ facility }: ScheduleProps) {
   const currentMonth = new Date().getMonth() + 1;
 
-  const isNomalFacility = (facility: any): facility is NomalFacility =>
-    'serialNumber' in facility;
+  const isNomalFacility = (
+    facility: NomalFacility | SpecialFacility
+  ): facility is NomalFacility => 'serialNumber' in facility;
 
   return (
     <div className={styles.container}>

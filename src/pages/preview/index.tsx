@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import ToggleButton from '@/components/Button/ToggleButton';
 import CustomButton from '@/components/Button/CustomButton';
@@ -54,12 +54,12 @@ const sportsOptions = [
 ];
 
 export default function Preview() {
-  const [selectedSport, setSelectedSport] = useState<string | null>(null);
+  // const [selectedSport, setSelectedSport] = useState<string | null>(null);
 
-  const handleSelectSport = (sport: string) => {
-    setSelectedSport(sport);
-    console.log(`Selected sport: ${sport}`);
-  };
+  // const handleSelectSport = (sport: string) => {
+  //   setSelectedSport(sport);
+  //   console.log(`Selected sport: ${sport}`);
+  // };
 
   return (
     <div className={styles.previewPage}>
@@ -107,13 +107,13 @@ export default function Preview() {
           isSelected={false}
         />
       </section>
-
+      {/* 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sport Button List</h2>
         {selectedSport && (
           <p style={{ marginTop: '20px' }}>선택한 스포츠: {selectedSport}</p>
         )}
-      </section>
+      </section> */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>CheckBox</h2>
@@ -144,7 +144,7 @@ export default function Preview() {
         />
       </section>
 
-      <section className={styles.section}>
+      {/* <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Sports DropDown</h2>
         <DropDown
           placeholder={'종목 선택'}
@@ -153,7 +153,7 @@ export default function Preview() {
             console.log('선택된 스포츠:', selectedSport)
           }
         />
-      </section>
+      </section> */}
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Loading Spinner</h2>

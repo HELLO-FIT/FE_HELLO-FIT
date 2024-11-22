@@ -14,8 +14,6 @@ import DetailsMap from './DetailsMap';
 import CourseCard from './CourseCard';
 import InfoCard from './InfoCard';
 import LoadingSpinner from '../LoadingSpinner';
-import { useRecoilValue } from 'recoil';
-import { toggleState } from '@/states/toggleState';
 import SpecialInfoCard from './SpecialInfoCard';
 
 export default function CourseDetails({
@@ -27,10 +25,10 @@ export default function CourseDetails({
   >(undefined);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const toggle = useRecoilValue(toggleState);
 
-  const isNomalFacility = (facility: any): facility is NomalFacilityDetails =>
-    facility && 'serialNumber' in facility;
+  const isNomalFacility = (
+    facility: NomalFacilityDetails | SpecialFacilityDetails
+  ): facility is NomalFacilityDetails => 'serialNumber' in facility;
 
   useEffect(() => {
     if (businessId) {

@@ -42,7 +42,7 @@ export default function Lesson({ onPopularClick }: LessonProps) {
   const toggle = useRecoilValue(toggleState);
   const [specialFilterValue, setSpecialFilterValue] = useState<string>('');
 
-  const handleSpecialFilterChange = (type: string, _: string[]) => {
+  const handleSpecialFilterChange = (type: string) => {
     setSpecialFilterValue(type);
   };
 

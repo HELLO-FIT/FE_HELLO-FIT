@@ -38,21 +38,22 @@ export default function Noti() {
     }
 
     if (notifications.length === 0) {
-      async function fetchNotifications() {
-        try {
-          const data = await getNotifications();
-          setNotifications(data);
-        } catch (error) {
-          console.error('Error fetching notifications:', error);
-        } finally {
-          setLoading(false);
-        }
-      }
       fetchNotifications();
     } else {
       setLoading(false);
     }
   }, [showLoginModal, notifications.length]);
+
+  const fetchNotifications = async () => {
+    try {
+      const data = await getNotifications();
+      setNotifications(data);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 읽음 처리
   const markAsRead = async (id: string) => {
