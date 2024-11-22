@@ -108,7 +108,7 @@ export default function LocalFilter({
             {isNextStep && (
               <button
                 className={classNames(styles.actionButton, {
-                  [styles.enabledSP]: toggle === 'general' && value,
+                  [styles.enabled]: toggle === 'general' && value,
                   [styles.enabledSP]: toggle !== 'general' && value,
                   [styles.disabled]: !value,
                 })}
