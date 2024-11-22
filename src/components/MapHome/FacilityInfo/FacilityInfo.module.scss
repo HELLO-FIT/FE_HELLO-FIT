@@ -26,17 +26,23 @@
   .header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 12px;
 
-    .backIconWrapper {
-      margin-right: 8px;
+    h1 {
+      @include T20B;
+      color: $gray90;
+      margin-right: 2px;
+      display: inline-block;
+    }
+
+    .rightIconWrapper {
       cursor: pointer;
     }
 
-    h1 {
-      @include B20R;
-      @include BOLD;
-      color: $gray90;
+    .closeIconWrapper {
+      margin-left: auto;
+      cursor: pointer;
     }
   }
 
