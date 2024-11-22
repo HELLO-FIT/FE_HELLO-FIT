@@ -20,36 +20,49 @@
   border-radius: 10px;
   background-color: $blue5;
   cursor: pointer;
+}
 
-  .titleContainer {
-    display: flex;
-    gap: 4px;
-    flex-direction: column;
-  }
+.popularBtnSP {
+  width: 100%;
+  padding: 24px 33px;
+  margin: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 10px;
+  background-color: $green10;
+  cursor: pointer;
+}
 
-  .buttonSubtitle {
-    @include MEDIUM;
-    color: $gray90;
-    font-size: 12px;
-    font-style: normal;
-    line-height: 140%;
-    letter-spacing: -0.24px;
-    text-transform: capitalize;
-  }
+.titleContainer {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
 
-  .buttonTitle {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    color: $gray90;
-    font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 140%;
-    letter-spacing: -0.32px;
-    text-transform: capitalize;
-  }
+.buttonSubtitle {
+  @include MEDIUM;
+  color: $gray90;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 140%;
+  letter-spacing: -0.24px;
+  text-transform: capitalize;
+}
+
+.buttonTitle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: $gray90;
+  font-family: 'Pretendard-Regular', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 140%;
+  letter-spacing: -0.32px;
+  text-transform: capitalize;
 }
 
 .listContainer {
@@ -74,6 +87,10 @@
 
   .totalTextColor {
     color: $blue60;
+  }
+
+  .totalTextColorSP {
+    color: $green80;
   }
 }
 

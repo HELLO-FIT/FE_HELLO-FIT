@@ -37,7 +37,7 @@
 .text {
   color: $gray90;
   text-align: center;
-  font-family: 'Pretendard Variable';
+  font-family: 'Pretendard-Regular', sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -63,6 +63,12 @@
   outline: none;
   border: none;
   background-color: $white;
+  font-family: 'Pretendard-Regular', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+  letter-spacing: -0.28px;
   cursor: pointer;
 }
 
@@ -75,6 +81,32 @@
   border-radius: 12px;
   background-color: $blue60;
   color: $white;
+  font-family: 'Pretendard-Regular', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+  letter-spacing: -0.28px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.confirmSP {
+  display: flex;
+  padding: 14px 40px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  background-color: $green70;
+  color: $white;
+  font-family: 'Pretendard-Regular', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+  letter-spacing: -0.28px;
   outline: none;
   border: none;
   cursor: pointer;

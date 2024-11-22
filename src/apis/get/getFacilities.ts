@@ -12,7 +12,6 @@ export interface NomalFacility {
   address: string;
   detailAddress: string;
   owner: string;
-  totalParticipantCount?: number;
   items: string[];
 }
 

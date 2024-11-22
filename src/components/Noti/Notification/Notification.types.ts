@@ -7,5 +7,6 @@ export interface NotificationProps {
     title: string;
     content: string;
     time: Date;
+    isGeneral: string | undefined;
   };
 }

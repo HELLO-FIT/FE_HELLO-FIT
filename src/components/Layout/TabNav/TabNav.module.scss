@@ -41,5 +41,11 @@
       color: $blue60;
       padding-bottom: 4px;
     }
+
+    &.activeSP {
+      border-bottom: 2px solid $green80;
+      color: $green80;
+      padding-bottom: 4px;
+    }
   }
 }

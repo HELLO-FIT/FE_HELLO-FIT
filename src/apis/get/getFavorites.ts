@@ -2,7 +2,7 @@ import BASE_URL from '@/constants/baseurl';
 
 export interface FavoritesItem {
   businessId: string;
-  serialNumber: string;
+  serialNumber?: string;
   name: string;
   cityCode: string;
   cityName: string;
@@ -10,7 +10,7 @@ export interface FavoritesItem {
   localName: string;
   address: string;
   detailAddress: string;
-  owner: string;
+  owner?: string;
   items: string[];
 }
 

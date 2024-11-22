@@ -13,7 +13,10 @@ export default function Notification({
     <div className={`${styles.container} ${isRead && styles.read}`}>
       <div className={styles.content} onClick={onClick}>
         <div className={styles.title}>
-          <IconComponent name="notification" size="s" />
+          <IconComponent
+            name={notification.isGeneral ? 'notification' : 'notificationSP'}
+            size="s"
+          />
           <div className={styles.message}>
             [<p className={styles.storeName}>{notification.title}</p>
             ]의 강좌가 개설되었어요!

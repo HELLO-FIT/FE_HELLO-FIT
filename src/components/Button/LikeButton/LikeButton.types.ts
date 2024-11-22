@@ -1,4 +1,4 @@
 export interface LikeButtonProps {
   businessId: string;
-  serialNumber: string;
+  serialNumber?: string;
 }

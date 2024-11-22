@@ -11,10 +11,12 @@ export default function InfoCard({ contact, representative }: InfoCardProps) {
         <span className={styles.label}>연락처</span>
         <span className={styles.value}>{phone}</span>
       </p>
-      <p className={styles.labelValue}>
-        <span className={styles.label}>대표자</span>
-        <span className={styles.value}>{representative}</span>
-      </p>
+      {representative && (
+        <p className={styles.labelValue}>
+          <span className={styles.label}>대표자</span>
+          <span className={styles.value}>{representative}</span>
+        </p>
+      )}
     </section>
   );
 }

@@ -4,6 +4,7 @@ import { DetailsMapProps, GeocoderResult } from './DetailsMap.types';
 export default function DetailsMap({
   address,
   radius = false,
+  isNormal = true,
 }: DetailsMapProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
@@ -36,7 +37,9 @@ export default function DetailsMap({
                 result[0].x
               );
 
-              const imageSrc = '/image/address-marker-normal.svg';
+              const imageSrc = isNormal
+                ? '/image/address-marker-normal.svg'
+                : '/image/address-marker-special.svg';
               const imageSize = new window.kakao.maps.Size(40, 40);
               const imageOption = {
                 offset: new window.kakao.maps.Point(20, 40),
@@ -71,7 +74,9 @@ export default function DetailsMap({
                 position.coords.longitude
               );
 
-              const imageSrc = '/image/my-location.svg'; // 사용자 현재 위치 마커 이미지
+              const imageSrc = isNormal
+                ? '/image/my-location.svg'
+                : '/image/my-location-special.svg';
               const imageSize = new window.kakao.maps.Size(40, 40);
               const imageOption = {
                 offset: new window.kakao.maps.Point(20, 40),
@@ -104,7 +109,7 @@ export default function DetailsMap({
     return () => {
       mapScript.removeEventListener('load', onLoadKakaoMap);
     };
-  }, [address, KAKAO_MAP_KEY]);
+  }, [address, isNormal, KAKAO_MAP_KEY]);
 
   return (
     <div

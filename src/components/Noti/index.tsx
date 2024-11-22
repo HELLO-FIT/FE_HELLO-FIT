@@ -11,11 +11,14 @@ import { deleteNotifications } from '@/apis/delete/deleteNotifications';
 import LoadingSpinner from '../LoadingSpinner';
 import { useModal } from '@/utils/modalUtils';
 import IconComponent from '../Asset/Icon';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 
 export default function Noti() {
   const [notifications, setNotifications] = useState<NotificationsItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+  const toggle = useRecoilValue(toggleState);
   const { openModal } = useModal();
 
   const showLoginModal = useCallback(() => {
@@ -34,18 +37,23 @@ export default function Noti() {
       return;
     }
 
-    async function fetchNotifications() {
-      try {
-        const data = await getNotifications();
-        setNotifications(data);
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      } finally {
-        setLoading(false);
-      }
+    if (notifications.length === 0) {
+      fetchNotifications();
+    } else {
+      setLoading(false);
     }
-    fetchNotifications();
-  }, [showLoginModal]);
+  }, [showLoginModal, notifications.length]);
+
+  const fetchNotifications = async () => {
+    try {
+      const data = await getNotifications();
+      setNotifications(data);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 읽음 처리
   const markAsRead = async (id: string) => {
@@ -91,7 +99,7 @@ export default function Noti() {
       );
       const responses = await Promise.all(deletePromises);
       if (responses.every(res => res.success)) {
-        setNotifications([]);
+        setNotifications([]); // 삭제 후 알림 목록 비우기
       } else {
         console.log('일부 알림 삭제에 실패했습니다.');
       }
@@ -131,7 +139,13 @@ export default function Noti() {
           <header className={styles.header}>
             <div className={styles.titleCounterWrapper}>
               <h2 className={styles.title}>알림</h2>
-              <p className={styles.counter}>{notifications.length}</p>
+              <p
+                className={
+                  toggle === 'general' ? styles.counter : styles.counterSP
+                }
+              >
+                {notifications.length}
+              </p>
             </div>
             <button onClick={showModal} className={styles.removeAll}>
               모두 지우기
@@ -155,6 +169,7 @@ export default function Noti() {
                   title: notification.facilityName,
                   content: notification.courseNames.join(' | '),
                   time: notification.createdAt,
+                  isGeneral: notification.serialNumber,
                 }}
               />
             ))}
@@ -174,6 +189,7 @@ export default function Noti() {
                   title: notification.facilityName,
                   content: notification.courseNames.join(' | '),
                   time: notification.createdAt,
+                  isGeneral: notification.serialNumber,
                 }}
               />
             ))}
@@ -182,7 +198,7 @@ export default function Noti() {
       ) : (
         <div className={styles.resultContainer}>
           <IconComponent
-            name="emptyNoti"
+            name={toggle === 'general' ? 'emptyNoti' : 'emptyNotiSP'}
             width={48}
             height={48}
             alt="알림 없음"
