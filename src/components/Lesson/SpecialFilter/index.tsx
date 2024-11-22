@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './SpecialFilter.module.scss';
 import { SpecialFilterProps } from './SpecialFilter.types';
 import IconComponent from '@/components/Asset/Icon';
