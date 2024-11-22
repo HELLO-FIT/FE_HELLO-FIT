@@ -17,12 +17,6 @@ export default function SpecialFilter({
   );
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (value !== selectedTypes) {
-      setSelectedTypes(value || undefined);
-    }
-  }, [value, selectedTypes]);
-
   const handleOptionClick = (option: string, type: 'type' | 'amenity') => {
     if (type === 'type') {
       const updatedTypes = selectedTypes === option ? undefined : option;
