@@ -212,9 +212,10 @@ export default function Map() {
 
   useEffect(() => {
     if (!map || facilities.length === 0) return;
-
-    const newMarkers: any[] = [];
-
+  
+    const newMarkers: kakao.maps.Marker[] = [];
+    let selectedMarker: Kakao.maps.Marker | null = null;
+  
     facilities.forEach(facility => {
       const geocoder = new window.kakao.maps.services.Geocoder();
       geocoder.addressSearch(
@@ -225,26 +226,24 @@ export default function Map() {
               parseFloat(result[0].y),
               parseFloat(result[0].x)
             );
-
+  
             // 기본 및 선택된 마커 이미지
             const defaultMarkerImage = new window.kakao.maps.MarkerImage(
-              classNames({
-                '/image/marker-special.svg': toggle === 'special',
-                '/image/marker.svg': toggle !== 'special',
-              }),
+              toggle === 'special'
+                ? '/image/marker-special.svg'
+                : '/image/marker.svg',
               new window.kakao.maps.Size(28, 28),
               { offset: new window.kakao.maps.Point(14, 14) }
             );
-
+  
             const selectedMarkerImage = new window.kakao.maps.MarkerImage(
-              classNames({
-                '/image/address-marker-special.svg': toggle === 'special',
-                '/image/address-marker-normal.svg': toggle !== 'special',
-              }),
+              toggle === 'special'
+                ? '/image/address-marker-special.svg'
+                : '/image/address-marker-normal.svg',
               new window.kakao.maps.Size(28, 28),
               { offset: new window.kakao.maps.Point(14, 14) }
             );
-
+  
             // 마커 생성
             const marker = new window.kakao.maps.Marker({
               map: map,
@@ -252,32 +251,32 @@ export default function Map() {
               image: defaultMarkerImage,
               title: facility.name,
             });
-
+  
             newMarkers.push(marker);
-
-            // 마커 이벤트 등록
+  
+            // 마우스 오버 이벤트
             window.kakao.maps.event.addListener(marker, 'mouseover', () => {
               if (!selectedMarker || selectedMarker !== marker) {
                 marker.setImage(defaultMarkerImage);
               }
             });
-
+  
+            // 마우스 아웃 이벤트
             window.kakao.maps.event.addListener(marker, 'mouseout', () => {
               if (!selectedMarker || selectedMarker !== marker) {
                 marker.setImage(defaultMarkerImage);
               }
             });
-
+  
+            // 클릭 이벤트
             window.kakao.maps.event.addListener(marker, 'click', async () => {
-              // 이전 선택된 마커를 기본 이미지로 복원
               if (selectedMarker && selectedMarker !== marker) {
-                selectedMarker.setImage(defaultMarkerImage);
+                selectedMarker.setImage(defaultMarkerImage); // 이전 선택된 마커 복원
               }
-
-              // 현재 선택된 마커를 선택 이미지로 변경
-              marker.setImage(selectedMarkerImage);
-              setSelectedMarker(marker);
-
+  
+              marker.setImage(selectedMarkerImage); // 현재 마커 선택 상태로 변경
+              selectedMarker = marker; // 현재 마커를 선택된 상태로 설정
+  
               try {
                 const details = await getNomalFacilityDetails(
                   facility.businessId,
@@ -293,13 +292,16 @@ export default function Map() {
         }
       );
     });
-
+  
     setMarkers(newMarkers);
-
+  
+    // Cleanup 마커
     return () => {
       newMarkers.forEach(marker => marker.setMap(null));
     };
   }, [map, facilities, toggle]);
+  
+  
 
   const moveToUserLocation = () => {
     if (map && userLocation) {
