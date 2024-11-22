@@ -1,7 +1,10 @@
 import {
   getNomalPopular,
   getNomalPopularParams,
+  getSpecialPopular,
+  getSpecialPopularParams,
   NomalPopular,
+  SpecialPopular,
 } from '@/apis/get/getPopular';
 import styles from './Popular.module.scss';
 import { useEffect, useRef, useState } from 'react';
@@ -25,17 +28,60 @@ import 'swiper/css';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import { toggleState } from '@/states/toggleState';
 import PopularSchedule from '@/components/Schedule/PopularSchedule';
+import SpecialFilter from '../SpecialFilter';
+import { specialAmenityList, specialTypeList } from '@/constants/specialList';
+import Tooltip from '@/components/Tooltip/Tooltip';
 
 export default function Popular() {
-  const [facilities, setFacilities] = useState<NomalPopular[]>([]);
+  const [facilities, setFacilities] = useState<
+    NomalPopular[] | SpecialPopular[]
+  >([]);
+  const [topFacilities, setTopFacilities] = useState<
+    NomalPopular[] | SpecialPopular[]
+  >([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedLocalCode] = useRecoilState(selectedLocalCodeState);
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState('인기순');
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const topFacilities = facilities.slice(0, 5);
   const toggle = useRecoilValue(toggleState);
+  const [specialFilterValue, setSpecialFilterValue] = useState<string>('');
+
+  const handleSpecialFilterChange = (type: string) => {
+    setSpecialFilterValue(type);
+  };
+
+  // 인기 TOP5 데이터 페칭
+  useEffect(() => {
+    const fetchTopFacilities = async () => {
+      if (!selectedLocalCode) return;
+      setIsLoading(true);
+
+      try {
+        let fetchedFacilities;
+
+        if (toggle === 'special') {
+          const params = {
+            localCode: selectedLocalCode,
+            type: undefined,
+          };
+          fetchedFacilities = await getSpecialPopular(params);
+        } else {
+          const params = { localCode: selectedLocalCode };
+          fetchedFacilities = await getNomalPopular(params);
+        }
+
+        setTopFacilities(fetchedFacilities.slice(0, 5));
+      } catch (error) {
+        console.error('TOP5 데이터를 불러오는 데 실패했습니다.', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTopFacilities();
+  }, [selectedLocalCode, toggle, specialFilterValue]);
 
   useEffect(() => {
     const fetchFacilities = async () => {
@@ -43,27 +89,33 @@ export default function Popular() {
       setIsLoading(true);
 
       try {
-        const params: getNomalPopularParams = {
-          localCode: selectedLocalCode,
-        };
+        let fetchedFacilities;
 
-        const fetchedFacilities = await getNomalPopular(params);
+        if (toggle === 'special') {
+          const params = {
+            localCode: selectedLocalCode,
+            type: specialFilterValue || undefined,
+          };
+          fetchedFacilities = await getSpecialPopular(params);
+        } else {
+          const params = { localCode: selectedLocalCode };
+          fetchedFacilities = await getNomalPopular(params);
+        }
         setFacilities(fetchedFacilities);
-      } catch {
-        console.error('데이터를 불러오는 데 실패했습니다.');
+      } catch (error) {
+        console.error('필터링된 데이터를 불러오는 데 실패했습니다.', error);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchFacilities();
-  }, [selectedLocalCode]);
+  }, [selectedLocalCode, toggle, specialFilterValue]);
 
-  // 스포츠 필터링 함수
   const filterFacilitiesBySport = (
-    facilities: NomalPopular[],
+    facilities: NomalPopular[] | SpecialPopular[],
     sport: string
-  ): NomalPopular[] => {
+  ): NomalPopular[] | SpecialPopular[] => {
     if (!sport) return facilities;
     return facilities.filter(facility =>
       facility.items.some(item => item.trim() === sport.trim())
@@ -81,7 +133,7 @@ export default function Popular() {
     }
 
     const cityName = cityCodes[cityCode];
-    if (!city) {
+    if (!cityName) {
       return '알 수 없는 지역';
     }
 
@@ -117,7 +169,7 @@ export default function Popular() {
               >
                 {parseLocalCode(selectedLocalCode)}
               </h2>
-              인기 시설 TOP 5
+              {`인기 시설 TOP ${topFacilities.length}`}
             </div>
             <div className={styles.bestContainer}>
               <Swiper
@@ -125,7 +177,6 @@ export default function Popular() {
                 loop={true}
                 pagination={{ clickable: true }}
                 breakpoints={{
-                  // 모바일
                   0: {
                     slidesPerView: 2,
                   },
@@ -133,9 +184,8 @@ export default function Popular() {
                     slidesPerView: 2.2,
                   },
                   430: {
-                    slidesPerView: 2.5,
+                    slidesPerView: 3,
                   },
-                  // PC
                   1024: {
                     slidesPerView: 3.5,
                   },
@@ -144,11 +194,11 @@ export default function Popular() {
                 {topFacilities.map((facility, index) => (
                   <SwiperSlide
                     className={styles.facilityCard}
-                    key={`${facility.businessId}-${facility.serialNumber}`}
+                    key={`${facility.businessId}-${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
                   >
                     <Link
-                      key={`${facility.businessId}-${facility.serialNumber}`}
-                      href={`/details/${facility.businessId}/${facility.serialNumber}`}
+                      key={`${facility.businessId}-${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
+                      href={`/details/${facility.businessId}${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
                     >
                       <SportsImageComponent
                         name={facility.items[0] as keyof typeof SPORTSIMAGES}
@@ -168,7 +218,7 @@ export default function Popular() {
                       <Chips
                         chipState="top"
                         text={`누적 수강 ${formatCurrency(facility.totalParticipantCount)}`}
-                        serialNumber
+                        serialNumber={toggle === 'general' ? true : false}
                       />
                     </Link>
                   </SwiperSlide>
@@ -185,6 +235,19 @@ export default function Popular() {
                   value={selectedSport}
                   onChange={setSelectedSport}
                 />
+                {toggle === 'special' && (
+                  <Tooltip
+                    text="유형에 따른 인기 강좌를 추천해드려요!"
+                    position="center"
+                  >
+                    <SpecialFilter
+                      types={specialTypeList}
+                      amenities={specialAmenityList}
+                      value={specialFilterValue}
+                      onChange={handleSpecialFilterChange}
+                    />
+                  </Tooltip>
+                )}
                 <div className={styles.totalText}>
                   총
                   <p
@@ -223,8 +286,8 @@ export default function Popular() {
               <div className={styles.listContainer}>
                 {filteredFacilities.map(facility => (
                   <Link
-                    key={`${facility.businessId}-${facility.serialNumber}`}
-                    href={`/details/${facility.businessId}/${facility.serialNumber}`}
+                    key={`${facility.businessId}-${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
+                    href={`/details/${facility.businessId}${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
                   >
                     <PopularSchedule facility={facility} />
                   </Link>
@@ -233,14 +296,13 @@ export default function Popular() {
             ) : (
               <div className={styles.resultContainer}>
                 <IconComponent
-                  name="noResult"
+                  name={toggle === 'general' ? 'noResult' : 'noResultSP'}
                   width={48}
                   height={48}
                   alt="결과 없음"
                 />
                 <div className={styles.textContainer}>
-                  <p className={styles.mainText}>해당하는 시설이 없어요.</p>
-                  <p className={styles.subText}>종목을 변경해주세요.</p>
+                  <p className={styles.mainText}>검색된 시설이 없습니다.</p>
                 </div>
               </div>
             )}
