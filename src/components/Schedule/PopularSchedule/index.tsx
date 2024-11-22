@@ -30,7 +30,11 @@ export default function PopularSchedule({ facility }: PopularScheduleProps) {
               {index < facility.items.length - 1 && ', '}
             </span>
           ))}
-          <Chips text={facility.totalParticipantCount} chipState="count" />
+          <Chips
+            text={facility.totalParticipantCount}
+            chipState="count"
+            serialNumber
+          />
         </div>
       </div>
       <IconComponent name="right" size="l" />
