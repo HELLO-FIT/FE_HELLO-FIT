@@ -1,3 +1,4 @@
+/* eslint-disable */
 declare namespace kakao.maps {
   class Map {
     constructor(container: HTMLElement, options: MapOptions);
