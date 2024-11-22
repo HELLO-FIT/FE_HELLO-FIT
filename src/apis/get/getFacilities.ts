@@ -53,6 +53,21 @@ export interface SpecialFacility {
   items: string[];
 }
 
+// 공통 Facility 타입
+export interface Facility {
+  businessId: string;
+  name: string;
+  cityCode: string;
+  cityName: string;
+  localCode: string;
+  localName: string;
+  address: string;
+  detailAddress: string;
+  items: string[];
+  serialNumber?: string;
+  owner?: string;
+}
+
 export interface GetSpecialFacilitiesParams {
   facilityName?: string; // 시설 명
   localCode?: string; // 5자리 지역코드
