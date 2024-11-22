@@ -35,6 +35,7 @@
     border: none;
     @include T16B;
     cursor: pointer;
+    @include Drag;
 
     &.active {
       border-bottom: 2px solid $blue60;

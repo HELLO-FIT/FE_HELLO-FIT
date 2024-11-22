@@ -26,6 +26,7 @@
   flex-shrink: 0;
   background-color: $white;
   border-radius: 16px;
+  @include Drag;
 }
 
 .texts {
