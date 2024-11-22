@@ -150,9 +150,9 @@ export default function Map() {
     const mapScript = document.createElement('script');
     mapScript.async = true;
     mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services`;
-
+  
     document.head.appendChild(mapScript);
-
+  
     const initializeMap = () => {
       window.kakao.maps.load(() => {
         const mapContainer = document.getElementById('map');
@@ -162,7 +162,7 @@ export default function Map() {
         };
         const kakaoMap = new window.kakao.maps.Map(mapContainer, mapOption);
         setMap(kakaoMap);
-
+  
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             position => {
@@ -172,18 +172,23 @@ export default function Map() {
               );
               setUserLocation(userLatLng);
               kakaoMap.setCenter(userLatLng);
-
+  
+              // `toggle` 상태에 따라 다른 마커 이미지 설정
               const userMarkerImage = new window.kakao.maps.MarkerImage(
-                '/image/my-location.svg',
+                toggle === 'special'
+                  ? '/image/my-location-special.svg'
+                  : '/image/my-location.svg',
                 new window.kakao.maps.Size(40, 40),
                 { offset: new window.kakao.maps.Point(20, 40) }
               );
+  
               new window.kakao.maps.Marker({
                 map: kakaoMap,
                 position: userLatLng,
                 image: userMarkerImage,
                 title: '현재 위치',
               });
+  
               updateLocalCodeAndFetchFacilities(
                 position.coords.latitude,
                 position.coords.longitude
@@ -196,13 +201,14 @@ export default function Map() {
         }
       });
     };
-
+  
     mapScript.addEventListener('load', initializeMap);
-
+  
     return () => {
       mapScript.removeEventListener('load', initializeMap);
     };
-  }, [KAKAO_MAP_KEY]);
+  }, [KAKAO_MAP_KEY, toggle]); 
+  
 
   useEffect(() => {
     if (!map || facilities.length === 0) return;
