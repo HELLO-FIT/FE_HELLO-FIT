@@ -19,7 +19,7 @@ export default function LessonPage() {
     if (query.tab) {
       setSelectedTab(query.tab as 'lesson' | 'popular');
     }
-  }, [router.query]);
+  }, [router, router.query]);
 
   const handleTabClick = (tab: 'lesson' | 'popular') => {
     setSelectedTab(tab);
@@ -32,17 +32,9 @@ export default function LessonPage() {
   return (
     <>
       {auth.isLoggedIn ? (
-        <TabNav
-          showmenu={true}
-          tab={selectedTab}
-          setSelectedTab={handleTabClick}
-        />
+        <TabNav showmenu={true} tab={selectedTab} />
       ) : (
-        <TabNav
-          showmenu={false}
-          tab={selectedTab}
-          setSelectedTab={handleTabClick}
-        />
+        <TabNav showmenu={false} tab={selectedTab} />
       )}
       {selectedTab === 'lesson' ? (
         <Lesson onPopularClick={() => handleTabClick('popular')} />

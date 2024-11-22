@@ -1,11 +1,10 @@
 import {
   getNomalPopular,
-  getNomalPopularParams,
   getSpecialPopular,
-  getSpecialPopularParams,
   NomalPopular,
   SpecialPopular,
 } from '@/apis/get/getPopular';
+
 import styles from './Popular.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';

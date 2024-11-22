@@ -39,7 +39,7 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
     if (query.tab) {
       setTab(query.tab as string);
     }
-  }, [router.query]);
+  }, [router, router.query]);
 
   // 지역 코드가 변경되면 options 업데이트
   useEffect(() => {
