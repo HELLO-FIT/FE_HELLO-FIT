@@ -133,7 +133,7 @@ export default function CourseDetails({
         {!isNomalFacility(facility) && (
           <div className={styles.facilityInfo}>
             <label className={styles.title}>장애 지원 정보</label>
-            <SpecialInfoCard />
+            <SpecialInfoCard specialType={facility.types} />
           </div>
         )}
         <div className={styles.labelSectionWrapper}>

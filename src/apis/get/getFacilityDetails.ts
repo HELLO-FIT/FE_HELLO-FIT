@@ -54,6 +54,7 @@ export interface SpecialFacilityDetails {
   detailAddress: string;
   phone: string;
   items: string[];
+  types: string[];
   isFavorite: boolean;
   courses: Array<{
     courseId: string;

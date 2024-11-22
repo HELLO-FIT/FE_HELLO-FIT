@@ -1,0 +1,185 @@
+@import '@/styles/globals.scss';
+
+.container {
+  position: relative;
+}
+
+.selectedValueSP {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid $gray20;
+  background-color: $white;
+  color: $gray60;
+  @include B14M;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    border: 1px solid $green30;
+  }
+}
+
+.selectedDropdownSP {
+  border: 1px solid $green30;
+  background-color: $green5;
+  color: $green80;
+}
+
+.background {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  height: 100vh;
+  background-color: $white;
+  overflow: hidden;
+  z-index: 32;
+  border: 1px solid $gray20;
+  padding: 0 24px 8px;
+}
+
+.header {
+  width: 100%;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  position: relative;
+  margin-bottom: 20px;
+
+  .title {
+    color: #222;
+    @include T18B;
+  }
+
+  .closeBtn {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+  }
+}
+
+.sectionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+
+    .subtitle {
+      @include T16B;
+      color: $gray90;
+    }
+
+    .chipsContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 6px;
+    }
+
+    .chips {
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  }
+}
+
+.optionListSP {
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .option {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+    @include B14M;
+    color: $gray70;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
+
+    &:hover {
+      color: $green60;
+    }
+  }
+
+  .selected {
+    color: $green80;
+  }
+}
+
+.btnContainer {
+  max-width: 598px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 12px 20px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  border-radius: 8px 8px 0px 0px;
+  background-color: $white;
+  box-shadow: 0px -2px 6px 0px rgba(0, 0, 0, 0.04);
+
+  .resetBtn {
+    display: flex;
+    width: 132px;
+    height: 52px;
+    padding: 0px 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 23px;
+    border-radius: 12px;
+    border: 1px solid $green70;
+    background-color: $white;
+    @include T16B;
+    color: $green70;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid $green80;
+      color: $green80;
+    }
+  }
+
+  .saveBtn {
+    display: flex;
+    min-width: 206px;
+    width: 100%;
+    height: 52px;
+    padding: 0px 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 23px;
+    border-radius: 12px;
+    background-color: $gray30;
+    @include T16B;
+    color: $white;
+    border: none;
+    cursor: pointer;
+
+    &.saveBtnActive {
+      background-color: $green70;
+    }
+  }
+}

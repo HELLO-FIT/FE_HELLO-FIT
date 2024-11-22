@@ -24,6 +24,8 @@ import IconComponent from '../Asset/Icon';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { toggleState } from '@/states/toggleState';
 import classNames from 'classnames';
+import SpecialFilter from './SpecialFilter';
+import { specialAmenityList, specialTypeList } from '@/constants/specialList';
 
 interface LessonProps {
   onPopularClick: () => void;
@@ -38,6 +40,11 @@ export default function Lesson({ onPopularClick }: LessonProps) {
   const [selectedLocalCode] = useRecoilState(selectedLocalCodeState);
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
   const toggle = useRecoilValue(toggleState);
+  const [specialFilterValue, setSpecialFilterValue] = useState<string>('');
+
+  const handleSpecialFilterChange = (type: string, _: string[]) => {
+    setSpecialFilterValue(type);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,17 +55,20 @@ export default function Lesson({ onPopularClick }: LessonProps) {
         };
 
         if (toggle === 'general') {
-          // 일반 시설 데이터 가져오기
           const fetchedFacilities = await getNomalFacilities(params);
           setFacilities(
             filterFacilitiesBySport(fetchedFacilities, selectedSport)
           );
         } else {
-          // 특수 시설 데이터 가져오기
           const specialParams: GetSpecialFacilitiesParams = {
             localCode: selectedLocalCode,
             itemName: selectedSport,
           };
+
+          if (specialFilterValue && specialFilterValue !== '') {
+            specialParams.type = specialFilterValue;
+          }
+
           const fetchedSpecialFacilities =
             await getSpecialFacilities(specialParams);
           setFacilities(fetchedSpecialFacilities);
@@ -73,7 +83,13 @@ export default function Lesson({ onPopularClick }: LessonProps) {
     if (selectedCityCode && selectedLocalCode) {
       fetchData();
     }
-  }, [selectedCityCode, selectedLocalCode, selectedSport, toggle]);
+  }, [
+    selectedCityCode,
+    selectedLocalCode,
+    selectedSport,
+    toggle,
+    specialFilterValue,
+  ]);
 
   // 스포츠 필터링
   const filterFacilitiesBySport = (
@@ -120,6 +136,14 @@ export default function Lesson({ onPopularClick }: LessonProps) {
               value={selectedSport}
               onChange={setSelectedSport}
             />
+            {toggle === 'special' && (
+              <SpecialFilter
+                types={specialTypeList}
+                amenities={specialAmenityList}
+                value={specialFilterValue}
+                onChange={handleSpecialFilterChange}
+              />
+            )}
             <div className={styles.totalText}>
               총
               <p
@@ -138,16 +162,8 @@ export default function Lesson({ onPopularClick }: LessonProps) {
             <div className={styles.listContainer}>
               {facilities.map(facility => (
                 <Link
-                  key={
-                    'serialNumber' in facility
-                      ? `${facility.businessId}-${facility.serialNumber}`
-                      : facility.businessId
-                  }
-                  href={
-                    'serialNumber' in facility
-                      ? `/details/${facility.businessId}/${facility.serialNumber}`
-                      : `/details/${facility.businessId}`
-                  }
+                  key={`${facility.businessId}-${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
+                  href={`/details/${facility.businessId}${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
                 >
                   <Schedule facility={facility} />
                 </Link>
