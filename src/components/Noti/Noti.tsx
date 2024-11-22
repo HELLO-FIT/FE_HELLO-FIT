@@ -168,6 +168,7 @@ export default function Noti() {
                   title: notification.facilityName,
                   content: notification.courseNames.join(' | '),
                   time: notification.createdAt,
+                  isGeneral: notification.serialNumber,
                 }}
               />
             ))}
@@ -187,6 +188,7 @@ export default function Noti() {
                   title: notification.facilityName,
                   content: notification.courseNames.join(' | '),
                   time: notification.createdAt,
+                  isGeneral: notification.serialNumber,
                 }}
               />
             ))}
@@ -195,7 +197,7 @@ export default function Noti() {
       ) : (
         <div className={styles.resultContainer}>
           <IconComponent
-            name="emptyNoti"
+            name={toggle === 'general' ? 'emptyNoti' : 'emptyNotiSP'}
             width={48}
             height={48}
             alt="알림 없음"

@@ -162,6 +162,7 @@ export const ICONS = {
   noResult: '/icon/custom/icon-no-result.svg',
   noResultSP: '/icon/custom/icon-no-result-green.svg',
   emptyNoti: '/icon/custom/icon-empty-noti.svg',
+  emptyNotiSP: '/icon/custom/icon-empty-noti-green.svg',
 };
 
 export const IMAGES = {
