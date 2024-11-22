@@ -6,6 +6,7 @@ import { getFavorites } from '@/apis/get/getFavorites';
 import { useModal } from '@/utils/modalUtils';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
+import { ICONS } from '@/constants/asset';
 
 export default function LikeButton({
   businessId,
@@ -72,13 +73,19 @@ export default function LikeButton({
     });
   };
 
+  let iconName: keyof typeof ICONS = 'blueHeartBlank';
+
+  if (isLiked && toggle === 'general') {
+    iconName = 'blueHeartFull';
+  } else if (!isLiked && toggle === 'general') {
+    iconName = 'blueHeartBlank';
+  } else if (isLiked && toggle !== 'general') {
+    iconName = 'greenHeartFull';
+  }
+
   return (
     <div onClick={handleClick} style={{ cursor: 'pointer' }}>
-      <IconComponent
-        name={isLiked ? 'blueHeartFull' : 'blueHeartBlank'}
-        width={44}
-        height={44}
-      />
+      <IconComponent name={iconName} width={44} height={44} />
     </div>
   );
 }
