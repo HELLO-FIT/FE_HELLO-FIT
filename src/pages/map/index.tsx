@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
 import styles from './map.module.scss';
 import { useRouter } from 'next/router';
+import classNames from 'classnames';
 
 /* eslint-disable */
 declare global {
@@ -92,7 +93,6 @@ export default function Map() {
       }
     );
   };
-
 
   const handleRegionSelect = (localCode: string, fullRegionName: string) => {
     if (!fullRegionName) {
@@ -206,27 +206,9 @@ export default function Map() {
 
   useEffect(() => {
     if (!map || facilities.length === 0) return;
-  
-    const defaultMarkerImage = (toggle: string) =>
-      new window.kakao.maps.MarkerImage(
-        toggle === 'special'
-          ? '/image/marker-special.svg'
-          : '/image/marker.svg',
-        new window.kakao.maps.Size(28, 28),
-        { offset: new window.kakao.maps.Point(14, 14) }
-      );
-  
-    const selectedMarkerImage = (toggle: string) =>
-      new window.kakao.maps.MarkerImage(
-        toggle === 'special'
-          ? '/image/address-marker-special.svg'
-          : '/image/address-marker-normal.svg',
-        new window.kakao.maps.Size(28, 28),
-        { offset: new window.kakao.maps.Point(14, 14) }
-      );
-  
+
     const newMarkers: any[] = [];
-  
+
     facilities.forEach(facility => {
       const geocoder = new window.kakao.maps.services.Geocoder();
       geocoder.addressSearch(
@@ -237,42 +219,65 @@ export default function Map() {
               parseFloat(result[0].y),
               parseFloat(result[0].x)
             );
-  
+
+            // 기본 및 선택된 마커 이미지
+            const defaultMarkerImage = new window.kakao.maps.MarkerImage(
+              toggle === 'special'
+                ? '/image/marker-special.svg'
+                : '/image/marker.svg',
+              new window.kakao.maps.Size(28, 28),
+              { offset: new window.kakao.maps.Point(14, 14) }
+            );
+
+            const selectedMarkerImage = new window.kakao.maps.MarkerImage(
+              toggle === 'special'
+                ? '/image/address-marker-special.svg'
+                : '/image/address-marker-normal.svg',
+              new window.kakao.maps.Size(28, 28),
+              { offset: new window.kakao.maps.Point(14, 14) }
+            );
+
             // 마커 생성
             const marker = new window.kakao.maps.Marker({
               map: map,
               position: coords,
-              image: defaultMarkerImage(toggle),
+              image: defaultMarkerImage,
               title: facility.name,
             });
-  
+
             newMarkers.push(marker);
-  
+
             // 마커 이벤트 등록
             window.kakao.maps.event.addListener(marker, 'mouseover', () => {
-              // 클릭된 마커가 아니면 hover 상태로 변경
               if (!selectedMarker || selectedMarker !== marker) {
-                marker.setImage(defaultMarkerImage(toggle));
+                marker.setImage(defaultMarkerImage);
               }
             });
-  
+
             window.kakao.maps.event.addListener(marker, 'mouseout', () => {
-              // 클릭된 마커가 아니면 기본 상태로 변경
               if (!selectedMarker || selectedMarker !== marker) {
-                marker.setImage(defaultMarkerImage(toggle));
+                marker.setImage(defaultMarkerImage);
               }
             });
-  
+
             window.kakao.maps.event.addListener(marker, 'click', async () => {
               // 이전 선택된 마커를 기본 이미지로 복원
               if (selectedMarker && selectedMarker !== marker) {
-                selectedMarker.setImage(defaultMarkerImage(toggle));
+                selectedMarker.setImage(
+                  new window.kakao.maps.MarkerImage(
+                    toggle === 'special'
+                      ? '/image/marker-special.svg'
+                      : '/image/marker.svg',
+                    new window.kakao.maps.Size(28, 28),
+                    { offset: new window.kakao.maps.Point(14, 14) }
+                  )
+                );
               }
-  
+
               // 현재 선택된 마커를 선택 이미지로 변경
-              marker.setImage(selectedMarkerImage(toggle));
+              marker.setImage(selectedMarkerImage);
               setSelectedMarker(marker);
-  
+
               try {
                 const details = await getNomalFacilityDetails(
                   facility.businessId,
@@ -288,16 +293,13 @@ export default function Map() {
         }
       );
     });
-  
+
     setMarkers(newMarkers);
-  
+
     return () => {
       newMarkers.forEach(marker => marker.setMap(null));
     };
   }, [map, facilities, toggle]);
-  
-  
-  
 
   const moveToUserLocation = () => {
     if (map && userLocation) {
@@ -322,25 +324,25 @@ export default function Map() {
       ></div>
       {indicatorMode === 'sports' ? (
         <PopularSports
-        onSelectSport={fetchFacilitiesBySport}
-        mode={toggle}
-        onRegionSelect={handleRegionSelect}
-        selectedRegion={selectedRegion}
-      />
-    ) : (
-      selectedFacility && (
-        <FacilityInfo
-          facility={selectedFacility}
-          filterItem={filterItem || undefined}
-          onBackClick={() => setIndicatorMode('sports')}
-          onMoveToDetail={() => {
-            if (selectedFacility) {
-              router.push(
-                `/details/${selectedFacility.businessId}/${selectedFacility.serialNumber}`
-              );
-            }
-          }}
+          onSelectSport={fetchFacilitiesBySport}
+          mode={toggle}
+          onRegionSelect={handleRegionSelect}
+          selectedRegion={selectedRegion}
         />
+      ) : (
+        selectedFacility && (
+          <FacilityInfo
+            facility={selectedFacility}
+            filterItem={filterItem || undefined}
+            onBackClick={() => setIndicatorMode('sports')}
+            onMoveToDetail={() => {
+              if (selectedFacility) {
+                router.push(
+                  `/details/${selectedFacility.businessId}/${selectedFacility.serialNumber}`
+                );
+              }
+            }}
+          />
         )
       )}
     </>
