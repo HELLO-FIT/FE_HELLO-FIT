@@ -50,6 +50,7 @@ export default function LargeMap({ businessId, serialNumber }: LargeMapProps) {
           address={
             (facility as NomalFacilityDetails | SpecialFacilityDetails).address
           }
+          isNormal={serialNumber ? true : false}
         />
       ) : (
         <p>시설 정보가 없습니다.</p>
