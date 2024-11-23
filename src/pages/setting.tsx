@@ -4,8 +4,23 @@ import { authState } from '@/states/authState';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
+import { InitialPageMeta } from '@/components/MetaData';
+import { SSRMetaProps } from '@/components/MetaData/MetaData.type';
+import { serviceUrl } from '@/constants/serviceUrl';
+import { GetServerSideProps } from 'next';
 
-export default function SettingPage() {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const OGTitle = '설정 | HELLOFIT';
+  const OGUrl = `${serviceUrl}/setting`;
+  return {
+    props: {
+      OGTitle,
+      OGUrl,
+    },
+  };
+};
+
+export default function SettingPage({ OGTitle, OGUrl }: SSRMetaProps) {
   const auth = useRecoilValue(authState);
   const router = useRouter();
 
@@ -23,6 +38,7 @@ export default function SettingPage() {
 
   return (
     <>
+      <InitialPageMeta title={OGTitle} url={OGUrl} />
       <Subheader subheaderText="설정" isGray={false} />
       <Setting />
     </>
