@@ -82,6 +82,7 @@
   z-index: 32;
   border: 1px solid $gray20;
   padding: 0 24px 8px;
+  @include Drag;
 
   .title {
     color: #222;

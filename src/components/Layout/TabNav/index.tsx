@@ -14,11 +14,7 @@ import { TabNavProps } from './TabNav.types';
 import { toggleState } from '@/states/toggleState';
 import classNames from 'classnames';
 
-export default function TabNav({
-  showmenu = true,
-  tab = 'lesson',
-  setSelectedTab,
-}: TabNavProps) {
+export default function TabNav({ showmenu = true }: TabNavProps) {
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
   }>({});
@@ -31,6 +27,19 @@ export default function TabNav({
   );
   const router = useRouter();
   const toggle = useRecoilValue(toggleState);
+  const [isClient, setIsClient] = useState(false);
+  const [tab, setTab] = useState<string>('lesson');
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    const { query } = router;
+    if (query.tab) {
+      setTab(query.tab as string);
+    }
+  }, [router, router.query]);
 
   // 지역 코드가 변경되면 options 업데이트
   useEffect(() => {
@@ -59,7 +68,11 @@ export default function TabNav({
   }, [setSelectedCityCode, setSelectedLocalCode]);
 
   const handleTabClick = (tab: 'lesson' | 'popular') => {
-    setSelectedTab(tab);
+    setTab(tab);
+    router.push({
+      pathname: '/lesson',
+      query: { tab: tab },
+    });
   };
 
   const handleMenuClick = () => {
@@ -107,8 +120,10 @@ export default function TabNav({
       <div className={styles.tabs}>
         <button
           className={classNames(styles.button, {
-            [styles.active]: tab === 'lesson' && toggle === 'general',
-            [styles.activeSP]: tab === 'lesson' && toggle === 'special',
+            [styles.active]:
+              tab === 'lesson' && isClient && toggle === 'general',
+            [styles.activeSP]:
+              tab === 'lesson' && isClient && toggle === 'special',
           })}
           onClick={() => handleTabClick('lesson')}
         >

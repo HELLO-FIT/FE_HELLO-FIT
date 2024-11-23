@@ -20,6 +20,7 @@
   border-radius: 10px;
   background-color: $blue5;
   cursor: pointer;
+  @include Drag;
 }
 
 .popularBtnSP {
@@ -33,6 +34,7 @@
   border-radius: 10px;
   background-color: $green10;
   cursor: pointer;
+  @include Drag;
 }
 
 .titleContainer {

@@ -65,6 +65,7 @@
   z-index: 20;
   border: 1px solid $gray20;
   padding: 0 24px 8px;
+  @include Drag;
 
   .title {
     color: #222;
@@ -193,7 +194,7 @@
 }
 
 .enabledSP {
-  background-color: $green60;
+  background-color: $green70;
   cursor: pointer;
 }
 
