@@ -61,6 +61,8 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    @include C12M;
+    color: $gray60;
   }
 }
 

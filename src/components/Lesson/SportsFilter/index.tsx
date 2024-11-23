@@ -16,6 +16,8 @@ export default function SportsFilter({
   const filterRef = useRef<HTMLDivElement>(null);
   const toggle = useRecoilValue(toggleState);
 
+  const startY = useRef(0);
+  const currentY = useRef(0);
   useOutsideClick(filterRef, () => setIsOpen(false));
 
   const handleOptionClick = (option: string) => {
@@ -25,6 +27,31 @@ export default function SportsFilter({
       onChange(option);
     }
     setIsOpen(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    startY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    currentY.current = e.touches[0].clientY;
+    const distance = currentY.current - startY.current;
+
+    if (distance > 0 && filterRef.current) {
+      filterRef.current.style.transform = `translateY(${distance}px)`;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    const distance = currentY.current - startY.current;
+
+    if (distance > 100) {
+      setIsOpen(false);
+    }
+
+    if (filterRef.current) {
+      filterRef.current.style.transform = '';
+    }
   };
 
   return (
@@ -48,7 +75,13 @@ export default function SportsFilter({
       {isOpen && (
         <>
           <div className={styles.overlay} onClick={() => setIsOpen(false)} />
-          <div className={styles.bottomSheet} ref={filterRef}>
+          <div
+            className={styles.bottomSheet}
+            ref={filterRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div className={styles.indicatorWrapper}>
               <IconComponent
                 name="indicator"

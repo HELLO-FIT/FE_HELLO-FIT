@@ -71,14 +71,13 @@
 .bottomSheet {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   width: 100%;
   max-width: 600px;
   background-color: $white;
   border-radius: 12px 12px 0 0;
   overflow: hidden;
-  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: transform 0.3s ease-out;
   z-index: 32;
   border: 1px solid $gray20;
   padding: 0 24px 8px;
