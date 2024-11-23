@@ -11,6 +11,21 @@ import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
 import styles from './map.module.scss';
 import { useRouter } from 'next/router';
+import { InitialPageMeta } from '@/components/MetaData';
+import { SSRMetaProps } from '@/components/MetaData/MetaData.type';
+import { serviceUrl } from '@/constants/serviceUrl';
+import { GetServerSideProps } from 'next';
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const OGTitle = '지도 홈 | HELLOFIT';
+  const OGUrl = `${serviceUrl}/map`;
+  return {
+    props: {
+      OGTitle,
+      OGUrl,
+    },
+  };
+};
 
 /* eslint-disable */
 interface KakaoMapResult {
@@ -18,7 +33,7 @@ interface KakaoMapResult {
   x: string;
 }
 
-export default function Map() {
+export default function Map({ OGTitle, OGUrl }: SSRMetaProps) {
   const [facilities, setFacilities] = useState<NomalFacility[]>([]);
   const [selectedFacility, setSelectedFacility] =
     useState<NomalFacilityDetails | null>(null);
@@ -68,11 +83,9 @@ export default function Map() {
   };
 
   const createMarkerImage = (src: string): kakao.maps.MarkerImage => {
-    return new kakao.maps.MarkerImage(
-      src,
-      new kakao.maps.Size(28, 28),
-      { offset: new kakao.maps.Point(14, 14) }
-    );
+    return new kakao.maps.MarkerImage(src, new kakao.maps.Size(28, 28), {
+      offset: new kakao.maps.Point(14, 14),
+    });
   };
 
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
@@ -126,10 +139,7 @@ export default function Map() {
     geocoder.addressSearch(
       fullRegionName,
       (result: KakaoMapResult[], status: string) => {
-        if (
-          status === kakao.maps.services.Status.OK &&
-          result.length > 0
-        ) {
+        if (status === kakao.maps.services.Status.OK && result.length > 0) {
           const { y: latitude, x: longitude } = result[0];
           const coords = new kakao.maps.LatLng(
             parseFloat(latitude),
@@ -164,7 +174,10 @@ export default function Map() {
             center: new kakao.maps.LatLng(37.5665, 126.978),
             level: 3,
           };
-          const kakaoMap = new kakao.maps.Map(container as HTMLElement, options);
+          const kakaoMap = new kakao.maps.Map(
+            container as HTMLElement,
+            options
+          );
           setMap(kakaoMap);
 
           if (navigator.geolocation) {
@@ -299,11 +312,15 @@ export default function Map() {
 
   return (
     <>
+      <InitialPageMeta title={OGTitle} url={OGUrl} />
       <Header />
       <div className={styles.positionButton} onClick={moveToUserLocation}>
         <img src="/image/position.svg" alt="현재 위치로 돌아가기" />
       </div>
-      <div id="map" style={{ width: '100%', height: '100vh', position: 'relative' }}></div>
+      <div
+        id="map"
+        style={{ width: '100%', height: '100vh', position: 'relative' }}
+      ></div>
       {indicatorMode === 'sports' ? (
         <PopularSports
           onSelectSport={fetchFacilitiesBySport}

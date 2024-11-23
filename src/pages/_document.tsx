@@ -5,6 +5,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <link rel="icon" href="../../public/favicon.ico" />
         <script
           defer
           src="https://developers.kakao.com/sdk/js/kakao.min.js"
