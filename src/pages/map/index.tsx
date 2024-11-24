@@ -12,6 +12,7 @@ import { toggleState } from '@/states/toggleState';
 import styles from './map.module.scss';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import GNB from '@/components/Layout/GNB';
 
 /* eslint-disable */
 interface KakaoMapResult {
@@ -35,6 +36,7 @@ export default function Map() {
     null
   );
   const [localCode, setLocalCode] = useState<string | null>(null);
+  const [isLocalFilterActive, setIsLocalFilterActive] = useState(false);
 
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
@@ -324,6 +326,9 @@ export default function Map() {
           mode={toggle}
           onRegionSelect={handleRegionSelect}
           selectedRegion={selectedRegion}
+          onLocalFilterToggle={isOpen => {
+            setIsLocalFilterActive(isOpen); 
+          }}
         />
       ) : (
         selectedFacility && (

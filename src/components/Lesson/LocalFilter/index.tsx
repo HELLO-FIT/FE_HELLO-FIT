@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styles from './LocalFilter.module.scss';
 import { LocalFilterProps } from './LocalFilter.types';
 import IconComponent from '@/components/Asset/Icon';
@@ -17,12 +17,20 @@ export default function LocalFilter({
   onCompleteClick,
   isNextStep,
   placeholderType,
-}: LocalFilterProps) {
+  onToggle,
+}: LocalFilterProps & { onToggle?: (isOpen: boolean) => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const toggle = useRecoilValue(toggleState);
 
   useOutsideClick(filterRef, () => setIsOpen(false));
+
+  // isOpen 상태 변경 시 onToggle 호출 (onToggle이 있을 때만)
+  useEffect(() => {
+    if (onToggle) {
+      onToggle(isOpen);
+    }
+  }, [isOpen, onToggle]);
 
   const handleOptionClick = (key: string) => {
     onChange(key);
