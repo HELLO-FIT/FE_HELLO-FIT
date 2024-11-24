@@ -24,7 +24,7 @@ export default function PopularSports({
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
-  const maxDragDistance = 140;
+  const maxDragDistance = 170;
 
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
@@ -104,6 +104,13 @@ export default function PopularSports({
     );
   };
 
+  // 인디케이터 클릭 시 하단으로 이동/올라오기
+  const handleIndicatorClick = () => {
+    setPosition(prevPosition =>
+      prevPosition === maxDragDistance ? 0 : maxDragDistance
+    );
+  };
+
   return (
     <div
       className={styles.popularSportsContainer}
@@ -115,7 +122,7 @@ export default function PopularSports({
       onMouseUp={handleDragEnd}
       onTouchEnd={handleDragEnd}
     >
-      <div className={styles.indicatorWrapper}>
+      <div className={styles.indicatorWrapper} onClick={handleIndicatorClick}>
         <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
       </div>
 
