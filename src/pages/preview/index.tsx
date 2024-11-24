@@ -4,7 +4,6 @@ import ToggleButton from '@/components/Button/ToggleButton';
 import CustomButton from '@/components/Button/CustomButton';
 import SportButton from '@/components/Button/SportButton';
 import styles from './preview.module.scss';
-import Checkbox from '@/components/Checkbox/Checkbox';
 import SearchBar from '@/components/Search/SearchBar';
 // import Chips from '@/components/Button/Chips';
 import DropDown from '@/components/DropDown';
@@ -114,11 +113,6 @@ export default function Preview() {
           <p style={{ marginTop: '20px' }}>선택한 스포츠: {selectedSport}</p>
         )}
       </section> */}
-
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>CheckBox</h2>
-        <Checkbox>체크박스</Checkbox>
-      </section>
 
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>SearchBar</h2>
