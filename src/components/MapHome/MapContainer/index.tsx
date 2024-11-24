@@ -225,7 +225,11 @@ export default function MapContainer() {
 
   // 시설 목록이 변경될 때 지도 마커 업데이트
   useEffect(() => {
-    renderMarkers();
+    if (facilities.length > 0) {
+      renderMarkers();
+    } else {
+      clearMarkers();
+    }
   }, [map, facilities]);
 
   // 마커 렌더링 함수
@@ -282,6 +286,12 @@ export default function MapContainer() {
     // 기존 마커 제거 후 새로운 마커 설정
     markers.forEach(marker => marker.setMap(null));
     setMarkers(newMarkers);
+  };
+
+  // 기존 마커 제거 함수
+  const clearMarkers = () => {
+    markers.forEach(marker => marker.setMap(null));
+    setMarkers([]);
   };
 
   // 현재 위치로 이동 함수
@@ -342,7 +352,7 @@ export default function MapContainer() {
             onMoveToDetail={() => {
               if (selectedFacility) {
                 router.push(
-                  `/details/${selectedFacility.businessId}/${
+                  `/details/${selectedFacility.businessId}/$${
                     'serialNumber' in selectedFacility
                       ? selectedFacility.serialNumber
                       : ''
