@@ -17,6 +17,7 @@ export default function LocalFilter({
   onCompleteClick,
   isNextStep,
   placeholderType,
+  additionalBottomSheetClass,
 }: LocalFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -87,7 +88,7 @@ export default function LocalFilter({
         <>
           <div className={styles.overlay} onClick={() => setIsOpen(false)} />
           <div
-            className={styles.bottomSheet}
+            className={`${styles.bottomSheet} ${additionalBottomSheetClass ?? ''}`}
             ref={filterRef}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}

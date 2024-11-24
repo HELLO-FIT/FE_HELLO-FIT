@@ -127,16 +127,19 @@ export default function PopularSports({
 
       <div className={styles.content}>
         <header className={styles.header}>
-          <LocalFilter
-            options={isNextStep ? currentOptions : cityCodes}
-            value={isNextStep ? selectedLocalCode : selectedCityCode}
-            onChange={handleValueChange}
-            title={isNextStep ? '구/군 선택 (2/2)' : '시/도 선택 (1/2)'}
-            placeholder={selectedRegion}
-            onNextClick={handleNextClick}
-            onCompleteClick={handleCompleteClick}
-            isNextStep={isNextStep}
-          />
+          <div className={styles.localFilterContainer}>
+            <LocalFilter
+              options={isNextStep ? currentOptions : cityCodes}
+              value={isNextStep ? selectedLocalCode : selectedCityCode}
+              onChange={handleValueChange}
+              title={isNextStep ? '구/군 선택 (2/2)' : '시/도 선택 (1/2)'}
+              placeholder={selectedRegion}
+              onNextClick={handleNextClick}
+              onCompleteClick={handleCompleteClick}
+              isNextStep={isNextStep}
+              additionalBottomSheetClass={styles.customBottomSheet}
+            />
+          </div>
         </header>
 
         <h2 className={styles.title}>인기 스포츠</h2>
