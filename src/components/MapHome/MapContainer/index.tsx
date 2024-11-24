@@ -2,25 +2,22 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import {
-  getNomalFacilities,
-  getSpecialFacilities,
-  NomalFacility,
-  SpecialFacility,
-} from '@/apis/get/getFacilities';
-import {
-  getNomalFacilityDetails,
-  getSpecialFacilityDetails,
-  NomalFacilityDetails,
-  SpecialFacilityDetails,
-} from '@/apis/get/getFacilityDetails';
+import { fetchFacilities } from '@/apis/get/facilitiesAPI';
+import { simplifyRegionName } from '@/utils/regionUtils';
+import { createMarkerImage } from '@/utils/markerUtils';
+import useKakaoMap from '@/utils/mapUtils';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
 import styles from './MapContainer.module.scss';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-
-/* eslint-disable */
+import { NomalFacility, SpecialFacility } from '@/apis/get/getFacilities';
+import {
+  NomalFacilityDetails,
+  SpecialFacilityDetails,
+  getSpecialFacilityDetails,
+  getNomalFacilityDetails,
+} from '@/apis/get/getFacilityDetails';
 
 type Facility = NomalFacility | SpecialFacility;
 
@@ -35,7 +32,6 @@ export default function MapContainer() {
   const [selectedRegion, setSelectedRegion] = useState('지역');
   const [filterItem, setFilterItem] = useState<string | null>(null);
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY!;
-  const [map, setMap] = useState<kakao.maps.Map | null>(null);
   const [userLocation, setUserLocation] = useState<kakao.maps.LatLng | null>(
     null
   );
@@ -43,16 +39,10 @@ export default function MapContainer() {
     localStorage.getItem('localCode') || null
   );
   const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
-
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
+  const { map, setMap } = useKakaoMap(KAKAO_MAP_KEY, null);
 
   const loadKakaoMapScript = () => {
     const script = document.createElement('script');
@@ -67,43 +57,14 @@ export default function MapContainer() {
     });
   };
 
-  // 지역 이름 간소화 함수 (특별시, 광역시 등 제거)
-  const simplifyRegionName = (fullRegionName: string): string => {
-    return (
-      fullRegionName
-        .replace(/(특별시|광역시|특별자치도|특별자치시)/g, '')
-        .replace(/청$/, '')
-        .match(/.+?(시|군|구)/)?.[0] || fullRegionName
-    );
-  };
-
-  // 지도 마커 이미지 생성 함수
-  const createMarkerImage = (src: string): kakao.maps.MarkerImage => {
-    return new kakao.maps.MarkerImage(src, new kakao.maps.Size(28, 28), {
-      offset: new kakao.maps.Point(14, 14),
-    });
-  };
-
-  // 스포츠 필터에 따라 시설 목록 요청 함수
+  // 시설 목록 요청
   const fetchFacilitiesBySport = async (sport: string | null = null) => {
-    try {
-      setFacilities([]);
-      setFilterItem(sport);
-
-      const params = {
-        localCode: localCode || '11110',
-        itemName: sport || undefined,
-      };
-
-      const data =
-        toggle === 'special'
-          ? await getSpecialFacilities(params)
-          : await getNomalFacilities(params);
-
-      setFacilities(data);
-    } catch (error) {
-      console.error('시설 데이터를 가져오는 중 오류 발생:', error);
-    }
+    const data = await fetchFacilities(
+      localStorage.getItem('localCode'),
+      sport,
+      toggle
+    );
+    setFacilities(data);
   };
 
   // 좌표를 기반으로 지역 코드 및 시설 목록 갱신 함수
@@ -120,26 +81,18 @@ export default function MapContainer() {
           const fullLocalCode = result[0].code.trim();
           const shortLocalCode = `${fullLocalCode.slice(0, 4)}0`;
 
-          setLocalCode(shortLocalCode);
           localStorage.setItem('localCode', shortLocalCode);
-
           const simplifiedRegion = simplifyRegionName(result[0].address_name);
           setSelectedRegion(simplifiedRegion);
 
           fetchFacilitiesBySport(filterItem);
-        } else if (
-          status === kakao.maps.services.Status.OK &&
-          result.length === 0
-        ) {
-          console.warn('No results returned for the given coordinates.');
-          setFacilities([]);
         } else {
           console.error('Failed to fetch region code:', status);
+          setFacilities([]);
         }
       }
     );
   };
-
   // 지역을 선택했을 때 호출되는 함수
   const handleRegionSelect = (localCode: string, fullRegionName: string) => {
     if (!fullRegionName) {
