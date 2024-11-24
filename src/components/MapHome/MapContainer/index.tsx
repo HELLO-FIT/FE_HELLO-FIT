@@ -160,10 +160,13 @@ export default function MapContainer() {
           map.setCenter(coords);
         }
 
+        setUserLocation(coords); // 사용자가 선택한 위치로 설정
         updateLocalCodeAndFetchFacilities(
           parseFloat(latitude),
           parseFloat(longitude)
         );
+
+        fetchFacilitiesBySport(); // 지역 선택 후 해당 지역의 시설 목록 갱신
       } else {
         console.error('지역 검색 실패 또는 결과 없음:', status, fullRegionName);
       }
@@ -237,6 +240,8 @@ export default function MapContainer() {
   // 마커 렌더링 함수
   const renderMarkers = () => {
     if (!map || facilities.length === 0) return;
+
+    clearMarkers(); // 기존 마커 제거
 
     const newMarkers: kakao.maps.Marker[] = [];
     let selectedMarker: kakao.maps.Marker | null = null;
@@ -336,6 +341,7 @@ export default function MapContainer() {
         userLocation.getLat(),
         userLocation.getLng()
       );
+      fetchFacilitiesBySport(); // 현재 위치로 이동 후 시설 목록 갱신
     } else {
       console.warn('Map or userLocation is not available');
     }
@@ -373,7 +379,31 @@ export default function MapContainer() {
           onRegionSelect={(localCode, region) => {
             setLocalCode(localCode);
             setSelectedRegion(simplifyRegionName(region));
-            fetchFacilitiesBySport();
+            if (map) {
+              const geocoder = new kakao.maps.services.Geocoder();
+              geocoder.addressSearch(
+                region,
+                (result: any[], status: string) => {
+                  if (
+                    status === kakao.maps.services.Status.OK &&
+                    result.length > 0
+                  ) {
+                    const { y: latitude, x: longitude } = result[0];
+                    const coords = new kakao.maps.LatLng(
+                      parseFloat(latitude),
+                      parseFloat(longitude)
+                    );
+                    map.setCenter(coords);
+                    setUserLocation(coords);
+                    updateLocalCodeAndFetchFacilities(
+                      parseFloat(latitude),
+                      parseFloat(longitude)
+                    );
+                    fetchFacilitiesBySport(); // 지역 선택 후 해당 지역의 시설 목록 갱신
+                  }
+                }
+              );
+            }
           }}
           selectedRegion={selectedRegion}
         />
