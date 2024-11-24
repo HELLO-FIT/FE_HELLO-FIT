@@ -52,12 +52,6 @@ export default function MapContainer() {
     };
   }, []);
 
-  useEffect(() => {
-    if (filterItem !== null) {
-      fetchFacilities();
-    }
-  }, [filterItem]);
-
   const loadKakaoMapScript = () => {
     const script = document.createElement('script');
     script.async = true;
@@ -71,6 +65,7 @@ export default function MapContainer() {
     });
   };
 
+  // 지역 이름 간소화 함수 (특별시, 광역시 등 제거)
   const simplifyRegionName = (fullRegionName: string): string => {
     return (
       fullRegionName
@@ -80,12 +75,36 @@ export default function MapContainer() {
     );
   };
 
+  // 지도 마커 이미지 생성 함수
   const createMarkerImage = (src: string): kakao.maps.MarkerImage => {
     return new kakao.maps.MarkerImage(src, new kakao.maps.Size(28, 28), {
       offset: new kakao.maps.Point(14, 14),
     });
   };
 
+  // 스포츠 필터에 따라 시설 목록 요청 함수
+  const fetchFacilitiesBySport = async (sport: string | null = null) => {
+    try {
+      setFacilities([]);
+      setFilterItem(sport);
+
+      const params = {
+        localCode: localCode || '11110',
+        itemName: sport || undefined,
+      };
+
+      const data =
+        toggle === 'special'
+          ? await getSpecialFacilities(params)
+          : await getNomalFacilities(params);
+
+      setFacilities(data);
+    } catch (error) {
+      console.error('시설 데이터를 가져오는 중 오류 발생:', error);
+    }
+  };
+
+  // 좌표를 기반으로 지역 코드 및 시설 목록 갱신 함수
   const updateLocalCodeAndFetchFacilities = async (
     latitude: number,
     longitude: number
@@ -105,7 +124,7 @@ export default function MapContainer() {
           const simplifiedRegion = simplifyRegionName(result[0].address_name);
           setSelectedRegion(simplifiedRegion);
 
-          fetchFacilities();
+          fetchFacilitiesBySport(filterItem);
         } else if (
           status === kakao.maps.services.Status.OK &&
           result.length === 0
@@ -118,100 +137,37 @@ export default function MapContainer() {
     );
   };
 
-  // const fetchFacilities = async (localCodeOverride?: string) => {
-  //   try {
-  //     setFacilities([]);
-  //     const params = {
-  //       localCode: localCodeOverride || localCode || '11110',
-  //       itemName: filterItem || undefined,
-  //     };
-
-  //     const data =
-  //       toggle === 'special'
-  //         ? await getSpecialFacilities(params)
-  //         : await getNomalFacilities(params);
-
-  //     setFacilities(data);
-  //   } catch (error) {
-  //     console.error('시설 데이터를 가져오는 중 오류 발생:', error);
-  //   }
-  // };
-
-  const fetchFacilityDetails = async (
-    businessId: string,
-    serialNumber?: string
-  ) => {
-    try {
-      const details =
-        toggle === 'special'
-          ? await getSpecialFacilityDetails(businessId)
-          : await getNomalFacilityDetails(businessId, serialNumber!);
-      setSelectedFacility(details);
-      setIndicatorMode('facilityInfo');
-    } catch (error) {
-      console.error('Failed to fetch facility details:', error);
+  // 지역을 선택했을 때 호출되는 함수
+  const handleRegionSelect = (localCode: string, fullRegionName: string) => {
+    if (!fullRegionName) {
+      console.error('유효하지 않은 지역 이름:', localCode, fullRegionName);
+      return;
     }
+
+    const geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch(fullRegionName, (result: any[], status: string) => {
+      if (status === kakao.maps.services.Status.OK && result.length > 0) {
+        const { y: latitude, x: longitude } = result[0];
+        const coords = new kakao.maps.LatLng(
+          parseFloat(latitude),
+          parseFloat(longitude)
+        );
+
+        if (map) {
+          map.setCenter(coords);
+        }
+
+        updateLocalCodeAndFetchFacilities(
+          parseFloat(latitude),
+          parseFloat(longitude)
+        );
+      } else {
+        console.error('지역 검색 실패 또는 결과 없음:', status, fullRegionName);
+      }
+    });
   };
 
-  // const renderMarkers = () => {
-  //   if (!map || facilities.length === 0) return;
-
-  //   const newMarkers: kakao.maps.Marker[] = [];
-  //   facilities.forEach(facility => {
-  //     if (filterItem && !facility.items.includes(filterItem)) return;
-
-  //     const geocoder = new kakao.maps.services.Geocoder();
-  //     geocoder.addressSearch(
-  //       facility.address,
-  //       (result: any[], status: string) => {
-  //         if (status === kakao.maps.services.Status.OK) {
-  //           const coords = new kakao.maps.LatLng(
-  //             parseFloat(result[0].y),
-  //             parseFloat(result[0].x)
-  //           );
-
-  //           const markerImage = createMarkerImage(
-  //             toggle === 'special'
-  //               ? '/image/marker-special.svg'
-  //               : '/image/marker.svg'
-  //           );
-
-  //           const marker = new kakao.maps.Marker({
-  //             map,
-  //             position: coords,
-  //             image: markerImage,
-  //             title: facility.name,
-  //           });
-
-  //           kakao.maps.event.addListener(marker, 'click', () => {
-  //             fetchFacilityDetails(
-  //               facility.businessId,
-  //               'serialNumber' in facility ? facility.serialNumber : undefined
-  //             );
-  //           });
-
-  //           newMarkers.push(marker);
-  //         }
-  //       }
-  //     );
-  //   });
-
-  //   markers.forEach(marker => marker.setMap(null));
-  //   setMarkers(newMarkers);
-  // };
-
-  const moveToUserLocation = () => {
-    if (map && userLocation) {
-      map.setCenter(userLocation);
-      updateLocalCodeAndFetchFacilities(
-        userLocation.getLat(),
-        userLocation.getLng()
-      );
-    } else {
-      console.warn('Map or userLocation is not available');
-    }
-  };
-
+  // 초기 카카오 지도 로드 및 위치 설정
   useEffect(() => {
     loadKakaoMapScript()
       .then(() => {
@@ -265,17 +221,12 @@ export default function MapContainer() {
       .catch(console.error);
   }, [KAKAO_MAP_KEY, toggle]);
 
+  // 시설 목록이 변경될 때 지도 마커 업데이트
   useEffect(() => {
     renderMarkers();
   }, [map, facilities]);
 
-  /** 기존 마커를 삭제 */
-  const clearMarkers = () => {
-    markers.forEach(marker => marker.setMap(null));
-    setMarkers([]);
-  };
-
-  /** 마커를 생성 및 렌더링 */
+  // 마커 렌더링 함수
   const renderMarkers = () => {
     if (!map || facilities.length === 0) return;
 
@@ -304,20 +255,18 @@ export default function MapContainer() {
               title: facility.name,
             });
 
-            kakao.maps.event.addListener(marker, 'click', () => {
+            kakao.maps.event.addListener(marker, 'click', async () => {
               if (toggle === 'special') {
-                // 특수 시설의 경우 serialNumber가 필요하지 않음
-                getSpecialFacilityDetails(facility.businessId)
-                  .then(details => setSelectedFacility(details))
-                  .catch(console.error);
+                const details = await getSpecialFacilityDetails(
+                  facility.businessId
+                );
+                setSelectedFacility(details);
               } else if ('serialNumber' in facility) {
-                // 일반 시설의 경우 serialNumber를 포함하여 API 호출
-                getNomalFacilityDetails(
+                const details = await getNomalFacilityDetails(
                   facility.businessId,
                   facility.serialNumber
-                )
-                  .then(details => setSelectedFacility(details))
-                  .catch(console.error);
+                );
+                setSelectedFacility(details);
               }
               setIndicatorMode('facilityInfo');
             });
@@ -333,70 +282,18 @@ export default function MapContainer() {
     setMarkers(newMarkers);
   };
 
-  /** 시설 데이터 가져오기 */
-  const fetchFacilities = async () => {
-    try {
-      const params = {
-        localCode: localCode || '11110',
-        itemName: filterItem || undefined,
-      };
-      const data =
-        toggle === 'special'
-          ? await getSpecialFacilities(params)
-          : await getNomalFacilities(params);
-
-      setFacilities(data);
-    } catch (error) {
-      console.error('시설 데이터를 가져오는 중 오류 발생:', error);
+  // 현재 위치로 이동 함수
+  const moveToUserLocation = () => {
+    if (map && userLocation) {
+      map.setCenter(userLocation);
+      updateLocalCodeAndFetchFacilities(
+        userLocation.getLat(),
+        userLocation.getLng()
+      );
+    } else {
+      console.warn('Map or userLocation is not available');
     }
   };
-
-  /** 지도 초기화 및 이벤트 핸들러 */
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY}&autoload=false&libraries=services`;
-    document.head.appendChild(script);
-
-    script.onload = () => {
-      kakao.maps.load(() => {
-        const container = document.getElementById('map') as HTMLElement;
-        const kakaoMap = new kakao.maps.Map(container, {
-          center: new kakao.maps.LatLng(37.5665, 126.978),
-          level: 3,
-        });
-        setMap(kakaoMap);
-
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            position => {
-              const userLatLng = new kakao.maps.LatLng(
-                position.coords.latitude,
-                position.coords.longitude
-              );
-              setUserLocation(userLatLng);
-              kakaoMap.setCenter(userLatLng);
-              fetchFacilities();
-            },
-            error => console.error('Failed to get user location:', error)
-          );
-        }
-
-        kakao.maps.event.addListener(kakaoMap, 'zoom_changed', fetchFacilities);
-        kakao.maps.event.addListener(kakaoMap, 'dragend', fetchFacilities);
-      });
-    };
-  }, []);
-
-  /** `toggle` 상태 변경 시 시설 목록 및 마커 업데이트 */
-  useEffect(() => {
-    fetchFacilities();
-  }, [toggle, filterItem]);
-
-  /** 시설 데이터 변경 시 마커 업데이트 */
-  useEffect(() => {
-    renderMarkers();
-  }, [facilities]);
 
   return (
     <>
@@ -424,12 +321,13 @@ export default function MapContainer() {
         <PopularSports
           onSelectSport={sport => {
             setFilterItem(sport);
+            fetchFacilitiesBySport(sport);
           }}
           mode={toggle}
           onRegionSelect={(localCode, region) => {
             setLocalCode(localCode);
             setSelectedRegion(region);
-            fetchFacilities(); // 매개변수 전달 없이 호출
+            fetchFacilitiesBySport();
           }}
           selectedRegion={selectedRegion}
         />
