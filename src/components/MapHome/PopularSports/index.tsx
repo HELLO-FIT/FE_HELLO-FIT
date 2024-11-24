@@ -6,7 +6,6 @@ import { cityCodes, localCodes } from '@/constants/localCode';
 import styles from './PopularSports.module.scss';
 import IconComponent from '@/components/Asset/Icon';
 import { getFullRegionName } from '@/utils/getFullRegionName';
-import GNB from '@/components/Layout/GNB';
 
 interface PopularSportsProps {
   onSelectSport: (sport: string) => void;
@@ -146,7 +145,6 @@ export default function PopularSports({
           onSelectSport={onSelectSport}
         />
       </div>
-      <GNB />
     </div>
   );
 }

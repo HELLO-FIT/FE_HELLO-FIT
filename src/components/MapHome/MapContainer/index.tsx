@@ -44,6 +44,13 @@ export default function MapContainer() {
 
   const { map, setMap } = useKakaoMap(KAKAO_MAP_KEY, null);
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const loadKakaoMapScript = () => {
     const script = document.createElement('script');
     script.async = true;
