@@ -2,10 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import { getNomalFacilities, NomalFacility } from '@/apis/get/getFacilities';
+import {
+  getNomalFacilities,
+  getSpecialFacilities,
+  NomalFacility,
+  SpecialFacility,
+} from '@/apis/get/getFacilities';
 import {
   getNomalFacilityDetails,
+  getSpecialFacilityDetails,
   NomalFacilityDetails,
+  SpecialFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
@@ -14,14 +21,14 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames';
 
 /* eslint-disable */
-interface KakaoMapResult {
-  y: string;
-  x: string;
-}
+
+type Facility = NomalFacility | SpecialFacility;
+
 export default function MapContainer() {
-  const [facilities, setFacilities] = useState<NomalFacility[]>([]);
-  const [selectedFacility, setSelectedFacility] =
-    useState<NomalFacilityDetails | null>(null);
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState<
+    NomalFacilityDetails | SpecialFacilityDetails | null
+  >(null);
   const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>(
     'sports'
   );
@@ -29,12 +36,12 @@ export default function MapContainer() {
   const [filterItem, setFilterItem] = useState<string | null>(null);
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY!;
   const [map, setMap] = useState<kakao.maps.Map | null>(null);
-  const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
   const [userLocation, setUserLocation] = useState<kakao.maps.LatLng | null>(
     null
   );
   const [localCode, setLocalCode] = useState<string | null>(null);
-  
+  const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
+
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
 
@@ -44,6 +51,12 @@ export default function MapContainer() {
       document.body.style.overflow = 'auto';
     };
   }, []);
+
+  useEffect(() => {
+    if (filterItem !== null) {
+      fetchFacilities();
+    }
+  }, [filterItem]);
 
   const loadKakaoMapScript = () => {
     const script = document.createElement('script');
@@ -73,20 +86,6 @@ export default function MapContainer() {
     });
   };
 
-  const fetchFacilitiesBySport = async (sport: string | null = null) => {
-    try {
-      setFacilities([]);
-      setFilterItem(sport);
-      const data = await getNomalFacilities({
-        localCode: localCode || '11110',
-        itemName: sport || undefined,
-      });
-      setFacilities(data);
-    } catch (error) {
-      console.error('시설 데이터를 가져오는 중 오류 발생:', error);
-    }
-  };
-
   const updateLocalCodeAndFetchFacilities = async (
     latitude: number,
     longitude: number
@@ -96,7 +95,7 @@ export default function MapContainer() {
       longitude,
       latitude,
       (result: any[], status: string) => {
-        if (status === kakao.maps.services.Status.OK && result[0].code) {
+        if (status === kakao.maps.services.Status.OK && result.length > 0) {
           const fullLocalCode = result[0].code.trim();
           const shortLocalCode = `${fullLocalCode.slice(0, 4)}0`;
 
@@ -106,7 +105,12 @@ export default function MapContainer() {
           const simplifiedRegion = simplifyRegionName(result[0].address_name);
           setSelectedRegion(simplifiedRegion);
 
-          fetchFacilitiesBySport(filterItem);
+          fetchFacilities();
+        } else if (
+          status === kakao.maps.services.Status.OK &&
+          result.length === 0
+        ) {
+          console.warn('No results returned for the given coordinates.');
         } else {
           console.error('Failed to fetch region code:', status);
         }
@@ -114,40 +118,98 @@ export default function MapContainer() {
     );
   };
 
-  const handleRegionSelect = (localCode: string, fullRegionName: string) => {
-    if (!fullRegionName) {
-      console.error('유효하지 않은 지역 이름:', localCode, fullRegionName);
-      return;
+  // const fetchFacilities = async (localCodeOverride?: string) => {
+  //   try {
+  //     setFacilities([]);
+  //     const params = {
+  //       localCode: localCodeOverride || localCode || '11110',
+  //       itemName: filterItem || undefined,
+  //     };
+
+  //     const data =
+  //       toggle === 'special'
+  //         ? await getSpecialFacilities(params)
+  //         : await getNomalFacilities(params);
+
+  //     setFacilities(data);
+  //   } catch (error) {
+  //     console.error('시설 데이터를 가져오는 중 오류 발생:', error);
+  //   }
+  // };
+
+  const fetchFacilityDetails = async (
+    businessId: string,
+    serialNumber?: string
+  ) => {
+    try {
+      const details =
+        toggle === 'special'
+          ? await getSpecialFacilityDetails(businessId)
+          : await getNomalFacilityDetails(businessId, serialNumber!);
+      setSelectedFacility(details);
+      setIndicatorMode('facilityInfo');
+    } catch (error) {
+      console.error('Failed to fetch facility details:', error);
     }
+  };
 
-    const geocoder = new kakao.maps.services.Geocoder();
-    geocoder.addressSearch(
-      fullRegionName,
-      (result: KakaoMapResult[], status: string) => {
-        if (status === kakao.maps.services.Status.OK && result.length > 0) {
-          const { y: latitude, x: longitude } = result[0];
-          const coords = new kakao.maps.LatLng(
-            parseFloat(latitude),
-            parseFloat(longitude)
-          );
+  // const renderMarkers = () => {
+  //   if (!map || facilities.length === 0) return;
 
-          if (map) {
-            map.setCenter(coords);
-          }
+  //   const newMarkers: kakao.maps.Marker[] = [];
+  //   facilities.forEach(facility => {
+  //     if (filterItem && !facility.items.includes(filterItem)) return;
 
-          updateLocalCodeAndFetchFacilities(
-            parseFloat(latitude),
-            parseFloat(longitude)
-          );
-        } else {
-          console.error(
-            '지역 검색 실패 또는 결과 없음:',
-            status,
-            fullRegionName
-          );
-        }
-      }
-    );
+  //     const geocoder = new kakao.maps.services.Geocoder();
+  //     geocoder.addressSearch(
+  //       facility.address,
+  //       (result: any[], status: string) => {
+  //         if (status === kakao.maps.services.Status.OK) {
+  //           const coords = new kakao.maps.LatLng(
+  //             parseFloat(result[0].y),
+  //             parseFloat(result[0].x)
+  //           );
+
+  //           const markerImage = createMarkerImage(
+  //             toggle === 'special'
+  //               ? '/image/marker-special.svg'
+  //               : '/image/marker.svg'
+  //           );
+
+  //           const marker = new kakao.maps.Marker({
+  //             map,
+  //             position: coords,
+  //             image: markerImage,
+  //             title: facility.name,
+  //           });
+
+  //           kakao.maps.event.addListener(marker, 'click', () => {
+  //             fetchFacilityDetails(
+  //               facility.businessId,
+  //               'serialNumber' in facility ? facility.serialNumber : undefined
+  //             );
+  //           });
+
+  //           newMarkers.push(marker);
+  //         }
+  //       }
+  //     );
+  //   });
+
+  //   markers.forEach(marker => marker.setMap(null));
+  //   setMarkers(newMarkers);
+  // };
+
+  const moveToUserLocation = () => {
+    if (map && userLocation) {
+      map.setCenter(userLocation);
+      updateLocalCodeAndFetchFacilities(
+        userLocation.getLat(),
+        userLocation.getLng()
+      );
+    } else {
+      console.warn('Map or userLocation is not available');
+    }
   };
 
   useEffect(() => {
@@ -204,96 +266,137 @@ export default function MapContainer() {
   }, [KAKAO_MAP_KEY, toggle]);
 
   useEffect(() => {
+    renderMarkers();
+  }, [map, facilities]);
+
+  /** 기존 마커를 삭제 */
+  const clearMarkers = () => {
+    markers.forEach(marker => marker.setMap(null));
+    setMarkers([]);
+  };
+
+  /** 마커를 생성 및 렌더링 */
+  const renderMarkers = () => {
     if (!map || facilities.length === 0) return;
 
     const newMarkers: kakao.maps.Marker[] = [];
-    let selectedMarker: kakao.maps.Marker | null = null;
-
     facilities.forEach(facility => {
       const geocoder = new kakao.maps.services.Geocoder();
       geocoder.addressSearch(
         facility.address,
-        (result: KakaoMapResult[], status: string) => {
+        (result: any[], status: string) => {
           if (status === kakao.maps.services.Status.OK) {
             const coords = new kakao.maps.LatLng(
               parseFloat(result[0].y),
               parseFloat(result[0].x)
             );
 
-            const defaultMarkerImage = createMarkerImage(
+            const markerImage = createMarkerImage(
               toggle === 'special'
                 ? '/image/marker-special.svg'
                 : '/image/marker.svg'
-            );
-            const selectedMarkerImage = createMarkerImage(
-              toggle === 'special'
-                ? '/image/address-marker-special.svg'
-                : '/image/address-marker-normal.svg'
             );
 
             const marker = new kakao.maps.Marker({
               map,
               position: coords,
-              image: defaultMarkerImage,
+              image: markerImage,
               title: facility.name,
             });
 
-            newMarkers.push(marker);
-
-            kakao.maps.event.addListener(marker, 'mouseover', () => {
-              if (!selectedMarker || selectedMarker !== marker) {
-                marker.setImage(defaultMarkerImage);
-              }
-            });
-
-            kakao.maps.event.addListener(marker, 'mouseout', () => {
-              if (!selectedMarker || selectedMarker !== marker) {
-                marker.setImage(defaultMarkerImage);
-              }
-            });
-
-            kakao.maps.event.addListener(marker, 'click', async () => {
-              if (selectedMarker && selectedMarker !== marker) {
-                selectedMarker.setImage(defaultMarkerImage);
-              }
-
-              marker.setImage(selectedMarkerImage);
-              selectedMarker = marker;
-
-              try {
-                const details = await getNomalFacilityDetails(
+            kakao.maps.event.addListener(marker, 'click', () => {
+              if (toggle === 'special') {
+                // 특수 시설의 경우 serialNumber가 필요하지 않음
+                getSpecialFacilityDetails(facility.businessId)
+                  .then(details => setSelectedFacility(details))
+                  .catch(console.error);
+              } else if ('serialNumber' in facility) {
+                // 일반 시설의 경우 serialNumber를 포함하여 API 호출
+                getNomalFacilityDetails(
                   facility.businessId,
                   facility.serialNumber
-                );
-                setSelectedFacility(details);
-                setIndicatorMode('facilityInfo');
-              } catch (error) {
-                console.error('Failed to fetch facility details:', error);
+                )
+                  .then(details => setSelectedFacility(details))
+                  .catch(console.error);
               }
+              setIndicatorMode('facilityInfo');
             });
+
+            newMarkers.push(marker);
           }
         }
       );
     });
 
+    // 기존 마커 제거 후 새로운 마커 설정
+    markers.forEach(marker => marker.setMap(null));
     setMarkers(newMarkers);
+  };
 
-    return () => {
-      newMarkers.forEach(marker => marker.setMap(null));
-    };
-  }, [map, facilities, toggle]);
+  /** 시설 데이터 가져오기 */
+  const fetchFacilities = async () => {
+    try {
+      const params = {
+        localCode: localCode || '11110',
+        itemName: filterItem || undefined,
+      };
+      const data =
+        toggle === 'special'
+          ? await getSpecialFacilities(params)
+          : await getNomalFacilities(params);
 
-  const moveToUserLocation = () => {
-    if (map && userLocation) {
-      map.setCenter(userLocation);
-      updateLocalCodeAndFetchFacilities(
-        userLocation.getLat(),
-        userLocation.getLng()
-      );
-    } else {
-      console.warn('Map or userLocation is not available');
+      setFacilities(data);
+    } catch (error) {
+      console.error('시설 데이터를 가져오는 중 오류 발생:', error);
     }
   };
+
+  /** 지도 초기화 및 이벤트 핸들러 */
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY}&autoload=false&libraries=services`;
+    document.head.appendChild(script);
+
+    script.onload = () => {
+      kakao.maps.load(() => {
+        const container = document.getElementById('map') as HTMLElement;
+        const kakaoMap = new kakao.maps.Map(container, {
+          center: new kakao.maps.LatLng(37.5665, 126.978),
+          level: 3,
+        });
+        setMap(kakaoMap);
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              const userLatLng = new kakao.maps.LatLng(
+                position.coords.latitude,
+                position.coords.longitude
+              );
+              setUserLocation(userLatLng);
+              kakaoMap.setCenter(userLatLng);
+              fetchFacilities();
+            },
+            error => console.error('Failed to get user location:', error)
+          );
+        }
+
+        kakao.maps.event.addListener(kakaoMap, 'zoom_changed', fetchFacilities);
+        kakao.maps.event.addListener(kakaoMap, 'dragend', fetchFacilities);
+      });
+    };
+  }, []);
+
+  /** `toggle` 상태 변경 시 시설 목록 및 마커 업데이트 */
+  useEffect(() => {
+    fetchFacilities();
+  }, [toggle, filterItem]);
+
+  /** 시설 데이터 변경 시 마커 업데이트 */
+  useEffect(() => {
+    renderMarkers();
+  }, [facilities]);
 
   return (
     <>
@@ -319,9 +422,15 @@ export default function MapContainer() {
       ></div>
       {indicatorMode === 'sports' ? (
         <PopularSports
-          onSelectSport={fetchFacilitiesBySport}
+          onSelectSport={sport => {
+            setFilterItem(sport);
+          }}
           mode={toggle}
-          onRegionSelect={handleRegionSelect}
+          onRegionSelect={(localCode, region) => {
+            setLocalCode(localCode);
+            setSelectedRegion(region);
+            fetchFacilities(); // 매개변수 전달 없이 호출
+          }}
           selectedRegion={selectedRegion}
         />
       ) : (
@@ -333,7 +442,11 @@ export default function MapContainer() {
             onMoveToDetail={() => {
               if (selectedFacility) {
                 router.push(
-                  `/details/${selectedFacility.businessId}/${selectedFacility.serialNumber}`
+                  `/details/${selectedFacility.businessId}/${
+                    'serialNumber' in selectedFacility
+                      ? selectedFacility.serialNumber
+                      : ''
+                  }`
                 );
               }
             }}
