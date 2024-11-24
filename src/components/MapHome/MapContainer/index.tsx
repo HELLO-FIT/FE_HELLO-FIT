@@ -39,7 +39,9 @@ export default function MapContainer() {
   const [userLocation, setUserLocation] = useState<kakao.maps.LatLng | null>(
     null
   );
-  const [localCode, setLocalCode] = useState<string | null>(null);
+  const [localCode, setLocalCode] = useState<string | null>(
+    localStorage.getItem('localCode') || null
+  );
   const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
 
   const toggle = useRecoilValue(toggleState);
@@ -174,7 +176,7 @@ export default function MapContainer() {
         kakao.maps.load(() => {
           const container = document.getElementById('map');
           const options = {
-            center: new kakao.maps.LatLng(37.5665, 126.978),
+            center: userLocation || new kakao.maps.LatLng(37.5665, 126.978),
             level: 3,
           };
           const kakaoMap = new kakao.maps.Map(
@@ -326,7 +328,7 @@ export default function MapContainer() {
           mode={toggle}
           onRegionSelect={(localCode, region) => {
             setLocalCode(localCode);
-            setSelectedRegion(region);
+            setSelectedRegion(simplifyRegionName(region));
             fetchFacilitiesBySport();
           }}
           selectedRegion={selectedRegion}
