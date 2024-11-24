@@ -18,12 +18,7 @@ interface KakaoMapResult {
   y: string;
   x: string;
 }
-
-interface MapContainerProps {
-  onLocalFilterToggle: (isOpen: boolean) => void;
-}
-
-export default function MapContainer({ onLocalFilterToggle }: MapContainerProps) {
+export default function MapContainer() {
   const [facilities, setFacilities] = useState<NomalFacility[]>([]);
   const [selectedFacility, setSelectedFacility] =
     useState<NomalFacilityDetails | null>(null);
@@ -39,7 +34,6 @@ export default function MapContainer({ onLocalFilterToggle }: MapContainerProps)
     null
   );
   const [localCode, setLocalCode] = useState<string | null>(null);
-  const [isLocalFilterActive, setIsLocalFilterActive] = useState(false);
   
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
@@ -329,9 +323,6 @@ export default function MapContainer({ onLocalFilterToggle }: MapContainerProps)
           mode={toggle}
           onRegionSelect={handleRegionSelect}
           selectedRegion={selectedRegion}
-          onLocalFilterToggle={isOpen => {
-            setIsLocalFilterActive(isOpen); 
-          }}
         />
       ) : (
         selectedFacility && (

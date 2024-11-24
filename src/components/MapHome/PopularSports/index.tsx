@@ -13,7 +13,6 @@ interface PopularSportsProps {
   mode: 'general' | 'special';
   onRegionSelect?: (region: string, fullRegionName: string) => void;
   selectedRegion: string;
-  onLocalFilterToggle: (isOpen: boolean) => void; 
 }
 
 export default function PopularSports({
@@ -21,13 +20,11 @@ export default function PopularSports({
   mode,
   onRegionSelect,
   selectedRegion,
-  onLocalFilterToggle,
 }: PopularSportsProps) {
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
   const maxDragDistance = 140;
-  const [isLocalFilterOpen, setIsLocalFilterOpen] = useState(false);
 
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;
@@ -107,11 +104,6 @@ export default function PopularSports({
     );
   };
 
-  const handleLocalFilterToggle = (isOpen: boolean) => {
-    setIsLocalFilterOpen(isOpen);
-    onLocalFilterToggle(isOpen); // 부모로 상태 전달
-  };
-
   return (
     <div
       className={styles.popularSportsContainer}
@@ -138,22 +130,16 @@ export default function PopularSports({
             onNextClick={handleNextClick}
             onCompleteClick={handleCompleteClick}
             isNextStep={isNextStep}
-            onToggle={handleLocalFilterToggle}
           />
         </header>
 
-        {!isLocalFilterOpen && (
-          <>
-            <h2 className={styles.title}>인기 스포츠</h2>
-            <SportButtonList
-              sports={mode === 'general' ? generalSports : specialSports}
-              onSelectSport={onSelectSport}
-            />
-          </>
-        )}
+        <h2 className={styles.title}>인기 스포츠</h2>
+        <SportButtonList
+          sports={mode === 'general' ? generalSports : specialSports}
+          onSelectSport={onSelectSport}
+        />
       </div>
-
-      {!isLocalFilterOpen && <GNB />}
+      <GNB />
     </div>
   );
 }
