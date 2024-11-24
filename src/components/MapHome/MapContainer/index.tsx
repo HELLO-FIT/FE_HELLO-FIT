@@ -9,7 +9,7 @@ import {
 } from '@/apis/get/getFacilityDetails';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
-import styles from './map.module.scss';
+import styles from './MapContainer.module.scss';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
 
@@ -19,7 +19,11 @@ interface KakaoMapResult {
   x: string;
 }
 
-export default function Map() {
+interface MapContainerProps {
+  onLocalFilterToggle: (isOpen: boolean) => void;
+}
+
+export default function MapContainer({ onLocalFilterToggle }: MapContainerProps) {
   const [facilities, setFacilities] = useState<NomalFacility[]>([]);
   const [selectedFacility, setSelectedFacility] =
     useState<NomalFacilityDetails | null>(null);
@@ -36,7 +40,7 @@ export default function Map() {
   );
   const [localCode, setLocalCode] = useState<string | null>(null);
   const [isLocalFilterActive, setIsLocalFilterActive] = useState(false);
-
+  
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
 

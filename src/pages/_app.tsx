@@ -65,6 +65,7 @@ export default function App({ Component, pageProps }: AppProps) {
     '/details/[businessId]/map',
     '/setting',
     '/search',
+    '/map',
   ].includes(router.pathname);
   const hideHeader = [
     '/',

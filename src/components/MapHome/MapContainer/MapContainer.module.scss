@@ -1,0 +1,22 @@
+@import '@/styles/globals.scss';
+
+.positionButton {
+  position: absolute;
+  right: 32px;
+  top: 102px; // 이용권 팝업 아래로 조정
+  cursor: pointer;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+
+  img {
+    transition:
+      transform 0.2s ease,
+      opacity 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+  }
+}
