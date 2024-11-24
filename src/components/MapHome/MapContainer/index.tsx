@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { SSRMetaProps } from '@/components/MetaData/MetaData.type';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
@@ -18,10 +19,23 @@ import {
   getSpecialFacilityDetails,
   getNomalFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
+import { GetServerSideProps } from 'next';
+import { serviceUrl } from '@/constants/serviceUrl';
 
 type Facility = NomalFacility | SpecialFacility;
 
-export default function MapContainer() {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const OGTitle = '지도 홈 | HELLOFIT';
+  const OGUrl = `${serviceUrl}/map`;
+  return {
+    props: {
+      OGTitle,
+      OGUrl,
+    },
+  };
+};
+
+export default function MapContainer({ OGTitle, OGUrl }: SSRMetaProps) {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<
     NomalFacilityDetails | SpecialFacilityDetails | null

@@ -93,9 +93,9 @@ export default function Lesson({ onPopularClick }: LessonProps) {
 
   // 스포츠 필터링
   const filterFacilitiesBySport = (
-    facilities: NomalFacility[],
+    facilities: NomalFacility[] | SpecialFacility[],
     sport: string
-  ): NomalFacility[] => {
+  ): NomalFacility[] | SpecialFacility[] => {
     if (!sport) return facilities;
     return facilities.filter(facility =>
       facility.items.some(item => item.trim() === sport.trim())

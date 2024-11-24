@@ -22,6 +22,8 @@ export default function LocalFilter({
   const filterRef = useRef<HTMLDivElement>(null);
   const toggle = useRecoilValue(toggleState);
 
+  const startY = useRef(0);
+  const currentY = useRef(0);
   useOutsideClick(filterRef, () => setIsOpen(false));
 
   const handleOptionClick = (key: string) => {
@@ -32,6 +34,31 @@ export default function LocalFilter({
     setIsOpen(false);
     if (onCompleteClick) {
       onCompleteClick();
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    startY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    currentY.current = e.touches[0].clientY;
+    const distance = currentY.current - startY.current;
+
+    if (distance > 0 && filterRef.current) {
+      filterRef.current.style.transform = `translateY(${distance}px)`;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    const distance = currentY.current - startY.current;
+
+    if (distance > 100) {
+      setIsOpen(false);
+    }
+
+    if (filterRef.current) {
+      filterRef.current.style.transform = '';
     }
   };
 
@@ -59,7 +86,13 @@ export default function LocalFilter({
       {isOpen && (
         <>
           <div className={styles.overlay} onClick={() => setIsOpen(false)} />
-          <div className={styles.bottomSheet} ref={filterRef}>
+          <div
+            className={styles.bottomSheet}
+            ref={filterRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div className={styles.indicatorWrapper}>
               <IconComponent
                 name="indicator"
@@ -108,7 +141,7 @@ export default function LocalFilter({
             {isNextStep && (
               <button
                 className={classNames(styles.actionButton, {
-                  [styles.enabledSP]: toggle === 'general' && value,
+                  [styles.enabled]: toggle === 'general' && value,
                   [styles.enabledSP]: toggle !== 'general' && value,
                   [styles.disabled]: !value,
                 })}

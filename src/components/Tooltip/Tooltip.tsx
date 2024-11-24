@@ -39,7 +39,8 @@ export default function Tooltip({ text, children, position }: TooltipProps) {
         <div
           className={classNames({
             [styles.left]: position === 'left',
-            [styles.right]: position !== 'left',
+            [styles.right]: position === 'right',
+            [styles.center]: position === 'center',
             [styles.tooltipText]: toggle === 'general',
             [styles.tooltipTextSP]: toggle !== 'general',
           })}

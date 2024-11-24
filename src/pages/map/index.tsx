@@ -21,7 +21,14 @@ export default function MapPage() {
   return (
     <>
       <Header />
-      {isLoading ? <LoadingSpinner /> : <MapContainer />}
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <MapContainer
+          OGTitle={'지도 홈 | HELLOFIT'}
+          OGUrl={'${serviceUrl}/map'}
+        />
+      )}
     </>
   );
 }

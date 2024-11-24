@@ -141,6 +141,7 @@ export const ICONS = {
   // 찜 아이콘
   blueHeartBlank: '/icon/custom/icon-blue-heart-blank.svg',
   blueHeartFull: '/icon/custom/icon-blue-heart-full.svg',
+  greenHeartFull: '/icon/custom/icon-green-heart-full.svg',
   landingKakao: '/icon/custom/icon-landing-kakao.svg',
   kakao: '/icon/custom/icon-kakao.svg',
   landingDumbbell: '/icon/custom/icon-landing-dumbbell.svg',

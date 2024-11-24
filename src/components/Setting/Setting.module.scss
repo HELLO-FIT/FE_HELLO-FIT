@@ -3,6 +3,7 @@
 .container {
   background-color: $white;
   padding: 0 20px;
+  @include Drag;
 }
 
 .section {
