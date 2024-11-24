@@ -30,7 +30,9 @@ interface MapContainerProps {
   OGUrl: string;
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps<
+  SSRMetaProps
+> = async () => {
   const OGTitle = '지도 홈 | HELLOFIT';
   const OGUrl = `${serviceUrl}/map`;
   return {

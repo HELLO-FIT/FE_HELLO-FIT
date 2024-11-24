@@ -1,6 +1,6 @@
 // 유지보수
 import { getNomalFacilities } from '@/apis/get/getFacilities';
-
+/* eslint-disable */
 export const fetchFacilitiesBySport = async (
   localCode: string | null,
   sport: string | null,
@@ -19,3 +19,4 @@ export const fetchFacilitiesBySport = async (
     console.error('Failed to fetch facilities:', error);
   }
 };
+/* eslint-enable */

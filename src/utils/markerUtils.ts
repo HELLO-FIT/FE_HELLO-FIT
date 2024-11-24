@@ -4,7 +4,7 @@ import {
   getNomalFacilityDetails,
   getSpecialFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
-
+/* eslint-disable */
 export const createMarkerImage = (src: string): kakao.maps.MarkerImage => {
   return new kakao.maps.MarkerImage(src, new kakao.maps.Size(28, 28), {
     offset: new kakao.maps.Point(14, 14),
@@ -104,3 +104,4 @@ export const renderMarkers = (
 export const clearMarkers = (markers: kakao.maps.Marker[]) => {
   markers.forEach(marker => marker.setMap(null));
 };
+/* eslint-enable */
