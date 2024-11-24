@@ -132,6 +132,7 @@ export default function MapContainer() {
           result.length === 0
         ) {
           console.warn('No results returned for the given coordinates.');
+          setFacilities([]);
         } else {
           console.error('Failed to fetch region code:', status);
         }
@@ -215,6 +216,7 @@ export default function MapContainer() {
               },
               error => {
                 console.error('현재 위치를 가져오는 데 실패했습니다:', error);
+                setFacilities([]); // 위치를 가져오지 못한 경우 시설 목록을 비웁니다.
               }
             );
           }
@@ -237,6 +239,8 @@ export default function MapContainer() {
     if (!map || facilities.length === 0) return;
 
     const newMarkers: kakao.maps.Marker[] = [];
+    let selectedMarker: kakao.maps.Marker | null = null;
+
     facilities.forEach(facility => {
       const geocoder = new kakao.maps.services.Geocoder();
       geocoder.addressSearch(
@@ -248,43 +252,73 @@ export default function MapContainer() {
               parseFloat(result[0].x)
             );
 
-            const markerImage = createMarkerImage(
+            const defaultMarkerImage = createMarkerImage(
               toggle === 'special'
                 ? '/image/marker-special.svg'
                 : '/image/marker.svg'
             );
 
+            const selectedMarkerImage = createMarkerImage(
+              toggle === 'special'
+                ? '/image/address-marker-special.svg'
+                : '/image/address-marker-normal.svg'
+            );
+
             const marker = new kakao.maps.Marker({
               map,
               position: coords,
-              image: markerImage,
+              image: defaultMarkerImage,
               title: facility.name,
             });
 
-            kakao.maps.event.addListener(marker, 'click', async () => {
-              if (toggle === 'special') {
-                const details = await getSpecialFacilityDetails(
-                  facility.businessId
-                );
-                setSelectedFacility(details);
-              } else if ('serialNumber' in facility) {
-                const details = await getNomalFacilityDetails(
-                  facility.businessId,
-                  facility.serialNumber
-                );
-                setSelectedFacility(details);
+            newMarkers.push(marker);
+
+            kakao.maps.event.addListener(marker, 'mouseover', () => {
+              if (!selectedMarker || selectedMarker !== marker) {
+                marker.setImage(defaultMarkerImage);
               }
-              setIndicatorMode('facilityInfo');
             });
 
-            newMarkers.push(marker);
+            kakao.maps.event.addListener(marker, 'mouseout', () => {
+              if (!selectedMarker || selectedMarker !== marker) {
+                marker.setImage(defaultMarkerImage);
+              }
+            });
+
+            kakao.maps.event.addListener(marker, 'click', async () => {
+              if (selectedMarker && selectedMarker !== marker) {
+                selectedMarker.setImage(defaultMarkerImage);
+              }
+
+              marker.setImage(selectedMarkerImage);
+              selectedMarker = marker;
+
+              try {
+                let details;
+                if (toggle === 'special') {
+                  details = await getSpecialFacilityDetails(
+                    facility.businessId
+                  );
+                } else if ('serialNumber' in facility) {
+                  details = await getNomalFacilityDetails(
+                    facility.businessId,
+                    facility.serialNumber
+                  );
+                }
+
+                if (details) {
+                  setSelectedFacility(details);
+                  setIndicatorMode('facilityInfo');
+                }
+              } catch (error) {
+                console.error('Failed to fetch facility details:', error);
+              }
+            });
           }
         }
       );
     });
 
-    // 기존 마커 제거 후 새로운 마커 설정
-    markers.forEach(marker => marker.setMap(null));
     setMarkers(newMarkers);
   };
 
@@ -348,7 +382,11 @@ export default function MapContainer() {
           <FacilityInfo
             facility={selectedFacility}
             filterItem={filterItem || undefined}
-            onBackClick={() => setIndicatorMode('sports')}
+            onBackClick={() => {
+              setIndicatorMode('sports');
+              clearMarkers(); // 모든 마커를 default 이미지로 초기화
+              renderMarkers(); // 다시 마커를 렌더링하여 default 이미지 적용
+            }}
             onMoveToDetail={() => {
               if (selectedFacility) {
                 router.push(
