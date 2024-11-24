@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Layout/Header';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -12,23 +12,14 @@ const MapContainer = dynamic(
 );
 
 export default function MapPage() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
+  const OGTitle = '지도 홈 | HELLOFIT';
+  const serviceUrl = process.env.NEXT_PUBLIC_SERVICE_URL;
+  const OGUrl = `${serviceUrl}/map`;
 
   return (
     <>
       <Header />
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <MapContainer
-          OGTitle={'지도 홈 | HELLOFIT'}
-          OGUrl={'${serviceUrl}/map'}
-        />
-      )}
+      <MapContainer OGTitle={OGTitle} OGUrl={OGUrl} />
     </>
   );
 }

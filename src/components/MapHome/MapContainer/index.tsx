@@ -22,7 +22,13 @@ import {
 import { GetServerSideProps } from 'next';
 import { serviceUrl } from '@/constants/serviceUrl';
 
+/* eslint-disable */
 type Facility = NomalFacility | SpecialFacility;
+
+interface MapContainerProps {
+  OGTitle: string;
+  OGUrl: string;
+}
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const OGTitle = '지도 홈 | HELLOFIT';
@@ -35,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-export default function MapContainer({ OGTitle, OGUrl }: SSRMetaProps) {
+export default function MapContainer({ OGTitle, OGUrl }: MapContainerProps) {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<
     NomalFacilityDetails | SpecialFacilityDetails | null
@@ -408,3 +414,4 @@ export default function MapContainer({ OGTitle, OGUrl }: SSRMetaProps) {
     </>
   );
 }
+/* eslint-enable */
