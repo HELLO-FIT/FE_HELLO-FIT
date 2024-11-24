@@ -5,7 +5,7 @@ import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import { fetchFacilities } from '@/apis/get/facilitiesAPI';
 import { simplifyRegionName } from '@/utils/regionUtils';
 import { createMarkerImage } from '@/utils/markerUtils';
-import useKakaoMap from '@/utils/mapUtils';
+import useKakaoMap from '@/hooks/useMap';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
 import styles from './MapContainer.module.scss';
