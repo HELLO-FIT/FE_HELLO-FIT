@@ -5,6 +5,7 @@ import IconComponent from '@/components/Asset/Icon';
 import classNames from 'classnames';
 import Chips from '@/components/Button/Chips';
 
+// 강좌 목록용 특수 필터
 export default function SpecialFilter({
   types,
   amenities,
