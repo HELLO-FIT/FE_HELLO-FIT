@@ -59,6 +59,13 @@ export default function FacilityInfo({
     );
   };
 
+  // 인디케이터 클릭 시 하단으로 이동/올라오기
+  const handleIndicatorClick = () => {
+    setPosition(prevPosition =>
+      prevPosition === maxDragDistance ? initialPosition : maxDragDistance
+    );
+  };
+
   useEffect(() => {
     setPosition(initialPosition);
   }, [facility, initialPosition]);
@@ -92,11 +99,11 @@ export default function FacilityInfo({
       onMouseDown={handleDragStart}
       onTouchStart={handleDragStart}
       onMouseMove={isDragging ? handleDragMove : undefined}
-      onMouseUp={handleDragEnd}
       onTouchMove={isDragging ? handleDragMove : undefined}
+      onMouseUp={handleDragEnd}
       onTouchEnd={handleDragEnd}
     >
-      <div className={styles.indicatorWrapper}>
+      <div className={styles.indicatorWrapper} onClick={handleIndicatorClick}>
         <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
       </div>
       <div className={styles.content}>
