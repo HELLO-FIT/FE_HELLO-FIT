@@ -34,7 +34,6 @@
   .bestContainer {
     display: flex;
     gap: 16px;
-    padding: 8px 0;
     cursor: grab;
 
     &:active {
@@ -52,6 +51,7 @@
         gap: 4px;
         align-items: center;
         margin-top: 8px;
+        margin-bottom: 4px;
         max-width: 130px;
         overflow: hidden;
         white-space: nowrap;
