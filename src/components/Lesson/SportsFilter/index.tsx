@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './SportsFilter.module.scss';
 import { SportsFilterProps } from './SportsFilter.types';
 import IconComponent from '@/components/Asset/Icon';
@@ -19,6 +19,18 @@ export default function SportsFilter({
   const startY = useRef(0);
   const currentY = useRef(0);
   useOutsideClick(filterRef, () => setIsOpen(false));
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const handleOptionClick = (option: string) => {
     if (value === option) {
