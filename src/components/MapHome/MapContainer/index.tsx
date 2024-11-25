@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '@/components/Layout/Header';
@@ -71,7 +71,7 @@ export default function MapContainer() {
 
   const notifyNoFacilities = () => {
     if (!toast.isActive('no-facilities')) {
-      toast('등록된 시설이 없습니다.', {
+      toast.error('등록된 시설이 없습니다.', {
         toastId: 'no-facilities',
       });
     }
@@ -344,7 +344,11 @@ export default function MapContainer() {
 
   return (
     <>
-      <ToastContainer position="top-center" autoClose={3000} />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        className={styles.toastContainer}
+      />
       <Header />
       <div
         className={classNames(styles.positionButton, {
