@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
@@ -66,6 +68,15 @@ export default function MapContainer() {
   };
 
   // 시설 목록 요청
+
+  const notifyNoFacilities = () => {
+    if (!toast.isActive('no-facilities')) {
+      toast('등록된 시설이 없습니다.', {
+        toastId: 'no-facilities',
+      });
+    }
+  };
+
   const fetchFacilitiesBySport = useCallback(
     async (sport: string | null = null) => {
       const data = await fetchFacilities(
@@ -73,7 +84,16 @@ export default function MapContainer() {
         sport,
         toggle
       );
-      setFacilities(data);
+
+      if (
+        !data ||
+        data.length === 0 ||
+        (data && data.length > 0 && !data[0].items)
+      ) {
+        notifyNoFacilities(); // 중복 방지된 토스트 메시지 호출
+      } else {
+        setFacilities(data);
+      }
     },
     [toggle]
   );
@@ -303,13 +323,13 @@ export default function MapContainer() {
   }, [map, facilities, toggle]);
 
   // 기존 마커 제거 함수
-  const clearMarkers = useCallback(() => {
+  const clearMarkers = () => {
     markers.forEach(marker => marker.setMap(null));
     setMarkers([]);
-  }, [markers]);
+  };
 
   // 현재 위치로 이동 함수
-  const moveToUserLocation = useCallback(() => {
+  const moveToUserLocation = () => {
     if (map && userLocation) {
       map.setCenter(userLocation);
       updateLocalCodeAndFetchFacilities(
@@ -320,15 +340,11 @@ export default function MapContainer() {
     } else {
       console.warn('Map or userLocation is not available');
     }
-  }, [
-    map,
-    userLocation,
-    updateLocalCodeAndFetchFacilities,
-    fetchFacilitiesBySport,
-  ]);
+  };
 
   return (
     <>
+      <ToastContainer position="top-center" autoClose={3000} />
       <Header />
       <div
         className={classNames(styles.positionButton, {
