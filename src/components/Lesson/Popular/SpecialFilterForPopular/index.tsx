@@ -1,20 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styles from './SportsFilter.module.scss';
-import { SportsFilterProps } from './SportsFilter.types';
+import styles from './SpecialFilterForPopular.module.scss';
+import { SpecialFilterForPopularProps } from './SpecialFilterForPopular.types';
 import IconComponent from '@/components/Asset/Icon';
-import useOutsideClick from '@/hooks/useOutsideClick';
-import { useRecoilValue } from 'recoil';
-import { toggleState } from '@/states/toggleState';
 import classNames from 'classnames';
+import useOutsideClick from '@/hooks/useOutsideClick';
 
-export default function SportsFilter({
+// 인기 페이지용 특수 필터
+export default function SpecialFilterForPopular({
   options,
   value,
   onChange,
-}: SportsFilterProps) {
+}: SpecialFilterForPopularProps) {
   const [isOpen, setIsOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
-  const toggle = useRecoilValue(toggleState);
 
   const startY = useRef(0);
   const currentY = useRef(0);
@@ -69,15 +67,12 @@ export default function SportsFilter({
   return (
     <div className={styles.container}>
       <div
-        className={classNames({
-          [styles.selectedValue]: toggle === 'general',
-          [styles.selectedValueSP]: toggle !== 'general',
-          [styles.selectedDropdown]: value && toggle === 'general',
-          [styles.selectedDropdownSP]: value && toggle !== 'general',
+        className={classNames(styles.selectedValueSP, {
+          [styles.selectedDropdownSP]: value,
         })}
         onClick={() => setIsOpen(!isOpen)}
       >
-        {value || '종목 선택'}
+        {value || '특수 필터'}
         <IconComponent
           name={isOpen ? 'up' : 'down'}
           size="m"
@@ -101,12 +96,8 @@ export default function SportsFilter({
                 alt="Drag Indicator"
               />
             </div>
-            <h2 className={styles.title}>스포츠 종목 선택</h2>
-            <div
-              className={
-                toggle === 'general' ? styles.optionList : styles.optionListSP
-              }
-            >
+            <h2 className={styles.title}>장애 유형 선택</h2>
+            <div className={styles.optionListSP}>
               {options.map(option => (
                 <div
                   key={option}
@@ -118,7 +109,7 @@ export default function SportsFilter({
                   {option}
                   {value === option && (
                     <IconComponent
-                      name={toggle === 'general' ? 'check' : 'checkSP'}
+                      name="checkSP"
                       size="m"
                       alt="selected check"
                     />

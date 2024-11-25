@@ -27,9 +27,9 @@ import 'swiper/css';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import { toggleState } from '@/states/toggleState';
 import PopularSchedule from '@/components/Schedule/PopularSchedule';
-import SpecialFilter from '../SpecialFilter';
-import { specialAmenityList, specialTypeList } from '@/constants/specialList';
+import { specialTypeList } from '@/constants/specialList';
 import Tooltip from '@/components/Tooltip/Tooltip';
+import SpecialFilterForPopular from './SpecialFilterForPopular';
 
 export default function Popular() {
   const [facilities, setFacilities] = useState<
@@ -239,9 +239,8 @@ export default function Popular() {
                     text="유형에 따른 인기 강좌를 추천해드려요!"
                     position="center"
                   >
-                    <SpecialFilter
-                      types={specialTypeList}
-                      amenities={specialAmenityList}
+                    <SpecialFilterForPopular
+                      options={specialTypeList}
                       value={specialFilterValue}
                       onChange={handleSpecialFilterChange}
                     />
