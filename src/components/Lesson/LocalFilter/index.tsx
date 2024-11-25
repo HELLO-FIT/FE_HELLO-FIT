@@ -66,7 +66,13 @@ export default function LocalFilter({
   return (
     <div className={styles.container}>
       <div
-        className={`${placeholderType !== 'lesson' && value ? styles.selectedDropdown : ''} ${placeholderType === 'lesson' ? styles.lesson : styles.selectedValue}`}
+        className={classNames(
+          placeholderType !== 'lesson' && value ? styles.selectedDropdown : '',
+          placeholderType === 'lesson' ? styles.lesson : styles.selectedValue,
+          {
+            [styles.specialDropdown]: toggle === 'special',
+          }
+        )}
         onClick={() => setIsOpen(!isOpen)}
       >
         {placeholder}

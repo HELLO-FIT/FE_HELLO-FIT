@@ -41,6 +41,12 @@
   color: $blue60;
 }
 
+.specialDropdown {
+  color: $green80; 
+  border-color: $green30;
+  background-color: $green5; 
+}
+
 .lesson {
   color: $gray90;
   @include T18B;
