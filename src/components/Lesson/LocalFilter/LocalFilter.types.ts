@@ -8,4 +8,5 @@ export interface LocalFilterProps {
   onCompleteClick?: () => void;
   isNextStep?: boolean;
   placeholderType?: string; // 지도 탭과 강좌 탭 페이지에 따른 드롭다운 요소 디자인 차이 구분용
+  additionalBottomSheetClass?: string;
 }

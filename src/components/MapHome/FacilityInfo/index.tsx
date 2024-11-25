@@ -1,12 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import IconComponent from '@/components/Asset/Icon';
 import Chips from '@/components/Button/Chips';
-import { NomalFacilityDetails } from '@/apis/get/getFacilityDetails';
+import {
+  NomalFacilityDetails,
+  SpecialFacilityDetails,
+} from '@/apis/get/getFacilityDetails';
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 import styles from './FacilityInfo.module.scss';
 
 interface FacilityInfoProps {
-  facility: NomalFacilityDetails | null;
+  facility: NomalFacilityDetails | SpecialFacilityDetails | null;
   onBackClick: () => void;
   onMoveToDetail: () => void;
   filterItem?: string | null;
@@ -23,6 +26,8 @@ export default function FacilityInfo({
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
+
+  const isNormalFacility = facility && 'serialNumber' in facility;
 
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
@@ -54,21 +59,25 @@ export default function FacilityInfo({
     );
   };
 
+  // 인디케이터 클릭 시 하단으로 이동/올라오기
+  const handleIndicatorClick = () => {
+    setPosition(prevPosition =>
+      prevPosition === maxDragDistance ? initialPosition : maxDragDistance
+    );
+  };
+
   useEffect(() => {
     setPosition(initialPosition);
   }, [facility, initialPosition]);
 
-  // 종목 라벨 계산
   const getLabelItem = () => {
     if (!facility || !facility.items || facility.items.length === 0)
       return '없음';
 
-    // 필터 조건에 맞는 종목을 우선 반환
     if (filterItem && facility.items.includes(filterItem)) {
       return filterItem;
     }
 
-    // 필터 조건이 없으면 빈도를 계산하여 가장 높은 종목 반환
     const frequency: Record<string, number> = {};
     facility.items.forEach(item => {
       frequency[item] = (frequency[item] || 0) + 1;
@@ -90,11 +99,11 @@ export default function FacilityInfo({
       onMouseDown={handleDragStart}
       onTouchStart={handleDragStart}
       onMouseMove={isDragging ? handleDragMove : undefined}
-      onMouseUp={handleDragEnd}
       onTouchMove={isDragging ? handleDragMove : undefined}
+      onMouseUp={handleDragEnd}
       onTouchEnd={handleDragEnd}
     >
-      <div className={styles.indicatorWrapper}>
+      <div className={styles.indicatorWrapper} onClick={handleIndicatorClick}>
         <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
       </div>
       <div className={styles.content}>
@@ -136,10 +145,14 @@ export default function FacilityInfo({
                 : '연락처 없음'}
             </span>
           </div>
-          <div className={styles.contactRow}>
-            <span className={styles.label}>대표자</span>
-            <span className={styles.value}>{facility.owner}</span>
-          </div>
+          {isNormalFacility && (
+            <div className={styles.contactRow}>
+              <span className={styles.label}>대표자</span>
+              <span className={styles.value}>
+                {facility.owner || '정보 없음'}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>
