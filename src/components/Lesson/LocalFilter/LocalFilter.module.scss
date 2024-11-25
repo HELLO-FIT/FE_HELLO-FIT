@@ -70,7 +70,7 @@
   transition: transform 0.3s ease-out;
   z-index: 20;
   border: 1px solid $gray20;
-  padding: 0 24px 8px;
+  padding: 0 24px 32px;
   @include Drag;
 
   .title {

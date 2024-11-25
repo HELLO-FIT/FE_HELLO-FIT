@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './LocalFilter.module.scss';
 import { LocalFilterProps } from './LocalFilter.types';
 import IconComponent from '@/components/Asset/Icon';
@@ -26,6 +26,18 @@ export default function LocalFilter({
   const startY = useRef(0);
   const currentY = useRef(0);
   useOutsideClick(filterRef, () => setIsOpen(false));
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const handleOptionClick = (key: string) => {
     onChange(key);

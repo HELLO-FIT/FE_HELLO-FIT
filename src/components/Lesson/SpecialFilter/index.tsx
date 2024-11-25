@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './SpecialFilter.module.scss';
 import { SpecialFilterProps } from './SpecialFilter.types';
 import IconComponent from '@/components/Asset/Icon';
 import classNames from 'classnames';
 import Chips from '@/components/Button/Chips';
 
+// 강좌 목록용 특수 필터
 export default function SpecialFilter({
   types,
   amenities,
@@ -16,6 +17,18 @@ export default function SpecialFilter({
     value || undefined
   );
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const handleOptionClick = (option: string, type: 'type' | 'amenity') => {
     if (type === 'type') {
