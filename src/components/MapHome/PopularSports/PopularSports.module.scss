@@ -15,12 +15,12 @@
   bottom: 0;
   width: 100%;
   min-width: 345px;
-  max-width: 600px;
+  max-width: 598px;
   transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
   background-color: $white;
   border-radius: 16px 16px 0 0;
   overflow: hidden;
-  border: 1px solid $gray20;
+  border-top: 1px solid $gray20;
   display: flex;
   flex-direction: column;
   align-items: center;
