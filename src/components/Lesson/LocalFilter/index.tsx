@@ -98,7 +98,10 @@ export default function LocalFilter({
       </div>
       {isOpen && (
         <>
-          <div className={styles.overlay} onClick={() => setIsOpen(false)} />
+          <div
+            className={`${placeholderType === 'lesson' && styles.overlay}`}
+            onClick={() => setIsOpen(false)}
+          />
           <div
             className={`${styles.bottomSheet} ${additionalBottomSheetClass ?? ''}`}
             ref={filterRef}
