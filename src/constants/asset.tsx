@@ -157,6 +157,10 @@ export const ICONS = {
   hapkido: '/icon/custom/sport/icon-hapkido.svg',
   health: '/icon/custom/sport/icon-health.svg',
   pilates: '/icon/custom/sport/icon-pilates.svg',
+  bowling: '/icon/custom/sport/icon-bowling.svg',
+  swimming: '/icon/custom/sport/icon-swimming.svg',
+  taekwondo: '/icon/custom/sport/icon-taekwondo.svg',
+  tabletennis: '/icon/custom/sport/icon-table-tennis.svg',
   // 인디케이터 아이콘
   indicator: '/icon/custom/indicator/icon-indicator.svg',
   indicatorDot: '/icon/custom/indicator/icon-indicator-dot.svg',

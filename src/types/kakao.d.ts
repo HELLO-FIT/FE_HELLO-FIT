@@ -8,6 +8,13 @@ declare namespace kakao.maps {
     getLevel(): number;
   }
 
+  interface KakaoMapResult {
+    y: string; 
+    x: string; 
+    address_name: string; 
+    code: string; 
+  }
+
   class LatLng {
     constructor(latitude: number, longitude: number);
     getLat(): number;
@@ -37,12 +44,12 @@ declare namespace kakao.maps {
       coord2RegionCode(
         longitude: number,
         latitude: number,
-        callback: (result: any[], status: string) => void
+        callback: (result: KakaoMapResult[], status: string) => void
       ): void;
 
       addressSearch(
         address: string,
-        callback: (result: any[], status: string) => void
+        callback: (result: KakaoMapResult[], status: string) => void
       ): void;
     }
 

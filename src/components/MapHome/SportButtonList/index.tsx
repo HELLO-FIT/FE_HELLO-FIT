@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SportButton from '@/components/Button/SportButton';
 import { ICONS } from '@/constants/asset';
-
+import styles from './SportButtonList.module.scss';
 
 interface SportButtonListProps {
   sports: { iconName: keyof typeof ICONS; label: string }[]; // 정확한 타입 지정
@@ -21,7 +21,7 @@ export default function SportButtonList({
   };
 
   return (
-    <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+    <div className={styles.sportButtonList}>
       {sports.map((sport, index) => (
         <SportButton
           key={index}
@@ -34,4 +34,3 @@ export default function SportButtonList({
     </div>
   );
 }
-
