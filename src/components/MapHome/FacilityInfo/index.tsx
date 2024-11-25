@@ -22,7 +22,7 @@ export default function FacilityInfo({
   filterItem,
 }: FacilityInfoProps) {
   const initialPosition = -50;
-  const maxDragDistance = 120;
+  const maxDragDistance = 150;
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
