@@ -18,6 +18,7 @@ export default function LocalFilter({
   isNextStep,
   placeholderType,
   additionalBottomSheetClass,
+  isSpecialMode,
 }: LocalFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -82,7 +83,7 @@ export default function LocalFilter({
           placeholderType !== 'lesson' && value ? styles.selectedDropdown : '',
           placeholderType === 'lesson' ? styles.lesson : styles.selectedValue,
           {
-            [styles.specialDropdown]: toggle === 'special',
+            [styles.specialDropdown]: isSpecialMode, 
           }
         )}
         onClick={() => setIsOpen(!isOpen)}
