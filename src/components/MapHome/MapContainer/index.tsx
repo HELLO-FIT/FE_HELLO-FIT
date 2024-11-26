@@ -41,6 +41,8 @@ export default function MapContainer() {
   const [localCode, setLocalCode] = useState<string | null>(
     localStorage.getItem('localCode') || null
   );
+  const [selectedLocation, setSelectedLocation] =
+    useState<kakao.maps.LatLng | null>(null);
   const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
@@ -68,7 +70,6 @@ export default function MapContainer() {
   };
 
   // 시설 목록 요청
-
   const notifyNoFacilities = () => {
     if (!toast.isActive('no-facilities')) {
       toast.error('등록된 시설이 없습니다.', {
@@ -149,6 +150,7 @@ export default function MapContainer() {
             }
 
             setUserLocation(coords); // 사용자가 선택한 위치로 설정
+            setSelectedLocation(coords); // 선택한 지역을 따로 저장
             updateLocalCodeAndFetchFacilities(
               parseFloat(latitude),
               parseFloat(longitude)
@@ -175,7 +177,10 @@ export default function MapContainer() {
         kakao.maps.load(() => {
           const container = document.getElementById('map');
           const options = {
-            center: userLocation || new kakao.maps.LatLng(37.5665, 126.978),
+            center:
+              selectedLocation ||
+              userLocation ||
+              new kakao.maps.LatLng(37.5665, 126.978), // 선택된 지역 우선
             level: 3,
           };
           const kakaoMap = new kakao.maps.Map(
@@ -184,7 +189,7 @@ export default function MapContainer() {
           );
           setMap(kakaoMap);
 
-          if (navigator.geolocation) {
+          if (navigator.geolocation && !selectedLocation) {
             navigator.geolocation.getCurrentPosition(
               position => {
                 const userLatLng = new kakao.maps.LatLng(
@@ -200,11 +205,15 @@ export default function MapContainer() {
                     : '/image/my-location.svg'
                 );
 
-                new kakao.maps.Marker({
+                const userMarker = new kakao.maps.Marker({
                   map: kakaoMap,
                   position: userLatLng,
                   image: userMarkerImage,
                   title: '현재 위치',
+                });
+
+                kakao.maps.event.addListener(userMarker, 'click', () => {
+                  moveToUserLocation();
                 });
 
                 updateLocalCodeAndFetchFacilities(
@@ -221,7 +230,26 @@ export default function MapContainer() {
         });
       })
       .catch(console.error);
-  }, [KAKAO_MAP_KEY, toggle, updateLocalCodeAndFetchFacilities]);
+  }, [
+    KAKAO_MAP_KEY,
+    toggle,
+    updateLocalCodeAndFetchFacilities,
+    selectedLocation,
+  ]);
+
+  // 현재 위치로 이동 함수
+  const moveToUserLocation = () => {
+    if (map && userLocation) {
+      map.setCenter(userLocation);
+      updateLocalCodeAndFetchFacilities(
+        userLocation.getLat(),
+        userLocation.getLng()
+      );
+      fetchFacilitiesBySport(); // 현재 위치로 이동 후 시설 목록 갱신
+    } else {
+      console.warn('Map or userLocation is not available');
+    }
+  };
 
   // 시설 목록이 변경될 때 지도 마커 업데이트
   useEffect(() => {
@@ -328,20 +356,6 @@ export default function MapContainer() {
     setMarkers([]);
   };
 
-  // 현재 위치로 이동 함수
-  const moveToUserLocation = () => {
-    if (map && userLocation) {
-      map.setCenter(userLocation);
-      updateLocalCodeAndFetchFacilities(
-        userLocation.getLat(),
-        userLocation.getLng()
-      );
-      fetchFacilitiesBySport(); // 현재 위치로 이동 후 시설 목록 갱신
-    } else {
-      console.warn('Map or userLocation is not available');
-    }
-  };
-
   return (
     <>
       <ToastContainer
@@ -376,35 +390,7 @@ export default function MapContainer() {
             fetchFacilitiesBySport(sport);
           }}
           mode={toggle}
-          onRegionSelect={(localCode, region) => {
-            setLocalCode(localCode);
-            setSelectedRegion(simplifyRegionName(region));
-            if (map) {
-              const geocoder = new kakao.maps.services.Geocoder();
-              geocoder.addressSearch(
-                region,
-                (result: any[], status: string) => {
-                  if (
-                    status === kakao.maps.services.Status.OK &&
-                    result.length > 0
-                  ) {
-                    const { y: latitude, x: longitude } = result[0];
-                    const coords = new kakao.maps.LatLng(
-                      parseFloat(latitude),
-                      parseFloat(longitude)
-                    );
-                    map.setCenter(coords);
-                    setUserLocation(coords);
-                    updateLocalCodeAndFetchFacilities(
-                      parseFloat(latitude),
-                      parseFloat(longitude)
-                    );
-                    fetchFacilitiesBySport(); // 지역 선택 후 해당 지역의 시설 목록 갱신
-                  }
-                }
-              );
-            }
-          }}
+          onRegionSelect={handleRegionSelect} // 기존 인라인 로직 대신 handleRegionSelect 사용
           selectedRegion={selectedRegion}
         />
       ) : (
