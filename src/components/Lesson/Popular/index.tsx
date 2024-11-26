@@ -300,7 +300,8 @@ export default function Popular() {
                   alt="결과 없음"
                 />
                 <div className={styles.textContainer}>
-                  <p className={styles.mainText}>검색된 시설이 없습니다.</p>
+                  <p className={styles.mainText}>해당하는 시설이 없어요.</p>
+                  <p className={styles.subText}>종목을 변경해주세요.</p>
                 </div>
               </div>
             )}
