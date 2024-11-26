@@ -8,8 +8,17 @@ export default function ButtonContainer({
   businessId,
   serialNumber,
 }: LikeButtonProps) {
-  const handleRedirect = () => {
-    window.open('https://svoucher.kspo.or.kr/main.do', '_blank');
+  const handleRedirectNormal = () => {
+    window.open(
+      'https://svoucher.kspo.or.kr/course/memberFacilityList.do',
+      '_blank'
+    );
+  };
+  const handleRedirectSpecial = () => {
+    window.open(
+      'https://dvoucher.kspo.or.kr/course/memberFacilityList.do',
+      '_blank'
+    );
   };
 
   return (
@@ -18,7 +27,10 @@ export default function ButtonContainer({
         <LikeButton businessId={businessId} serialNumber={serialNumber} />
       </div>
       <div className={styles.customButton}>
-        <CustomButton label="신청하러 가기" onClick={handleRedirect} />
+        <CustomButton
+          label="신청하러 가기"
+          onClick={serialNumber ? handleRedirectNormal : handleRedirectSpecial}
+        />
       </div>
     </div>
   );
