@@ -24,11 +24,13 @@
 
 .tabs {
   display: flex;
+  position: relative;
   gap: 20px;
   border-bottom: 1px solid $gray10;
   padding: 4px 20px 0;
 
   .button {
+    width: 50px;
     padding-bottom: 6px;
     background-color: $white;
     color: $gray50;
@@ -36,17 +38,42 @@
     @include T16B;
     cursor: pointer;
     @include Drag;
+    position: relative;
+
+    &:hover {
+      color: $gray70;
+    }
 
     &.active {
-      border-bottom: 2px solid $blue60;
       color: $blue60;
-      padding-bottom: 4px;
     }
 
     &.activeSP {
-      border-bottom: 2px solid $green80;
       color: $green80;
-      padding-bottom: 4px;
     }
+  }
+
+  .underline {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    width: 50px;
+    background-color: $blue60;
+    transform: translateX(0);
+    transition:
+      transform 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .underlineSP {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    width: 50px;
+    background-color: $green80;
+    transform: translateX(0);
+    transition:
+      transform 0.3s ease,
+      background-color 0.3s ease;
   }
 }
