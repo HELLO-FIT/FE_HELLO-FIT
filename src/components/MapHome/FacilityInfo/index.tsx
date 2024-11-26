@@ -7,6 +7,8 @@ import {
 } from '@/apis/get/getFacilityDetails';
 import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 import styles from './FacilityInfo.module.scss';
+import { useRecoilValue } from 'recoil';
+import { toggleState } from '@/states/toggleState';
 
 interface FacilityInfoProps {
   facility: NomalFacilityDetails | SpecialFacilityDetails | null;
@@ -26,8 +28,10 @@ export default function FacilityInfo({
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
+  const toggle = useRecoilValue(toggleState);
 
-  const isNormalFacility = facility && 'serialNumber' in facility;
+  const isNormalFacility =
+    toggle === 'general' && facility && 'serialNumber' in facility;
 
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
@@ -108,7 +112,7 @@ export default function FacilityInfo({
       </div>
       <div className={styles.content}>
         <div className={styles.header}>
-          <h1>{facility.name}</h1>
+          <h1 onClick={onMoveToDetail}>{facility.name}</h1>
           <div className={styles.rightIconWrapper} onClick={onMoveToDetail}>
             <IconComponent
               name="rightBold"
@@ -126,7 +130,11 @@ export default function FacilityInfo({
         </div>
 
         <div className={styles.chipsContainer}>
-          <Chips chipState="sports" text={getLabelItem()} serialNumber />
+          <Chips
+            chipState="sports"
+            text={getLabelItem()}
+            serialNumber={isNormalFacility ? true : false}
+          />
         </div>
         <p className={styles.addressInfo}>
           <IconComponent
