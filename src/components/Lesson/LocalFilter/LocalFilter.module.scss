@@ -29,10 +29,6 @@
   @include B14M;
   cursor: pointer;
   transition: background-color 0.2s;
-
-  &:hover {
-    border: 1px solid $blue20;
-  }
 }
 
 .selectedDropdown {
