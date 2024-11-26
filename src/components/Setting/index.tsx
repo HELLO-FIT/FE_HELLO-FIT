@@ -13,7 +13,7 @@ export default function Setting() {
         <p>계정정보</p>
         <div>
           <p className={styles.subtext}>SNS 로그인(카카오)</p>
-          <p className={styles.subtext}>{auth.email || '이메일 정보 없음'}</p>
+          <p className={styles.subtext}>{'이메일 정보 없음'}</p>
         </div>
       </section>
       <DeleteAccount />

@@ -23,13 +23,11 @@ function InitializeAuthState() {
 
   useEffect(() => {
     const access_token = localStorage.getItem('access_token');
-    const email = localStorage.getItem('email');
 
-    if (access_token && email) {
+    if (access_token) {
       setAuth({
         access_token,
         isLoggedIn: true,
-        email,
       });
     }
   }, [setAuth]);
@@ -37,17 +35,15 @@ function InitializeAuthState() {
   return null;
 }
 
-// Recoil 상태가 변경되면 access_token과 email을 localStorage에 저장하거나 제거함
+// Recoil 상태가 변경되면 access_token을 localStorage에 저장하거나 제거함
 function PersistAuthState() {
   useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
     const auth = snapshot.getLoadable(authState).contents;
 
     if (auth.isLoggedIn) {
       localStorage.setItem('access_token', auth.access_token);
-      localStorage.setItem('email', auth.email);
     } else {
       localStorage.removeItem('access_token');
-      localStorage.removeItem('email');
     }
   });
 

@@ -21,12 +21,6 @@ interface ErrorResponse {
   error_description: string;
 }
 
-interface KakaoUserInfo {
-  kakao_account: {
-    email: string | null;
-  };
-}
-
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -34,27 +28,19 @@ export default function Login() {
   const APP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY;
 
   const loginMutation = useMutation({
-    mutationFn: async ({
-      accessToken,
-      email,
-    }: {
-      accessToken: string;
-      email: string;
-    }) => {
+    mutationFn: async ({ accessToken }: { accessToken: string }) => {
       const response = await BASE_URL.post('/auth/login', {
         kakaoAccessToken: accessToken,
       });
-      return { ...response.data, email };
+      return { ...response.data };
     },
     onSuccess: data => {
       setAuth({
         access_token: data.accessToken,
         isLoggedIn: true,
-        email: data.email,
       });
 
       localStorage.setItem('access_token', data.accessToken);
-      localStorage.setItem('email', data.email);
       router.push('/map');
     },
     onError: (error: ErrorResponse) => {
@@ -74,16 +60,12 @@ export default function Login() {
     }
 
     window.Kakao.Auth.login({
-      scope: 'account_email',
       success: (authObj: AuthObj) => {
         window.Kakao.API.request({
           url: '/v2/user/me',
-          success: (userInfo: KakaoUserInfo) => {
-            const email = userInfo.kakao_account?.email || '이메일 정보 없음';
-
+          success: () => {
             loginMutation.mutate({
               accessToken: authObj.access_token,
-              email,
             });
           },
           fail: (err: ErrorResponse) => {
