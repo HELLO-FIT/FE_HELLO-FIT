@@ -122,7 +122,12 @@ export default function PopularSports({
       onTouchEnd={handleDragEnd}
     >
       <div className={styles.indicatorWrapper} onClick={handleIndicatorClick}>
-        <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
+        <IconComponent
+          name="indicator"
+          width={58}
+          height={4}
+          alt="Drag Indicator"
+        />
       </div>
 
       <div className={styles.content}>
@@ -138,7 +143,7 @@ export default function PopularSports({
               onCompleteClick={handleCompleteClick}
               isNextStep={isNextStep}
               additionalBottomSheetClass={styles.customBottomSheet}
-              isSpecialMode={mode === 'special'} 
+              isSpecialMode={mode === 'special'}
             />
           </div>
         </header>
