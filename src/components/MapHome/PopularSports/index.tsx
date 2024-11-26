@@ -138,6 +138,7 @@ export default function PopularSports({
               onCompleteClick={handleCompleteClick}
               isNextStep={isNextStep}
               additionalBottomSheetClass={styles.customBottomSheet}
+              isSpecialMode={mode === 'special'} 
             />
           </div>
         </header>
