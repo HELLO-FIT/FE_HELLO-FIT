@@ -406,7 +406,7 @@ export default function MapContainer() {
             onMoveToDetail={() => {
               if (selectedFacility) {
                 router.push(
-                  `/details/${selectedFacility.businessId}/$${
+                  `/details/${selectedFacility.businessId}/${
                     'serialNumber' in selectedFacility
                       ? selectedFacility.serialNumber
                       : ''
