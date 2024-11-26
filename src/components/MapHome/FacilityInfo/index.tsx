@@ -108,7 +108,7 @@ export default function FacilityInfo({
       </div>
       <div className={styles.content}>
         <div className={styles.header}>
-          <h1>{facility.name}</h1>
+          <h1 onClick={onMoveToDetail}>{facility.name}</h1>
           <div className={styles.rightIconWrapper} onClick={onMoveToDetail}>
             <IconComponent
               name="rightBold"
