@@ -42,9 +42,9 @@
 }
 
 .specialDropdown {
-  color: $green80; 
+  color: $green80;
   border-color: $green30;
-  background-color: $green5; 
+  background-color: $green5;
 }
 
 .lesson {
@@ -119,6 +119,10 @@
   .selected {
     color: $blue60;
   }
+
+  @media (max-height: 375px) {
+    height: 100px;
+  }
 }
 
 .optionList::-webkit-scrollbar {
@@ -165,6 +169,10 @@
 
   .selected {
     color: $green80;
+  }
+
+  @media (max-height: 375px) {
+    height: 100px;
   }
 }
 

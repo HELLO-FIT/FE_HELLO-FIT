@@ -7,6 +7,10 @@
   position: fixed;
   top: 0;
   z-index: 20;
+
+  @media (max-width: $mobile) {
+    width: 100vw;
+  }
 }
 
 .headerContainer {
