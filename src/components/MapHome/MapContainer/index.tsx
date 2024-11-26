@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { SSRMetaProps } from '@/components/MetaData/MetaData.type';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
@@ -19,31 +18,11 @@ import {
   getSpecialFacilityDetails,
   getNomalFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
-import { GetServerSideProps } from 'next';
-import { serviceUrl } from '@/constants/serviceUrl';
 
 /* eslint-disable */
 type Facility = NomalFacility | SpecialFacility;
 
-interface MapContainerProps {
-  OGTitle: string;
-  OGUrl: string;
-}
-
-export const getServerSideProps: GetServerSideProps<
-  SSRMetaProps
-> = async () => {
-  const OGTitle = '지도 홈 | HELLOFIT';
-  const OGUrl = `${serviceUrl}/map`;
-  return {
-    props: {
-      OGTitle,
-      OGUrl,
-    },
-  };
-};
-
-export default function MapContainer({ OGTitle, OGUrl }: MapContainerProps) {
+export default function MapContainer() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [selectedFacility, setSelectedFacility] = useState<
     NomalFacilityDetails | SpecialFacilityDetails | null
@@ -402,7 +381,7 @@ export default function MapContainer({ OGTitle, OGUrl }: MapContainerProps) {
             onMoveToDetail={() => {
               if (selectedFacility) {
                 router.push(
-                  `/details/${selectedFacility.businessId}/$${
+                  `/details/${selectedFacility.businessId}/${
                     'serialNumber' in selectedFacility
                       ? selectedFacility.serialNumber
                       : ''
