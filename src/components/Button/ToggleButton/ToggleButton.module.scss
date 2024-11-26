@@ -7,6 +7,20 @@
   border-radius: 100px;
   padding: 4px;
   width: fit-content;
+  position: relative;
+}
+
+.slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(50% - 4px);
+  height: calc(100% - 4px);
+  background-color: $white;
+  border-radius: 100px;
+  transition: transform 0.4s ease-in-out;
+  box-shadow: 2px 0px 8px 0px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
 }
 
 .toggleOption {
@@ -14,7 +28,7 @@
   color: $gray40;
   background: none;
   border: none;
-  padding: 4px 20px;
+  padding: 4px 16px;
   border-radius: 100px;
   cursor: pointer;
   transition:
@@ -22,9 +36,7 @@
     background-color 0.2s;
 
   &.active {
-    background-color: $white;
     color: $blue60;
-    box-shadow: 2px 0px 8px 0px rgba(0, 0, 0, 0.08);
   }
 
   &.specialActive {
