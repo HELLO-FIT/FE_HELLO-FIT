@@ -1,5 +1,3 @@
-import { useRecoilValue } from 'recoil';
-import { authState } from '@/states/authState';
 import styles from './Setting.module.scss';
 import DeleteAccount from '../Auth/DeleteAccount';
 import Logout from '../Auth/Logout';
