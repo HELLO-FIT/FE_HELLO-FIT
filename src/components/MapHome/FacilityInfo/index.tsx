@@ -108,7 +108,12 @@ export default function FacilityInfo({
       onTouchEnd={handleDragEnd}
     >
       <div className={styles.indicatorWrapper} onClick={handleIndicatorClick}>
-        <IconComponent name="indicator" size="custom" alt="Drag Indicator" />
+        <IconComponent
+          name="indicator"
+          width={58}
+          height={4}
+          alt="Drag Indicator"
+        />
       </div>
       <div className={styles.content}>
         <div className={styles.header}>
@@ -128,7 +133,6 @@ export default function FacilityInfo({
             />
           </div>
         </div>
-
         <div className={styles.chipsContainer}>
           <Chips
             chipState="sports"
@@ -136,17 +140,23 @@ export default function FacilityInfo({
             serialNumber={isNormalFacility ? true : false}
           />
         </div>
-        <p className={styles.addressInfo}>
+        <div className={styles.addressWrapper}>
           <IconComponent
-            name="addressMarker"
+            name={toggle === 'general' ? 'addressMarker' : 'addressMarkerSP'}
             size="s"
             alt="Address Marker Icon"
-          />{' '}
-          {facility.cityName} {facility.localName} {facility.address}
-        </p>
+          />
+          <p className={styles.addressInfo}>
+            {facility.cityName} {facility.localName} {facility.address}
+          </p>
+        </div>
         <div className={styles.facilityDetails}>
           <div className={styles.contactRow}>
-            <span className={styles.label}>연락처</span>
+            <span
+              className={toggle === 'general' ? styles.label : styles.labelSP}
+            >
+              연락처
+            </span>
             <span className={styles.value}>
               {facility.phone
                 ? formatPhoneNumber(facility.phone)

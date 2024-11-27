@@ -29,6 +29,10 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
   const toggle = useRecoilValue(toggleState);
   const [isClient, setIsClient] = useState(false);
   const [tab, setTab] = useState<string>('lesson');
+  const [underlineStyle, setUnderlineStyle] = useState({
+    transform: 'translateX(0)',
+    backgroundColor: '$blue60',
+  });
 
   useEffect(() => {
     setIsClient(true);
@@ -67,8 +71,14 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
     fetchInitialData();
   }, [setSelectedCityCode, setSelectedLocalCode]);
 
-  const handleTabClick = (tab: 'lesson' | 'popular') => {
+  const handleTabClick = (tab: 'lesson' | 'popular', index: number) => {
     setTab(tab);
+
+    setUnderlineStyle({
+      transform: `translateX(${index * 70}px)`,
+      backgroundColor: toggle === 'special' ? '$green80' : '$blue60',
+    });
+
     router.push({
       pathname: '/lesson',
       query: { tab: tab },
@@ -125,7 +135,7 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
             [styles.activeSP]:
               tab === 'lesson' && isClient && toggle === 'special',
           })}
-          onClick={() => handleTabClick('lesson')}
+          onClick={() => handleTabClick('lesson', 0)}
         >
           전체
         </button>
@@ -135,11 +145,15 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
               [styles.active]: tab === 'popular' && toggle === 'general',
               [styles.activeSP]: tab === 'popular' && toggle === 'special',
             })}
-            onClick={() => handleTabClick('popular')}
+            onClick={() => handleTabClick('popular', 1)}
           >
             인기
           </button>
         </Tooltip>
+        <div
+          className={`${toggle === 'general' ? styles.underline : styles.underlineSP}`}
+          style={underlineStyle}
+        />
       </div>
     </header>
   );

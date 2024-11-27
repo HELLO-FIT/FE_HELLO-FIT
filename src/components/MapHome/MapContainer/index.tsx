@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
@@ -20,6 +18,7 @@ import {
   getSpecialFacilityDetails,
   getNomalFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
+import { usePopup } from '@/utils/popupUtils';
 
 /* eslint-disable */
 type Facility = NomalFacility | SpecialFacility;
@@ -46,7 +45,7 @@ export default function MapContainer() {
   const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
-
+  const { openPopup } = usePopup();
   const { map, setMap } = useKakaoMap(KAKAO_MAP_KEY, null);
 
   useEffect(() => {
@@ -69,13 +68,10 @@ export default function MapContainer() {
     });
   };
 
-  // 시설 목록 요청
   const notifyNoFacilities = () => {
-    if (!toast.isActive('no-facilities')) {
-      toast.error('등록된 시설이 없습니다.', {
-        toastId: 'no-facilities',
-      });
-    }
+    openPopup({
+      content: '등록된 시설이 없습니다.',
+    });
   };
 
   const fetchFacilitiesBySport = useCallback(
@@ -91,7 +87,7 @@ export default function MapContainer() {
         data.length === 0 ||
         (data && data.length > 0 && !data[0].items)
       ) {
-        notifyNoFacilities(); // 중복 방지된 토스트 메시지 호출
+        notifyNoFacilities(); // 중복 방지된 팝업 호출
       } else {
         setFacilities(data);
       }
@@ -358,11 +354,6 @@ export default function MapContainer() {
 
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        className={styles.toastContainer}
-      />
       <Header />
       <div
         className={classNames(styles.positionButton, {

@@ -13,16 +13,14 @@ export default function DeleteAccount() {
 
   const deleteAccountMutation = useMutation({
     mutationFn: async () => {
-      return BASE_URL.delete('/users');
+      return BASE_URL.delete('/users/me');
     },
     onSuccess: () => {
       setAuth({
         access_token: '',
         isLoggedIn: false,
-        email: '',
       });
       localStorage.removeItem('access_token');
-      localStorage.removeItem('email');
       router.push('/');
     },
     onError: error => {

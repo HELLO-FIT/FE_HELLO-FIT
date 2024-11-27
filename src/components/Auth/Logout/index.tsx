@@ -19,11 +19,9 @@ export default function Logout() {
     setAuth({
       access_token: '',
       isLoggedIn: false,
-      email: '',
     });
 
     localStorage.removeItem('access_token');
-    localStorage.removeItem('email');
     router.push('/map');
   };
 
