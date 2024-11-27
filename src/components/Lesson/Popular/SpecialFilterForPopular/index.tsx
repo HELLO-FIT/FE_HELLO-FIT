@@ -92,7 +92,8 @@ export default function SpecialFilterForPopular({
             <div className={styles.indicatorWrapper}>
               <IconComponent
                 name="indicator"
-                size="custom"
+                width={58}
+                height={4}
                 alt="Drag Indicator"
               />
             </div>

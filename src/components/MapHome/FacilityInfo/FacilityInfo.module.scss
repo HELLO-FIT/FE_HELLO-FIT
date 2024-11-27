@@ -13,6 +13,8 @@
   border: 1px solid $gray20;
 
   .indicatorWrapper {
+    width: 100%;
+    height: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,7 +29,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
 
     h1 {
       @include T20B;
@@ -51,16 +52,20 @@
     padding: 12px 0 20px 0;
   }
 
-  .addressInfo {
+  .addressWrapper {
     display: flex;
     align-items: center;
-    @include B14R;
-    color: $gray70;
     margin-bottom: 16px;
+    gap: 4px;
 
-    .iconPlaceholder {
-      margin-right: 8px;
-      color: $blue60;
+    .addressInfo {
+      @include B14R;
+      color: $gray70;
+
+      .iconPlaceholder {
+        margin-right: 8px;
+        color: $blue60;
+      }
     }
   }
 
@@ -76,6 +81,12 @@
 
       .label {
         color: $blue60;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .labelSP {
+        color: $green80;
         font-weight: 600;
         font-size: 14px;
       }

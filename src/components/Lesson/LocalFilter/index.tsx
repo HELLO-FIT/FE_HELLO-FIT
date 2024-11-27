@@ -83,7 +83,7 @@ export default function LocalFilter({
           placeholderType !== 'lesson' && value ? styles.selectedDropdown : '',
           placeholderType === 'lesson' ? styles.lesson : styles.selectedValue,
           {
-            [styles.specialDropdown]: isSpecialMode, 
+            [styles.specialDropdown]: isSpecialMode,
           }
         )}
         onClick={() => setIsOpen(!isOpen)}
@@ -119,7 +119,8 @@ export default function LocalFilter({
             <div className={styles.indicatorWrapper}>
               <IconComponent
                 name="indicator"
-                size="custom"
+                width={58}
+                height={4}
                 alt="Drag Indicator"
               />
             </div>
