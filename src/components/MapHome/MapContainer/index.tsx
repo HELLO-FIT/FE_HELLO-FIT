@@ -149,7 +149,6 @@ export default function MapContainer() {
               map.setCenter(coords);
             }
 
-            setUserLocation(coords); // 사용자가 선택한 위치로 설정
             setSelectedLocation(coords); // 선택한 지역을 따로 저장
             updateLocalCodeAndFetchFacilities(
               parseFloat(latitude),
