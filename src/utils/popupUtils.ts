@@ -7,12 +7,12 @@ export function usePopup() {
 
   const openPopup = ({
     content = '',
-    onConfirm,
+    onClose,
   }: Partial<Omit<ModalState, 'isOpen'>>) => {
     setPopup({
       isOpen: true,
       content,
-      onConfirm,
+      onClose,
     });
   };
 
