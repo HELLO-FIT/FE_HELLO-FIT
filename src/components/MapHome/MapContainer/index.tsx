@@ -241,6 +241,7 @@ export default function MapContainer() {
   const moveToUserLocation = () => {
     if (map && userLocation) {
       map.setCenter(userLocation);
+      setSelectedLocation(null); // 현재 위치로 이동 시 선택된 지역 초기화
       updateLocalCodeAndFetchFacilities(
         userLocation.getLat(),
         userLocation.getLng()
