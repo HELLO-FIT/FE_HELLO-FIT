@@ -11,6 +11,7 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import Modal from '@/components/Modal';
+import Popup from '@/components/Popup';
 import { authState } from '@/states/authState';
 import { useEffect } from 'react';
 
@@ -97,6 +98,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </div>
         </div>
         <Modal />
+        <Popup />
       </QueryClientProvider>
     </RecoilRoot>
   );
