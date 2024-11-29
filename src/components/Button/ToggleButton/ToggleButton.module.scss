@@ -13,7 +13,6 @@
 .slider {
   position: absolute;
   top: 2px;
-  left: 2px;
   width: calc(50% - 4px);
   height: calc(100% - 4px);
   background-color: $white;
@@ -21,6 +20,27 @@
   transition: transform 0.4s ease-in-out;
   box-shadow: 2px 0px 8px 0px rgba(0, 0, 0, 0.08);
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .stateText {
+    @include T14B;
+    color: $gray40;
+    transition: color 0.4s ease-in-out;
+  }
+
+  &.general {
+    .stateText {
+      color: $blue60;
+    }
+  }
+
+  &.special {
+    .stateText {
+      color: $green60;
+    }
+  }
 }
 
 .toggleOption {
@@ -32,8 +52,8 @@
   border-radius: 100px;
   cursor: pointer;
   transition:
-    color 0.2s,
-    background-color 0.2s;
+    color 0.4s ease-in-out,
+    background-color 0.4s ease-in-out;
 
   &.active {
     color: $blue60;
