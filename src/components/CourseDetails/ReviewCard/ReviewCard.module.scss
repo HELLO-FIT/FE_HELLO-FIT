@@ -4,10 +4,50 @@
   margin: 24px 0 16px 0;
 }
 
-.title {
-  @include T16B;
-  color: $gray90;
-  margin-bottom: 8px;
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  .headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .reviewTitle {
+      @include T16B;
+      color: $gray90;
+    }
+
+    .ratingSummary {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      .averageRating {
+        @include T16B;
+        color: $gray90;
+      }
+
+      .reviewCount {
+        @include T16B;
+        color: $gray50;
+      }
+    }
+  }
+
+  .writeReviewButton {
+    @include T14B;
+    color: $blue60;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .reviewContainer {
@@ -42,8 +82,7 @@
 
       .name-date {
         display: flex;
-        gap: 8px; 
-        flex-direction: row;
+        gap: 8px;
       }
 
       .name {
