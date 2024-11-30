@@ -1,0 +1,71 @@
+@import '@/styles/globals';
+
+.reviewWrapper {
+  margin: 24px 0 16px 0;
+}
+
+.title {
+  @include T16B;
+  color: $gray90;
+  margin-bottom: 8px;
+}
+
+.reviewContainer {
+  padding: 16px;
+  background: $white;
+  border-radius: 12px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviewItem {
+  border-bottom: 1px solid $gray20;
+  padding-bottom: 12px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .profile {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      .name-date {
+        display: flex;
+        gap: 8px; 
+        flex-direction: row;
+      }
+
+      .name {
+        @include B14M;
+        color: $gray90;
+      }
+
+      .date {
+        @include B14R;
+        color: $gray60;
+      }
+    }
+  }
+
+  .rating {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0;
+  }
+
+  .content {
+    @include B14R;
+    color: $gray80;
+  }
+}
