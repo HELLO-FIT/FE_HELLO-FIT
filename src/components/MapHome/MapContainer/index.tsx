@@ -19,7 +19,7 @@ import {
   getNomalFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 import { usePopup } from '@/utils/popupUtils';
-import throttle from 'lodash/throttle'; 
+import throttle from 'lodash/throttle';
 
 /* eslint-disable */
 type Facility = NomalFacility | SpecialFacility;
@@ -65,7 +65,8 @@ export default function MapContainer() {
 
     return new Promise<void>((resolve, reject) => {
       script.onload = () => resolve();
-      script.onerror = () => reject(new Error('Failed to load Kakao Maps API'));
+      script.onerror = () =>
+        reject(new Error('카카오 지도 API 로드에 실패했습니다.'));
     });
   };
 
@@ -114,12 +115,12 @@ export default function MapContainer() {
 
             fetchFacilitiesBySport(filterItem);
           } else {
-            console.error('Failed to fetch region code:', status);
+            console.error('지역 코드를 가져오는 데 실패했습니다:', status);
             setFacilities([]);
           }
         }
       );
-    }, 2000), // 2초 동안 호출 제한
+    }, 2000),
     [fetchFacilitiesBySport, filterItem]
   );
 
@@ -176,7 +177,7 @@ export default function MapContainer() {
             center:
               selectedLocation ||
               userLocation ||
-              new kakao.maps.LatLng(37.5665, 126.978), // 선택된 지역 우선
+              new kakao.maps.LatLng(37.5665, 126.978),
             level: 3,
           };
           const kakaoMap = new kakao.maps.Map(
@@ -219,7 +220,7 @@ export default function MapContainer() {
               },
               error => {
                 console.error('현재 위치를 가져오는 데 실패했습니다:', error);
-                setFacilities([]); // 위치를 가져오지 못한 경우 시설 목록을 비웁니다.
+                setFacilities([]);
               }
             );
           }
@@ -237,14 +238,14 @@ export default function MapContainer() {
   const moveToUserLocation = () => {
     if (map && userLocation) {
       map.setCenter(userLocation);
-      setSelectedLocation(null); // 현재 위치로 이동 시 선택된 지역 초기화
+      setSelectedLocation(null);
       updateLocalCodeAndFetchFacilities(
         userLocation.getLat(),
         userLocation.getLng()
       );
-      fetchFacilitiesBySport(); // 현재 위치로 이동 후 시설 목록 갱신
+      fetchFacilitiesBySport();
     } else {
-      console.warn('Map or userLocation is not available');
+      console.warn('지도 객체 또는 사용자 위치가 사용 가능하지 않습니다.');
     }
   };
 
@@ -262,7 +263,7 @@ export default function MapContainer() {
     throttle(() => {
       if (!map || facilities.length === 0) return;
 
-      clearMarkers(); // 기존 마커 제거
+      clearMarkers();
 
       const newMarkers: kakao.maps.Marker[] = [];
       let selectedMarker: kakao.maps.Marker | null = null;
@@ -337,7 +338,10 @@ export default function MapContainer() {
                     setIndicatorMode('facilityInfo');
                   }
                 } catch (error) {
-                  console.error('Failed to fetch facility details:', error);
+                  console.error(
+                    '시설 상세 정보를 가져오는 데 실패했습니다:',
+                    error
+                  );
                 }
               });
             }
@@ -346,7 +350,7 @@ export default function MapContainer() {
       });
 
       setMarkers(newMarkers);
-    }, 2000), // 2초 동안 호출 제한
+    }, 2000),
     [map, facilities, toggle]
   );
 
@@ -385,7 +389,7 @@ export default function MapContainer() {
             fetchFacilitiesBySport(sport);
           }}
           mode={toggle}
-          onRegionSelect={handleRegionSelect} 
+          onRegionSelect={handleRegionSelect}
           selectedRegion={selectedRegion}
         />
       ) : (
