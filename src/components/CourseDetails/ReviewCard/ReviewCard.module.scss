@@ -98,12 +98,6 @@
     }
   }
 
-  .rating {
-    display: flex;
-    gap: 4px;
-    margin: 8px 0;
-  }
-
   .content {
     @include B14R;
     color: $gray80;
