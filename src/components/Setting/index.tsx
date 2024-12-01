@@ -17,7 +17,7 @@ export default function Setting() {
         const data = await getProfile();
         setProfile(data);
       } catch (err) {
-        console.log('찜한 강좌를 가져오는데 실패했습니다.', err);
+        console.log('프로필 정보를 가져오는데 실패했습니다.', err);
       } finally {
         setLoading(false);
       }

@@ -172,11 +172,13 @@ export const ICONS = {
   emptyNoti: '/icon/custom/icon-empty-noti.svg',
   emptyNotiSP: '/icon/custom/icon-empty-noti-green.svg',
   closeCircle: '/icon/custom/icon-close-circle.svg',
-  // 평점
-  defaultStar: '/icon/custom/rating/star.svg',
-  BlueStar: '/icon/custom/rating/star-blue.svg',
   meatBall: '/icon/custom/icon-meatball.svg',
   profile: '/icon/custom/profile.svg',
+  profile2: '/icon/custom/profile2.svg',
+  emptyReview: '/icon/custom/empty-review.svg',
+  starEmpty: '/icon/custom/star-empty.svg',
+  starHalf: '/icon/custom/star-half.svg',
+  starFull: '/icon/custom/star-full.svg',
 };
 
 export const IMAGES = {

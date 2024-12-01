@@ -18,8 +18,8 @@ export async function postNormalReview(
   reviewData: ReviewRequest
 ): Promise<ReviewResponse> {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/normal/facilities/${businessId}/${serialNumber}/review`,
+    const response = await BASE_URL.post(
+      `/normal/facilities/${businessId}/${serialNumber}/review`,
       reviewData
     );
 

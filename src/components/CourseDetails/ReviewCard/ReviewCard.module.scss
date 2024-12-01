@@ -8,7 +8,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 
   .headerLeft {
     display: flex;
@@ -51,7 +51,7 @@
 }
 
 .reviewContainer {
-  padding: 16px;
+  padding: 24px 20px;
   background: $white;
   border-radius: 12px;
 }
@@ -80,8 +80,9 @@
       gap: 8px;
       align-items: center;
 
-      .name-date {
+      .nameDate {
         display: flex;
+        align-items: center;
         gap: 8px;
       }
 
@@ -91,7 +92,7 @@
       }
 
       .date {
-        @include B14R;
+        @include C12M;
         color: $gray60;
       }
     }
@@ -106,5 +107,19 @@
   .content {
     @include B14R;
     color: $gray80;
+    margin-left: 40px;
   }
+}
+
+.emptyContainer {
+  background-color: $white;
+  padding: 56px 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  @include B14M;
+  color: $gray50;
+  @include Drag;
 }

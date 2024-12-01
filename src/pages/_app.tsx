@@ -63,6 +63,7 @@ export default function App({ Component, pageProps }: AppProps) {
     '/setting',
     '/search',
     '/setting/my-review',
+    '/details/[businessId]/[serialNumber]/review',
   ].includes(router.pathname);
   const hideHeader = [
     '/',
@@ -79,6 +80,7 @@ export default function App({ Component, pageProps }: AppProps) {
     '/search',
     '/popular',
     '/setting/my-review',
+    '/details/[businessId]/[serialNumber]/review',
   ].includes(router.pathname);
   const withoutHeader = ['/', '/login'].includes(router.pathname);
   const tabNav = ['/lesson', '/popular'].includes(router.pathname);
