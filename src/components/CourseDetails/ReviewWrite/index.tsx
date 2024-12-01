@@ -70,6 +70,9 @@ export default function ReviewWrite({
       );
 
       if (response.success) {
+        openPopup({
+          content: '후기 작성을 완료했어요.',
+        });
         setText('');
         setRating(1);
         router.back();
