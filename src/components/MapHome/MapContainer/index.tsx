@@ -19,6 +19,7 @@ import {
   getNomalFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 import { usePopup } from '@/utils/popupUtils';
+import throttle from 'lodash/throttle';
 
 /* eslint-disable */
 type Facility = NomalFacility | SpecialFacility;
@@ -64,7 +65,8 @@ export default function MapContainer() {
 
     return new Promise<void>((resolve, reject) => {
       script.onload = () => resolve();
-      script.onerror = () => reject(new Error('Failed to load Kakao Maps API'));
+      script.onerror = () =>
+        reject(new Error('카카오 지도 API 로드에 실패했습니다.'));
     });
   };
 
@@ -97,7 +99,7 @@ export default function MapContainer() {
 
   // 좌표를 기반으로 지역 코드 및 시설 목록 갱신 함수
   const updateLocalCodeAndFetchFacilities = useCallback(
-    async (latitude: number, longitude: number) => {
+    throttle(async (latitude: number, longitude: number) => {
       const geocoder = new kakao.maps.services.Geocoder();
       geocoder.coord2RegionCode(
         longitude,
@@ -113,12 +115,12 @@ export default function MapContainer() {
 
             fetchFacilitiesBySport(filterItem);
           } else {
-            console.error('Failed to fetch region code:', status);
+            console.error('지역 코드를 가져오는 데 실패했습니다:', status);
             setFacilities([]);
           }
         }
       );
-    },
+    }, 2000),
     [fetchFacilitiesBySport, filterItem]
   );
 
@@ -145,7 +147,6 @@ export default function MapContainer() {
               map.setCenter(coords);
             }
 
-            setUserLocation(coords); // 사용자가 선택한 위치로 설정
             setSelectedLocation(coords); // 선택한 지역을 따로 저장
             updateLocalCodeAndFetchFacilities(
               parseFloat(latitude),
@@ -176,7 +177,7 @@ export default function MapContainer() {
             center:
               selectedLocation ||
               userLocation ||
-              new kakao.maps.LatLng(37.5665, 126.978), // 선택된 지역 우선
+              new kakao.maps.LatLng(37.5665, 126.978),
             level: 3,
           };
           const kakaoMap = new kakao.maps.Map(
@@ -219,7 +220,7 @@ export default function MapContainer() {
               },
               error => {
                 console.error('현재 위치를 가져오는 데 실패했습니다:', error);
-                setFacilities([]); // 위치를 가져오지 못한 경우 시설 목록을 비웁니다.
+                setFacilities([]);
               }
             );
           }
@@ -237,114 +238,121 @@ export default function MapContainer() {
   const moveToUserLocation = () => {
     if (map && userLocation) {
       map.setCenter(userLocation);
+      setSelectedLocation(null);
       updateLocalCodeAndFetchFacilities(
         userLocation.getLat(),
         userLocation.getLng()
       );
-      fetchFacilitiesBySport(); // 현재 위치로 이동 후 시설 목록 갱신
+      fetchFacilitiesBySport();
     } else {
-      console.warn('Map or userLocation is not available');
+      console.warn('지도 객체 또는 사용자 위치가 사용 가능하지 않습니다.');
     }
   };
 
   // 시설 목록이 변경될 때 지도 마커 업데이트
   useEffect(() => {
     if (facilities.length > 0) {
-      renderMarkers();
+      throttledRenderMarkers();
     } else {
       clearMarkers();
     }
   }, [map, facilities]);
 
-  // 마커 렌더링 함수
-  const renderMarkers = useCallback(() => {
-    if (!map || facilities.length === 0) return;
+  // 마커 렌더링 함수에 throttle 적용
+  const throttledRenderMarkers = useCallback(
+    throttle(() => {
+      if (!map || facilities.length === 0) return;
 
-    clearMarkers(); // 기존 마커 제거
+      clearMarkers();
 
-    const newMarkers: kakao.maps.Marker[] = [];
-    let selectedMarker: kakao.maps.Marker | null = null;
+      const newMarkers: kakao.maps.Marker[] = [];
+      let selectedMarker: kakao.maps.Marker | null = null;
 
-    facilities.forEach(facility => {
-      const geocoder = new kakao.maps.services.Geocoder();
-      geocoder.addressSearch(
-        facility.address,
-        (result: any[], status: string) => {
-          if (status === kakao.maps.services.Status.OK) {
-            const coords = new kakao.maps.LatLng(
-              parseFloat(result[0].y),
-              parseFloat(result[0].x)
-            );
+      facilities.forEach(facility => {
+        const geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch(
+          facility.address,
+          (result: any[], status: string) => {
+            if (status === kakao.maps.services.Status.OK) {
+              const coords = new kakao.maps.LatLng(
+                parseFloat(result[0].y),
+                parseFloat(result[0].x)
+              );
 
-            const defaultMarkerImage = createMarkerImage(
-              toggle === 'special'
-                ? '/image/marker-special.svg'
-                : '/image/marker.svg'
-            );
+              const defaultMarkerImage = createMarkerImage(
+                toggle === 'special'
+                  ? '/image/marker-special.svg'
+                  : '/image/marker.svg'
+              );
 
-            const selectedMarkerImage = createMarkerImage(
-              toggle === 'special'
-                ? '/image/address-marker-special.svg'
-                : '/image/address-marker-normal.svg'
-            );
+              const selectedMarkerImage = createMarkerImage(
+                toggle === 'special'
+                  ? '/image/address-marker-special.svg'
+                  : '/image/address-marker-normal.svg'
+              );
 
-            const marker = new kakao.maps.Marker({
-              map,
-              position: coords,
-              image: defaultMarkerImage,
-              title: facility.name,
-            });
+              const marker = new kakao.maps.Marker({
+                map,
+                position: coords,
+                image: defaultMarkerImage,
+                title: facility.name,
+              });
 
-            newMarkers.push(marker);
+              newMarkers.push(marker);
 
-            kakao.maps.event.addListener(marker, 'mouseover', () => {
-              if (!selectedMarker || selectedMarker !== marker) {
-                marker.setImage(defaultMarkerImage);
-              }
-            });
+              kakao.maps.event.addListener(marker, 'mouseover', () => {
+                if (!selectedMarker || selectedMarker !== marker) {
+                  marker.setImage(defaultMarkerImage);
+                }
+              });
 
-            kakao.maps.event.addListener(marker, 'mouseout', () => {
-              if (!selectedMarker || selectedMarker !== marker) {
-                marker.setImage(defaultMarkerImage);
-              }
-            });
+              kakao.maps.event.addListener(marker, 'mouseout', () => {
+                if (!selectedMarker || selectedMarker !== marker) {
+                  marker.setImage(defaultMarkerImage);
+                }
+              });
 
-            kakao.maps.event.addListener(marker, 'click', async () => {
-              if (selectedMarker && selectedMarker !== marker) {
-                selectedMarker.setImage(defaultMarkerImage);
-              }
-
-              marker.setImage(selectedMarkerImage);
-              selectedMarker = marker;
-
-              try {
-                let details;
-                if (toggle === 'special') {
-                  details = await getSpecialFacilityDetails(
-                    facility.businessId
-                  );
-                } else if ('serialNumber' in facility) {
-                  details = await getNomalFacilityDetails(
-                    facility.businessId,
-                    facility.serialNumber
-                  );
+              kakao.maps.event.addListener(marker, 'click', async () => {
+                if (selectedMarker && selectedMarker !== marker) {
+                  selectedMarker.setImage(defaultMarkerImage);
                 }
 
-                if (details) {
-                  setSelectedFacility(details);
-                  setIndicatorMode('facilityInfo');
+                marker.setImage(selectedMarkerImage);
+                selectedMarker = marker;
+
+                try {
+                  let details;
+                  if (toggle === 'special') {
+                    details = await getSpecialFacilityDetails(
+                      facility.businessId
+                    );
+                  } else if ('serialNumber' in facility) {
+                    details = await getNomalFacilityDetails(
+                      facility.businessId,
+                      facility.serialNumber
+                    );
+                  }
+
+                  if (details) {
+                    setSelectedFacility(details);
+                    setIndicatorMode('facilityInfo');
+                  }
+                } catch (error) {
+                  console.error(
+                    '시설 상세 정보를 가져오는 데 실패했습니다:',
+                    error
+                  );
                 }
-              } catch (error) {
-                console.error('Failed to fetch facility details:', error);
-              }
-            });
+              });
+            }
           }
-        }
-      );
-    });
+        );
+      });
 
-    setMarkers(newMarkers);
-  }, [map, facilities, toggle]);
+      setMarkers(newMarkers);
+    }, 2000),
+    [map, facilities, toggle]
+  );
 
   // 기존 마커 제거 함수
   const clearMarkers = () => {
@@ -381,7 +389,7 @@ export default function MapContainer() {
             fetchFacilitiesBySport(sport);
           }}
           mode={toggle}
-          onRegionSelect={handleRegionSelect} // 기존 인라인 로직 대신 handleRegionSelect 사용
+          onRegionSelect={handleRegionSelect}
           selectedRegion={selectedRegion}
         />
       ) : (
@@ -392,7 +400,7 @@ export default function MapContainer() {
             onBackClick={() => {
               setIndicatorMode('sports');
               clearMarkers();
-              renderMarkers();
+              throttledRenderMarkers();
             }}
             onMoveToDetail={() => {
               if (selectedFacility) {

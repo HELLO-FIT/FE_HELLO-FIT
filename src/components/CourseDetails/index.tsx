@@ -15,6 +15,7 @@ import CourseCard from './CourseCard';
 import InfoCard from './InfoCard';
 import LoadingSpinner from '../LoadingSpinner';
 import SpecialInfoCard from './SpecialInfoCard';
+import ReviewCard from './ReviewCard';
 
 export default function CourseDetails({
   businessId,
@@ -157,6 +158,7 @@ export default function CourseDetails({
           ))}
         </div>
       </div>
+      <ReviewCard />
     </div>
   );
 }

@@ -31,16 +31,48 @@ export default function ToggleButton({ onButtonClick }: ToggleButtonProps) {
   };
 
   return (
-    <div className={styles.toggle}>
+    <div
+      className={`${styles.toggle} ${
+        activeButton === 'general' ? styles.general : styles.special
+      }`}
+      onClick={() =>
+        handleClick(activeButton === 'general' ? 'special' : 'general')
+      }
+    >
+      <div
+        className={`${styles.slider} ${
+          activeButton === 'general' ? styles.general : styles.special
+        }`}
+        style={{
+          transform:
+            activeButton === 'special' ? 'translateX(100%)' : 'translateX(0)',
+        }}
+      >
+        <span className={styles.stateText}>
+          {activeButton === 'special' ? '특수' : '일반'}
+        </span>
+      </div>
       <button
-        className={`${styles.toggleOption} ${activeButton === 'general' ? styles.active : ''}`}
-        onClick={() => handleClick('general')}
+        className={`${styles.toggleOption} ${
+          activeButton === 'general' ? styles.active : ''
+        }`}
+        onClick={e => {
+          e.stopPropagation();
+          handleClick('general');
+        }}
       >
         일반
       </button>
       <button
-        className={`${styles.toggleOption} ${activeButton === 'special' ? `${styles.active} ${styles.specialActive}` : ''}`}
-        onClick={() => handleClick('special')}
+        className={`${styles.toggleOption} ${
+          activeButton === 'special'
+            ? `${styles.active} ${styles.specialActive}`
+            : ''
+        }`}
+        onClick={e => {
+          e.stopPropagation();
+          handleClick('special');
+        }}
       >
         특수
       </button>
