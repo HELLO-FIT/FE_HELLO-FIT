@@ -158,7 +158,12 @@ export default function CourseDetails({
           ))}
         </div>
       </div>
-      <ReviewCard />
+      <ReviewCard
+        businessId={businessId}
+        serialNumber={serialNumber}
+        averageScore={facility.averageScore}
+        reviews={facility.reviews}
+      />
     </div>
   );
 }

@@ -1,57 +1,62 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './ReviewCard.module.scss';
 import IconComponent from '@/components/Asset/Icon';
+import { ReviewCardProps } from './ReviewCard.types';
+import router from 'next/router';
+import { formattedDate } from '@/utils/formatDate';
+import { hideNickname } from '@/utils/hideNickname';
+import { getProfile, ProfileResponse } from '@/apis/get/getProfile';
 
-// api 확인 전이라 임의로 작성해서 types로 분리하지않음
-interface Review {
-  id: number;
-  name: string;
-  date: string;
-  rating: number;
-  content: string;
-}
+export default function ReviewCard({
+  businessId,
+  serialNumber,
+  averageScore,
+  reviews,
+}: ReviewCardProps) {
+  const [profile, setProfile] = useState<ProfileResponse>();
 
-const reviews: Review[] = [
-  {
-    id: 1,
-    name: '조*진',
-    date: '2024. 2. 3',
-    rating: 4,
-    content: '세상에 프론트의 신이 있다면',
-  },
-  {
-    id: 2,
-    name: '송*진',
-    date: '2024. 2. 3',
-    rating: 1,
-    content: '송영진이 누구냐면 케이티 소닉붐의 감독인데,',
-  },
-  {
-    id: 3,
-    name: '김*현',
-    date: '2024. 2. 3',
-    rating: 3,
-    content: '시설 깔끔하고 강사님도 친절해요',
-  },
-];
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+        setProfile(data);
+      } catch (err) {
+        console.log('프로필 정보를 가져오는데 실패했습니다.', err);
+      }
+    };
 
-export default function ReviewCard() {
+    fetchProfile();
+  }, []);
+
+  const handleOpenReviewWrite = () => {
+    router.push(`/details/${businessId}/${serialNumber}/review`);
+  };
+
+  // 작성한 리뷰가 있는지 확인
+  const hasReviewed = reviews.some(review => review.userId === profile?.id);
+
   return (
     <div className={styles.reviewWrapper}>
       <div className={styles.reviewHeader}>
         <div className={styles.headerLeft}>
           <span className={styles.reviewTitle}>시설 후기</span>
           <div className={styles.ratingSummary}>
-            <IconComponent name="BlueStar" size="custom" width={16} height={16} />
-            <span className={styles.averageRating}>4.0</span>
-            <span className={styles.reviewCount}>(3)</span>
+            <IconComponent name="starFull" width={14} height={14} />
+            <span className={styles.averageRating}>{averageScore}</span>
+            <span className={styles.reviewCount}>({reviews.length})</span>
           </div>
         </div>
-        <button className={styles.writeReviewButton}>후기 작성</button>
+        {!hasReviewed && (
+          <button
+            className={styles.writeReviewButton}
+            onClick={handleOpenReviewWrite}
+          >
+            후기 작성
+          </button>
+        )}
       </div>
-
-      <div className={styles.reviewContainer}>
-        <div className={styles.card}>
+      {reviews.length > 0 ? (
+        <div className={styles.reviewContainer}>
           {reviews.map(review => (
             <div key={review.id} className={styles.reviewItem}>
               <div className={styles.header}>
@@ -59,12 +64,34 @@ export default function ReviewCard() {
                   <IconComponent
                     name="profile"
                     size="custom"
-                    width={40}
-                    height={40}
+                    width={32}
+                    height={32}
                   />
-                  <div className={styles['name-date']}>
-                    <span className={styles.name}>{review.name}</span>
-                    <span className={styles.date}>{review.date}</span>
+                  <div className={styles.nameDate}>
+                    <span className={styles.name}>
+                      {hideNickname(review.nickname)}
+                    </span>
+                    <div className={styles.rating}>
+                      {Array.from({ length: review.score }, (_, index) => (
+                        <IconComponent
+                          key={`filled-${review.id}-${index}`}
+                          name="starFull"
+                          width={14}
+                          height={14}
+                        />
+                      ))}
+                      {Array.from({ length: 5 - review.score }, (_, index) => (
+                        <IconComponent
+                          key={`empty-${review.id}-${index}`}
+                          name="starEmpty"
+                          width={14}
+                          height={14}
+                        />
+                      ))}
+                    </div>
+                    <span className={styles.date}>
+                      {formattedDate(review.createdAt)}
+                    </span>
                   </div>
                 </div>
                 <IconComponent
@@ -74,27 +101,21 @@ export default function ReviewCard() {
                   height={20}
                 />
               </div>
-              <div className={styles.rating}>
-                {Array.from({ length: review.rating }, (_, index) => (
-                  <IconComponent
-                    key={`filled-${index}`}
-                    name="BlueStar"
-                    size="custom"
-                  />
-                ))}
-                {Array.from({ length: 5 - review.rating }, (_, index) => (
-                  <IconComponent
-                    key={`empty-${index}`}
-                    name="defaultStar"
-                    size="custom"
-                  />
-                ))}
-              </div>
               <p className={styles.content}>{review.content}</p>
             </div>
           ))}
         </div>
-      </div>
+      ) : (
+        <div className={styles.emptyContainer}>
+          <IconComponent
+            name="emptyReview"
+            width={20}
+            height={20}
+            alt="emptyReview"
+          />
+          <p>현재 작성된 후기가 없어요.</p>
+        </div>
+      )}
     </div>
   );
 }

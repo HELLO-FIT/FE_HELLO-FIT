@@ -12,7 +12,7 @@ export interface NotificationsItem {
 
 export async function getNotifications(): Promise<NotificationsItem[]> {
   try {
-    const response = await BASE_URL.get<NotificationsItem[]>('/Notifications');
+    const response = await BASE_URL.get<NotificationsItem[]>('/notifications');
     return response.data;
   } catch (error) {
     console.error('Error fetching Notifications:', error);
