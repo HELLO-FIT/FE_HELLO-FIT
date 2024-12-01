@@ -5,14 +5,16 @@ import { formattedDate } from '@/utils/formatDate';
 import { getMyReviews, MyReviewsResponse } from '@/apis/get/getMyReviews';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import IconComponent from '@/components/Asset/Icon';
-import { getProfile, ProfileResponse } from '@/apis/get/getProfile';
 import { hideNickname } from '@/utils/hideNickname';
+import { deleteReview } from '@/apis/delete/deleteReview';
+import { useModal } from '@/utils/modalUtils';
 
 export default function MyReview() {
-  const [profile, setProfile] = useState<ProfileResponse>();
   const [reviews, setReviews] = useState<MyReviewsResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const router = useRouter();
+  const { openModal } = useModal();
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -34,7 +36,40 @@ export default function MyReview() {
   }
 
   const handleFacilityClick = (businessId: string, serialNumber?: string) => {
-    router.push(`/details/${businessId}/${serialNumber}`);
+    router.push(`/details/${businessId}/${serialNumber || ''}`);
+  };
+
+  const handleModifyReview = (
+    reviewId: string,
+    businessId: string,
+    serialNumber?: string
+  ) => {
+    router.push(
+      `/details/${businessId}/${(serialNumber as string) || ''}/review/${reviewId}`
+    );
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    try {
+      const result = await deleteReview(reviewId);
+
+      if (result.success) {
+        router.reload();
+      }
+    } catch (err) {
+      console.error('후기 삭제 도중 문제가 발생했습니다.', err);
+    }
+  };
+
+  const deleteReviewModal = (reviewId: string) => {
+    openModal({
+      content: '후기를 삭제',
+      onConfirm: () => handleDeleteReview(reviewId),
+    });
+  };
+
+  const toggleDropdown = (reviewId: string) => {
+    setDropdownOpen(prev => (prev === reviewId ? null : reviewId));
   };
 
   return (
@@ -87,13 +122,40 @@ export default function MyReview() {
                       {formattedDate(review.createdAt)}
                     </span>
                   </div>
-                  <div className={styles.meatball}>
-                    <IconComponent
-                      name="meatBall"
-                      size="custom"
-                      width={20}
-                      height={20}
-                    />
+                  <div className={styles.meatBallWrapper}>
+                    <div
+                      className={styles.meatball}
+                      onClick={() => toggleDropdown(review.id)}
+                    >
+                      <IconComponent
+                        name="meatBall"
+                        size="custom"
+                        width={20}
+                        height={20}
+                      />
+                    </div>
+                    {dropdownOpen === review.id && (
+                      <div className={styles.dropdown}>
+                        <button
+                          className={styles.dropdownButton}
+                          onClick={() =>
+                            handleModifyReview(
+                              review.id,
+                              review.businessId,
+                              review.serialNumber
+                            )
+                          }
+                        >
+                          수정하기
+                        </button>
+                        <button
+                          className={styles.dropdownButton}
+                          onClick={() => deleteReviewModal(review.id)}
+                        >
+                          삭제하기
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <p className={styles.content}>{review.content}</p>

@@ -1,0 +1,95 @@
+@import '@/styles/globals';
+
+.container {
+  background-color: $gray10;
+  width: 100%;
+  height: calc(100vh - 56px);
+  padding: 24px 20px;
+  position: relative;
+
+  .writerContainer {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+
+    .nickname {
+      @include B16M;
+      color: $gray90;
+    }
+
+    .date {
+      @include B14M;
+      color: $gray50;
+    }
+  }
+
+  .textareaContainer {
+    width: 100%;
+    background-color: $white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 12px 0 4px;
+
+    .textarea {
+      width: 100%;
+      min-height: 168px;
+      @include B14M;
+      color: $gray80;
+      border: none;
+      outline: none;
+      resize: none;
+    }
+  }
+
+  .messageContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: $gray50;
+    padding: 0 8px;
+    gap: 4px;
+    height: 24px;
+
+    .message {
+      @include C12M;
+    }
+
+    .counter {
+      color: $blue60;
+      @include B14M;
+      display: flex;
+      gap: 4px;
+    }
+
+    .total {
+      color: $gray50;
+      @include B14M;
+    }
+  }
+
+  .ratingContainer {
+    width: 100%;
+    background-color: $white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-top: 16px;
+  }
+
+  .btnContainer {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    background-color: $white;
+    display: flex;
+    padding: 12px 20px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    border-radius: 8px 8px 0px 0px;
+    box-shadow: 0px -2px 6px 0px rgba(0, 0, 0, 0.04);
+  }
+}
