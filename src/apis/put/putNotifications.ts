@@ -10,7 +10,7 @@ export async function putNotifications(
   id: string
 ): Promise<NotificationsResponse> {
   try {
-    const response = await BASE_URL.put(`/Notifications/${id}`);
+    const response = await BASE_URL.put(`/notifications/${id}`);
 
     if (response.status === 204) {
       return {

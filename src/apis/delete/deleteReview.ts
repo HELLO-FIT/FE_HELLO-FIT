@@ -1,21 +1,15 @@
 import BASE_URL from '@/constants/baseurl';
 import { AxiosError } from 'axios';
+import { ReviewResponse } from '../post/postReview';
 
-export interface NotificationsResponse {
-  success: boolean;
-  message: string;
-}
-
-export async function deleteNotifications(
-  id: string
-): Promise<NotificationsResponse> {
+export async function deleteReview(reviewId: string): Promise<ReviewResponse> {
   try {
-    const response = await BASE_URL.delete(`/notifications/${id}`);
+    const response = await BASE_URL.delete(`/reviews/${reviewId}`);
 
     if (response.status === 204) {
       return {
         success: true,
-        message: '알림 삭제 성공',
+        message: '후기 삭제 성공',
       };
     } else {
       return {
@@ -35,7 +29,7 @@ export async function deleteNotifications(
       }
     }
 
-    console.error('Error processing notification deletion:', error);
-    throw new Error('Error processing notification deletion');
+    console.error('Error processing review deletion:', error);
+    throw new Error('Error processing review deletion');
   }
 }

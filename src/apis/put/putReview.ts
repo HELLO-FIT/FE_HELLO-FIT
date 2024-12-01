@@ -1,21 +1,18 @@
 import BASE_URL from '@/constants/baseurl';
 import { AxiosError } from 'axios';
+import { ReviewRequest, ReviewResponse } from '../post/postReview';
 
-export interface NotificationsResponse {
-  success: boolean;
-  message: string;
-}
-
-export async function deleteNotifications(
-  id: string
-): Promise<NotificationsResponse> {
+export async function putReview(
+  reviewId: string,
+  reviewData: ReviewRequest
+): Promise<ReviewResponse> {
   try {
-    const response = await BASE_URL.delete(`/notifications/${id}`);
+    const response = await BASE_URL.put(`/reviews/${reviewId}`, reviewData);
 
     if (response.status === 204) {
       return {
         success: true,
-        message: '알림 삭제 성공',
+        message: '후기 수정 성공',
       };
     } else {
       return {
@@ -35,7 +32,7 @@ export async function deleteNotifications(
       }
     }
 
-    console.error('Error processing notification deletion:', error);
-    throw new Error('Error processing notification deletion');
+    console.error('리뷰 수정 중 오류 발생:', error);
+    throw new Error('리뷰 수정 실패');
   }
 }
