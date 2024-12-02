@@ -163,6 +163,7 @@ export default function CourseDetails({
         serialNumber={serialNumber}
         averageScore={facility.averageScore}
         reviews={facility.reviews}
+        isNormal={serialNumber ? true : false}
       />
     </div>
   );
