@@ -30,7 +30,6 @@ const RatingField = styled.fieldset<{ isNormal: boolean }>`
 `;
 
 export default function StarRating({
-  currentRating,
   onRatingChange,
   isNormal,
 }: StarRatingProps) {
