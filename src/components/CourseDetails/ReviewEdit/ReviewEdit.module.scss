@@ -26,6 +26,10 @@
 
   .textareaContainer {
     width: 100%;
+    min-height: 168px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: $white;
     border-radius: 12px;
     padding: 16px 20px;
@@ -33,12 +37,19 @@
 
     .textarea {
       width: 100%;
-      min-height: 168px;
+      min-height: 100px;
       @include B14M;
       color: $gray80;
       border: none;
       outline: none;
       resize: none;
+    }
+
+    .message {
+      width: 100%;
+      @include B14M;
+      color: $gray50;
+      transition: opacity 0.2s ease-in-out;
     }
   }
 

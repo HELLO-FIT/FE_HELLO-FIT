@@ -107,6 +107,12 @@ export default function ReviewEdit({ reviewId }: { reviewId: string }) {
           value={text}
           onChange={handleTextChange}
         />
+        {!text.length && (
+          <span className={styles.message}>
+            *주의: 사실이 아닌 내용, 욕설, 비방 목적 혹은 명예 훼손성 내용은
+            작성 시 삭제 처리 될 수 있습니다.
+          </span>
+        )}
       </div>
       <div className={styles.messageContainer}>
         <p className={styles.message}>최소 15자 이상 작성</p>
