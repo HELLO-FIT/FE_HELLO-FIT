@@ -30,6 +30,7 @@ import PopularSchedule from '@/components/Schedule/PopularSchedule';
 import { specialTypeList } from '@/constants/specialList';
 import Tooltip from '@/components/Tooltip/Tooltip';
 import SpecialFilterForPopular from './SpecialFilterForPopular';
+import { useRouter } from 'next/router';
 
 export default function Popular() {
   const [facilities, setFacilities] = useState<
@@ -42,10 +43,12 @@ export default function Popular() {
   const [selectedLocalCode] = useRecoilState(selectedLocalCodeState);
   const [selectedSport, setSelectedSport] = useRecoilState(selectedSportState);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState('인기순');
+  const [selectedSort, setSelectedSort] = useState('total');
+  const [selectedSortName, setSelectedSortName] = useState('누적 수강 수');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const toggle = useRecoilValue(toggleState);
   const [specialFilterValue, setSpecialFilterValue] = useState<string>('');
+  const router = useRouter();
 
   const handleSpecialFilterChange = (type: string) => {
     setSpecialFilterValue(type);
@@ -121,7 +124,55 @@ export default function Popular() {
     );
   };
 
+  const sortFacilities = (
+    facilities: NomalPopular[] | SpecialPopular[],
+    sort: string
+  ): NomalPopular[] | SpecialPopular[] => {
+    switch (sort) {
+      case 'total':
+        return [...facilities].sort(
+          (a, b) => b.totalParticipantCount - a.totalParticipantCount
+        );
+      case 'average':
+        return [...facilities].sort((a, b) => b.averageScore - a.averageScore);
+      case 'review':
+        return [...facilities].sort((a, b) => b.reviewCount - a.reviewCount);
+      case 'favorite':
+        return [...facilities].sort(
+          (a, b) => b.favoriteCount - a.favoriteCount
+        );
+      default:
+        return facilities;
+    }
+  };
+
+  const handleSelectSort = (sort: string) => {
+    setSelectedSort(sort);
+    setIsDropdownOpen(false);
+    if (sort === 'total') {
+      setSelectedSortName('누적 수강 수');
+    } else if (sort === 'average') {
+      setSelectedSortName('별점 순');
+    } else if (sort === 'review') {
+      setSelectedSortName('후기 개수');
+    } else if (sort === 'favorite') {
+      setSelectedSortName('찜 개수');
+    }
+
+    const query = { ...router.query, sort };
+    router.push({ pathname: router.pathname, query }, undefined, {
+      shallow: true,
+    });
+  };
+
+  useEffect(() => {
+    if (router.query.sort) {
+      setSelectedSort(router.query.sort as string);
+    }
+  }, [router.query.sort]);
+
   const filteredFacilities = filterFacilitiesBySport(facilities, selectedSport);
+  const sortedFacilities = sortFacilities(filteredFacilities, selectedSort);
 
   const parseLocalCode = (localCode: string): string => {
     const cityCode = localCode.slice(0, 2);
@@ -146,11 +197,6 @@ export default function Popular() {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(prevState => !prevState);
-  };
-
-  const handleSelectSort = (sort: string) => {
-    setSelectedSort(sort);
-    setIsDropdownOpen(false);
   };
 
   useOutsideClick(dropdownRef, toggleDropdown);
@@ -261,8 +307,12 @@ export default function Popular() {
                 </div>
               </div>
               <div className={styles.sortContainer}>
-                <div className={styles.sort} onClick={toggleDropdown}>
-                  <span className={styles.selectedSort}>{selectedSort}</span>
+                <div
+                  className={styles.selectedSort}
+                  onClick={toggleDropdown}
+                  ref={dropdownRef}
+                >
+                  <span>{selectedSortName}</span>
                   <IconComponent
                     name={isDropdownOpen ? 'up' : 'down'}
                     size="s"
@@ -270,19 +320,38 @@ export default function Popular() {
                   />
                 </div>
                 {isDropdownOpen && (
-                  <div
-                    className={styles.dropdown}
-                    onClick={() => handleSelectSort('인기순')}
-                    ref={dropdownRef}
-                  >
-                    <div className={styles.sort}>인기순</div>
+                  <div className={styles.sortOptions} ref={dropdownRef}>
+                    <div
+                      className={styles.sortOption}
+                      onClick={() => handleSelectSort('total')}
+                    >
+                      누적 수강 수
+                    </div>
+                    <div
+                      className={styles.sortOption}
+                      onClick={() => handleSelectSort('average')}
+                    >
+                      별점 순
+                    </div>
+                    <div
+                      className={styles.sortOption}
+                      onClick={() => handleSelectSort('review')}
+                    >
+                      후기 개수
+                    </div>
+                    <div
+                      className={styles.sortOption}
+                      onClick={() => handleSelectSort('favorite')}
+                    >
+                      찜 개수
+                    </div>
                   </div>
                 )}
               </div>
             </div>
-            {filteredFacilities.length > 0 ? (
+            {sortedFacilities.length > 0 ? (
               <div className={styles.listContainer}>
-                {filteredFacilities.map(facility => (
+                {sortedFacilities.map(facility => (
                   <Link
                     key={`${facility.businessId}-${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
                     href={`/details/${facility.businessId}${'serialNumber' in facility ? `/${facility.serialNumber}` : ''}`}
