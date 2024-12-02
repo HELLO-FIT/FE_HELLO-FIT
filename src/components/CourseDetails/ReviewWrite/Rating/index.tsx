@@ -3,7 +3,11 @@ import { RatingProps } from './Rating.types';
 import IconComponent from '@/components/Asset/Icon';
 import styles from './Rating.module.scss';
 
-export default function Rating({ currentRating, onRatingChange }: RatingProps) {
+export default function Rating({
+  currentRating,
+  onRatingChange,
+  isNormal,
+}: RatingProps) {
   const [rating, setRating] = useState(currentRating);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const totalStars = 5;
@@ -35,9 +39,9 @@ export default function Rating({ currentRating, onRatingChange }: RatingProps) {
       index === Math.floor(ratingValue) + 0.5 ||
       (ratingValue % 1 !== 0 && index === Math.floor(ratingValue) + 1)
     ) {
-      return 'starHalf';
+      return isNormal ? 'starHalf' : 'starHalfSP';
     } else {
-      return 'starFull';
+      return isNormal ? 'starFull' : 'starFullSP';
     }
   };
 

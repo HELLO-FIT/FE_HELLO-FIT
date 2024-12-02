@@ -1,25 +1,26 @@
 import { useEffect, useState } from 'react';
-import styles from './ReviewWrite.module.scss';
+import styles from './ReviewEdit.module.scss';
 import { getProfile, ProfileResponse } from '@/apis/get/getProfile';
 import { formattedDate } from '@/utils/formatDate';
 import IconComponent from '@/components/Asset/Icon';
-import StarRating from '../RatingStar/StarRating';
 import CustomButton from '@/components/Button/CustomButton';
 import { usePopup } from '@/utils/popupUtils';
-import { postNormalReview, postSpecialReview } from '@/apis/post/postReview';
+import { putReview } from '@/apis/put/putReview';
+import { getMyReviews } from '@/apis/get/getMyReviews';
 import router from 'next/router';
 import { hideNickname } from '@/utils/hideNickname';
+import Rating from '../ReviewWrite/Rating';
 
-export default function ReviewWrite({
-  businessId,
-  serialNumber,
+export default function ReviewEdit({
+  reviewId,
+  isNormal = true,
 }: {
-  businessId: string;
-  serialNumber?: string;
+  reviewId: string;
+  isNormal: boolean;
 }) {
   const [profile, setProfile] = useState<ProfileResponse>();
   const [text, setText] = useState<string>('');
-  const [rating, setRating] = useState<number>(0);
+  const [rating, setRating] = useState<number>(1);
   const { openPopup } = usePopup();
 
   useEffect(() => {
@@ -32,8 +33,26 @@ export default function ReviewWrite({
       }
     };
 
+    // 기존 후기 데이터 가져오기
+    const fetchReviewData = async () => {
+      try {
+        const reviews = await getMyReviews();
+        const review = reviews.find(r => r.id === reviewId);
+
+        if (review) {
+          setText(review.content);
+          setRating(review.score);
+        } else {
+          console.log('리뷰 데이터를 찾을 수 없습니다.');
+        }
+      } catch (err) {
+        console.log('리뷰 데이터를 가져오는데 실패했습니다.', err);
+      }
+    };
+
     fetchProfile();
-  }, []);
+    fetchReviewData();
+  }, [reviewId]);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = e.target.value;
@@ -63,26 +82,18 @@ export default function ReviewWrite({
         content: text,
       };
 
-      let response;
-
-      if (serialNumber) {
-        response = await postNormalReview(businessId, serialNumber, reviewData);
-      } else {
-        response = await postSpecialReview(businessId, reviewData);
-      }
+      const response = await putReview(reviewId, reviewData);
 
       if (response.success) {
         openPopup({
-          content: '후기 작성을 완료했어요.',
+          content: '후기 수정을 완료했어요.',
         });
-        setText('');
-        setRating(0);
         router.back();
       } else {
         console.log(response.message);
       }
     } catch (error) {
-      console.log('리뷰 작성 중 문제가 발생했습니다.', error);
+      console.log('리뷰 수정 중 문제가 발생했습니다.', error);
     }
   };
 
@@ -111,20 +122,20 @@ export default function ReviewWrite({
       </div>
       <div className={styles.messageContainer}>
         <p className={styles.message}>최소 15자 이상 작성</p>
-        <span className={serialNumber ? styles.counter : styles.counterSP}>
+        <span className={isNormal ? styles.counter : styles.counterSP}>
           {text.length}
           <p className={styles.total}>/ 100</p>
         </span>
       </div>
       <div className={styles.ratingContainer}>
-        <StarRating
+        <Rating
+          onRatingChange={rating => setRating(rating)}
           currentRating={rating}
-          onRatingChange={(newRating: number) => setRating(newRating)}
-          isNormal={serialNumber ? true : false}
+          isNormal={isNormal}
         />
       </div>
       <div className={styles.btnContainer}>
-        <CustomButton label="작성 완료" onClick={handleSubmit} />
+        <CustomButton label="수정 완료" onClick={handleSubmit} />
       </div>
     </div>
   );
