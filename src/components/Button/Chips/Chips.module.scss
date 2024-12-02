@@ -85,3 +85,19 @@
   @include C10B;
   color: $green80;
 }
+
+.like {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  @include C10M;
+  color: $gray70;
+}
+
+.average {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  @include C10M;
+  color: $gray70;
+}

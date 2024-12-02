@@ -14,6 +14,9 @@ export interface NomalPopular {
   owner: string;
   totalParticipantCount: number;
   items: string[];
+  averageScore: number;
+  reviewCount: number;
+  favoriteCount: number;
 }
 
 export interface getNomalPopularParams {
@@ -54,6 +57,9 @@ export interface SpecialPopular {
   detailAddress: string;
   totalParticipantCount: number;
   items: string[];
+  averageScore: number;
+  reviewCount: number;
+  favoriteCount: number;
 }
 
 export interface getSpecialPopularParams {

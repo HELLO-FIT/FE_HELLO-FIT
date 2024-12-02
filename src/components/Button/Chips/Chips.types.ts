@@ -4,7 +4,9 @@ export type ChipState =
   | 'label'
   | 'sports'
   | 'count'
-  | 'top';
+  | 'top'
+  | 'like'
+  | 'average';
 
 export interface ChipsProps {
   text: string | number | undefined;

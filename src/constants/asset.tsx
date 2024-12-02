@@ -181,6 +181,8 @@ export const ICONS = {
   starFull: '/icon/custom/star-full.svg',
   starHalfSP: '/icon/custom/star-half-sp.svg',
   starFullSP: '/icon/custom/star-full-sp.svg',
+  like: '/icon/custom/like-icon.svg',
+  average: '/icon/custom/average-icon.svg',
 };
 
 export const IMAGES = {
