@@ -5,8 +5,8 @@
   flex-direction: column;
   background-color: $white;
   width: 100%;
-  height: calc(100vh - 56px);
-  padding: 0 20px;
+  min-height: calc(100vh - 56px);
+  padding: 0 20px 60px;
   @include Drag;
 
   .title {

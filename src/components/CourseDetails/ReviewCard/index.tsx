@@ -35,11 +35,13 @@ export default function ReviewCard({
   }, []);
 
   const handleOpenReviewWrite = () => {
-    router.push(`/details/${businessId}/${serialNumber}/review`);
+    router.push(`/details/${businessId}/${serialNumber || ''}/review`);
   };
 
   const handleModifyReview = (reviewId: string) => {
-    router.push(`/details/${businessId}/${serialNumber}/review/${reviewId}`);
+    router.push(
+      `/details/${businessId}/${serialNumber || ''}/review/${reviewId}`
+    );
   };
 
   const handleDeleteReview = async (reviewId: string) => {
@@ -76,14 +78,22 @@ export default function ReviewCard({
         <div className={styles.headerLeft}>
           <span className={styles.reviewTitle}>시설 후기</span>
           <div className={styles.ratingSummary}>
-            <IconComponent name="starFull" width={14} height={14} />
+            <IconComponent
+              name={serialNumber ? 'starFull' : 'starFullSP'}
+              width={14}
+              height={14}
+            />
             <span className={styles.averageRating}>{averageScore}</span>
             <span className={styles.reviewCount}>({reviews.length})</span>
           </div>
         </div>
         {!hasReviewed && (
           <button
-            className={styles.writeReviewButton}
+            className={
+              serialNumber
+                ? styles.writeReviewButton
+                : styles.writeReviewButtonSP
+            }
             onClick={handleOpenReviewWrite}
           >
             후기 작성
@@ -110,7 +120,7 @@ export default function ReviewCard({
                       {Array.from({ length: review.score }, (_, index) => (
                         <IconComponent
                           key={`filled-${review.id}-${index}`}
-                          name="starFull"
+                          name={serialNumber ? 'starFull' : 'starFullSP'}
                           width={14}
                           height={14}
                         />

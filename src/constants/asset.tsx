@@ -179,6 +179,8 @@ export const ICONS = {
   starEmpty: '/icon/custom/star-empty.svg',
   starHalf: '/icon/custom/star-half.svg',
   starFull: '/icon/custom/star-full.svg',
+  starHalfSP: '/icon/custom/star-half-sp.svg',
+  starFullSP: '/icon/custom/star-full-sp.svg',
 };
 
 export const IMAGES = {

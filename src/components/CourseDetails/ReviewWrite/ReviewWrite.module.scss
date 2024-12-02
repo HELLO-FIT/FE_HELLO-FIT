@@ -73,6 +73,13 @@
       gap: 4px;
     }
 
+    .counterSP {
+      color: $green70;
+      @include B14M;
+      display: flex;
+      gap: 4px;
+    }
+
     .total {
       color: $gray50;
       @include B14M;

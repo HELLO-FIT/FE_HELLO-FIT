@@ -27,7 +27,7 @@ export default function ReviewEditPage({ OGTitle, OGUrl }: SSRMetaProps) {
     <>
       <InitialPageMeta title={OGTitle} url={OGUrl} />
       <Subheader subheaderText="후기 수정" />
-      <ReviewEdit reviewId={reviewId as string} isNormal={true} />
+      <ReviewEdit reviewId={reviewId as string} isNormal={false} />
     </>
   );
 }

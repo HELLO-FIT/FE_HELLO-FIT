@@ -18,7 +18,7 @@ export default function CustomButton({
 
   return (
     <button
-      className={`${styles.button} ${toggle !== 'general' ? styles.buttonSP : ''} ${disabled ? styles.disabled : ''}`}
+      className={`${toggle === 'general' ? styles.button : styles.buttonSP} ${disabled ? styles.disabled : ''}`}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
     >
