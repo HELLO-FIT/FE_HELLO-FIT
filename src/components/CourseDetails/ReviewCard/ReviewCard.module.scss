@@ -54,21 +54,65 @@
   padding: 24px 20px;
   background: $white;
   border-radius: 12px;
-}
-
-.card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 28px;
 }
 
 .reviewItem {
-  border-bottom: 1px solid $gray20;
   padding-bottom: 12px;
 
-  &:last-child {
-    border-bottom: none;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .profile {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      .nameDate {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .name {
+        @include B14M;
+        color: $gray90;
+      }
+
+      .date {
+        @include C12M;
+        color: $gray60;
+      }
+    }
   }
+
+  .rating {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0;
+  }
+
+  .content {
+    @include B14R;
+    color: $gray80;
+    margin: 0 8px 0 40px;
+  }
+}
+.reviewContainer {
+  padding: 24px 20px;
+  background: $white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px; 
+}
+
+.reviewItem {
+  padding-bottom: 12px;
 
   .header {
     display: flex;

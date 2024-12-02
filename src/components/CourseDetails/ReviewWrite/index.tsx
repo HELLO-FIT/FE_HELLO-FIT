@@ -3,7 +3,7 @@ import styles from './ReviewWrite.module.scss';
 import { getProfile, ProfileResponse } from '@/apis/get/getProfile';
 import { formattedDate } from '@/utils/formatDate';
 import IconComponent from '@/components/Asset/Icon';
-import Rating from './Rating';
+import StarRating from '../RatingStar/StarRating';
 import CustomButton from '@/components/Button/CustomButton';
 import { usePopup } from '@/utils/popupUtils';
 import { postNormalReview } from '@/apis/post/postReview';
@@ -19,7 +19,7 @@ export default function ReviewWrite({
 }) {
   const [profile, setProfile] = useState<ProfileResponse>();
   const [text, setText] = useState<string>('');
-  const [rating, setRating] = useState<number>(1);
+  const [rating, setRating] = useState<number>(0);
   const { openPopup } = usePopup();
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function ReviewWrite({
 
       if (response.success) {
         setText('');
-        setRating(1);
+        setRating(0);
         router.back();
       } else {
         console.log(response.message);
@@ -106,9 +106,9 @@ export default function ReviewWrite({
         </span>
       </div>
       <div className={styles.ratingContainer}>
-        <Rating
-          onRatingChange={rating => setRating(rating)}
+        <StarRating
           currentRating={rating}
+          onRatingChange={(newRating: number) => setRating(newRating)}
         />
       </div>
       <div className={styles.btnContainer}>

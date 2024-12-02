@@ -72,22 +72,36 @@ export default function ReviewCard({
                       {hideNickname(review.nickname)}
                     </span>
                     <div className={styles.rating}>
-                      {Array.from({ length: review.score }, (_, index) => (
+                      {Array.from(
+                        { length: Math.floor(review.score) },
+                        (_, index) => (
+                          <IconComponent
+                            key={`filled-${review.id}-${index}`}
+                            name="starFull"
+                            width={14}
+                            height={14}
+                          />
+                        )
+                      )}
+                      {review.score % 1 !== 0 && (
                         <IconComponent
-                          key={`filled-${review.id}-${index}`}
-                          name="starFull"
+                          key={`half-${review.id}`}
+                          name="starHalf"
                           width={14}
                           height={14}
                         />
-                      ))}
-                      {Array.from({ length: 5 - review.score }, (_, index) => (
-                        <IconComponent
-                          key={`empty-${review.id}-${index}`}
-                          name="starEmpty"
-                          width={14}
-                          height={14}
-                        />
-                      ))}
+                      )}
+                      {Array.from(
+                        { length: 5 - Math.ceil(review.score) },
+                        (_, index) => (
+                          <IconComponent
+                            key={`empty-${review.id}-${index}`}
+                            name="starEmpty"
+                            width={14}
+                            height={14}
+                          />
+                        )
+                      )}
                     </div>
                     <span className={styles.date}>
                       {formattedDate(review.createdAt)}
