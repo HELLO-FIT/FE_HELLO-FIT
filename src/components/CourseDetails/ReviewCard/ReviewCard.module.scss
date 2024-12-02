@@ -98,16 +98,58 @@
     }
   }
 
-  .rating {
-    display: flex;
-    gap: 4px;
-    margin: 8px 0;
-  }
-
   .content {
     @include B14R;
     color: $gray80;
     margin-left: 40px;
+  }
+}
+
+.meatBallWrapper {
+  position: relative;
+}
+
+.meatball {
+  cursor: pointer;
+}
+
+.dropdown {
+  cursor: pointer;
+  position: absolute;
+  width: 80px;
+  top: 25px;
+  right: 0;
+  background-color: $white;
+  border-radius: 5px;
+  border: 1px solid $gray30;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.meatBallWrapper .dropdown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdownButton {
+  cursor: pointer;
+  @include C12M;
+  color: $gray70;
+  width: 100%;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  background: none;
+  border: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: $gray20;
   }
 }
 

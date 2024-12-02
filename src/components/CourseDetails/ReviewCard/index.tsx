@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './ReviewCard.module.scss';
 import IconComponent from '@/components/Asset/Icon';
 import { ReviewCardProps } from './ReviewCard.types';
@@ -6,6 +6,9 @@ import router from 'next/router';
 import { formattedDate } from '@/utils/formatDate';
 import { hideNickname } from '@/utils/hideNickname';
 import { getProfile, ProfileResponse } from '@/apis/get/getProfile';
+import { deleteReview } from '@/apis/delete/deleteReview';
+import { useModal } from '@/utils/modalUtils';
+import useOutsideClick from '@/hooks/useOutsideClick';
 
 export default function ReviewCard({
   businessId,
@@ -14,6 +17,9 @@ export default function ReviewCard({
   reviews,
 }: ReviewCardProps) {
   const [profile, setProfile] = useState<ProfileResponse>();
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { openModal } = useModal();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -32,8 +38,37 @@ export default function ReviewCard({
     router.push(`/details/${businessId}/${serialNumber}/review`);
   };
 
+  const handleModifyReview = (reviewId: string) => {
+    router.push(`/details/${businessId}/${serialNumber}/review/${reviewId}`);
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    try {
+      const result = await deleteReview(reviewId);
+
+      if (result.success) {
+        router.reload();
+      }
+    } catch (err) {
+      console.error('후기 삭제 도중 문제가 발생했습니다.', err);
+    }
+  };
+
+  const deleteReviewModal = (reviewId: string) => {
+    openModal({
+      content: '후기를 삭제',
+      onConfirm: () => handleDeleteReview(reviewId),
+    });
+  };
+
   // 작성한 리뷰가 있는지 확인
   const hasReviewed = reviews.some(review => review.userId === profile?.id);
+
+  const toggleDropdown = (reviewId: string) => {
+    setDropdownOpen(prev => (prev === reviewId ? null : reviewId));
+  };
+
+  useOutsideClick(dropdownRef, () => toggleDropdown(''));
 
   return (
     <div className={styles.reviewWrapper}>
@@ -94,12 +129,37 @@ export default function ReviewCard({
                     </span>
                   </div>
                 </div>
-                <IconComponent
-                  name="meatBall"
-                  size="custom"
-                  width={20}
-                  height={20}
-                />
+                {review.userId === profile?.id && (
+                  <div className={styles.meatBallWrapper}>
+                    <div
+                      className={styles.meatball}
+                      onClick={() => toggleDropdown(review.id)}
+                    >
+                      <IconComponent
+                        name="meatBall"
+                        size="custom"
+                        width={20}
+                        height={20}
+                      />
+                    </div>
+                    {dropdownOpen === review.id && (
+                      <div className={styles.dropdown} ref={dropdownRef}>
+                        <button
+                          className={styles.dropdownButton}
+                          onClick={() => handleModifyReview(review.id)}
+                        >
+                          수정하기
+                        </button>
+                        <button
+                          className={styles.dropdownButton}
+                          onClick={() => deleteReviewModal(review.id)}
+                        >
+                          삭제하기
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <p className={styles.content}>{review.content}</p>
             </div>
