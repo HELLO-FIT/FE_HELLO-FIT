@@ -65,6 +65,8 @@ export default function App({ Component, pageProps }: AppProps) {
     '/setting/my-review',
     '/details/[businessId]/[serialNumber]/review',
     '/details/[businessId]/[serialNumber]/review/[reviewId]',
+    '/details/[businessId]/review',
+    '/details/[businessId]/review/[reviewId]',
   ].includes(router.pathname);
   const hideHeader = [
     '/',
@@ -83,6 +85,8 @@ export default function App({ Component, pageProps }: AppProps) {
     '/setting/my-review',
     '/details/[businessId]/[serialNumber]/review',
     '/details/[businessId]/[serialNumber]/review/[reviewId]',
+    '/details/[businessId]/review',
+    '/details/[businessId]/review/[reviewId]',
   ].includes(router.pathname);
   const withoutHeader = ['/', '/login'].includes(router.pathname);
   const tabNav = ['/lesson', '/popular'].includes(router.pathname);

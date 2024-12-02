@@ -11,7 +11,13 @@ import router from 'next/router';
 import { hideNickname } from '@/utils/hideNickname';
 import Rating from '../ReviewWrite/Rating';
 
-export default function ReviewEdit({ reviewId }: { reviewId: string }) {
+export default function ReviewEdit({
+  reviewId,
+  isNormal = true,
+}: {
+  reviewId: string;
+  isNormal: boolean;
+}) {
   const [profile, setProfile] = useState<ProfileResponse>();
   const [text, setText] = useState<string>('');
   const [rating, setRating] = useState<number>(1);
@@ -116,7 +122,7 @@ export default function ReviewEdit({ reviewId }: { reviewId: string }) {
       </div>
       <div className={styles.messageContainer}>
         <p className={styles.message}>최소 15자 이상 작성</p>
-        <span className={styles.counter}>
+        <span className={isNormal ? styles.counter : styles.counterSP}>
           {text.length}
           <p className={styles.total}>/ 100</p>
         </span>
@@ -125,6 +131,7 @@ export default function ReviewEdit({ reviewId }: { reviewId: string }) {
         <Rating
           onRatingChange={rating => setRating(rating)}
           currentRating={rating}
+          isNormal={isNormal}
         />
       </div>
       <div className={styles.btnContainer}>

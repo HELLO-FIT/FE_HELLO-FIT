@@ -104,7 +104,7 @@ export default function MyReview() {
                       {Array.from({ length: review.score }, (_, index) => (
                         <IconComponent
                           key={`filled-${review.id}-${index}`}
-                          name="starFull"
+                          name={review.serialNumber ? 'starFull' : 'starFullSP'}
                           width={14}
                           height={14}
                         />
