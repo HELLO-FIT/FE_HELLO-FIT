@@ -15,7 +15,8 @@ export default function ReviewCard({
   serialNumber,
   averageScore,
   reviews,
-}: ReviewCardProps) {
+  isNormal, 
+}: ReviewCardProps & { isNormal: boolean }) {
   const [profile, setProfile] = useState<ProfileResponse>();
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -70,7 +71,7 @@ export default function ReviewCard({
     setDropdownOpen(prev => (prev === reviewId ? null : reviewId));
   };
 
-  useOutsideClick(dropdownRef, () => toggleDropdown(''));
+  useOutsideClick(dropdownRef, () => setDropdownOpen(null));
 
   return (
     <div className={styles.reviewWrapper}>
@@ -79,7 +80,7 @@ export default function ReviewCard({
           <span className={styles.reviewTitle}>시설 후기</span>
           <div className={styles.ratingSummary}>
             <IconComponent
-              name={serialNumber ? 'starFull' : 'starFullSP'}
+              name={isNormal ? 'starFull' : 'starFullSP'} 
               width={14}
               height={14}
             />
@@ -90,9 +91,7 @@ export default function ReviewCard({
         {!hasReviewed && (
           <button
             className={
-              serialNumber
-                ? styles.writeReviewButton
-                : styles.writeReviewButtonSP
+              isNormal ? styles.writeReviewButton : styles.writeReviewButtonSP
             }
             onClick={handleOpenReviewWrite}
           >
@@ -117,22 +116,36 @@ export default function ReviewCard({
                       {hideNickname(review.nickname)}
                     </span>
                     <div className={styles.rating}>
-                      {Array.from({ length: review.score }, (_, index) => (
+                      {Array.from(
+                        { length: Math.floor(review.score) },
+                        (_, index) => (
+                          <IconComponent
+                            key={`filled-${review.id}-${index}`}
+                            name={isNormal ? 'starFull' : 'starFullSP'}
+                            width={14}
+                            height={14}
+                          />
+                        )
+                      )}
+                      {review.score % 1 !== 0 && (
                         <IconComponent
-                          key={`filled-${review.id}-${index}`}
-                          name={serialNumber ? 'starFull' : 'starFullSP'}
+                          key={`half-${review.id}`}
+                          name={isNormal ? 'starHalf' : 'starHalfSP'}
                           width={14}
                           height={14}
                         />
-                      ))}
-                      {Array.from({ length: 5 - review.score }, (_, index) => (
-                        <IconComponent
-                          key={`empty-${review.id}-${index}`}
-                          name="starEmpty"
-                          width={14}
-                          height={14}
-                        />
-                      ))}
+                      )}
+                      {Array.from(
+                        { length: 5 - Math.ceil(review.score) },
+                        (_, index) => (
+                          <IconComponent
+                            key={`empty-${review.id}-${index}`}
+                            name="starEmpty"
+                            width={14}
+                            height={14}
+                          />
+                        )
+                      )}
                     </div>
                     <span className={styles.date}>
                       {formattedDate(review.createdAt)}
