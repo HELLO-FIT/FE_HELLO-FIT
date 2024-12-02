@@ -15,7 +15,8 @@ export default function ReviewCard({
   serialNumber,
   averageScore,
   reviews,
-}: ReviewCardProps) {
+  isNormal, 
+}: ReviewCardProps & { isNormal: boolean }) {
   const [profile, setProfile] = useState<ProfileResponse>();
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -70,7 +71,7 @@ export default function ReviewCard({
     setDropdownOpen(prev => (prev === reviewId ? null : reviewId));
   };
 
-  useOutsideClick(dropdownRef, () => toggleDropdown(''));
+  useOutsideClick(dropdownRef, () => setDropdownOpen(null));
 
   return (
     <div className={styles.reviewWrapper}>
@@ -79,7 +80,7 @@ export default function ReviewCard({
           <span className={styles.reviewTitle}>시설 후기</span>
           <div className={styles.ratingSummary}>
             <IconComponent
-              name={serialNumber ? 'starFull' : 'starFullSP'}
+              name={isNormal ? 'starFull' : 'starFullSP'} 
               width={14}
               height={14}
             />
@@ -90,9 +91,7 @@ export default function ReviewCard({
         {!hasReviewed && (
           <button
             className={
-              serialNumber
-                ? styles.writeReviewButton
-                : styles.writeReviewButtonSP
+              isNormal ? styles.writeReviewButton : styles.writeReviewButtonSP
             }
             onClick={handleOpenReviewWrite}
           >
@@ -122,7 +121,7 @@ export default function ReviewCard({
                         (_, index) => (
                           <IconComponent
                             key={`filled-${review.id}-${index}`}
-                            name="starFull"
+                            name={isNormal ? 'starFull' : 'starFullSP'}
                             width={14}
                             height={14}
                           />
@@ -131,7 +130,7 @@ export default function ReviewCard({
                       {review.score % 1 !== 0 && (
                         <IconComponent
                           key={`half-${review.id}`}
-                          name="starHalf"
+                          name={isNormal ? 'starHalf' : 'starHalfSP'}
                           width={14}
                           height={14}
                         />
