@@ -12,7 +12,15 @@ export default function PopularSchedule({ facility }: PopularScheduleProps) {
   return (
     <div className={styles.container}>
       <div>
-        <h2 className={styles.storeName}>{facility.name}</h2>
+        <div className={styles.chipsContainer}>
+          <h2 className={styles.storeName}>{facility.name}</h2>
+          <Chips text={facility.favoriteCount} chipState="like" serialNumber />
+          <Chips
+            text={`${facility.averageScore}(${facility.reviewCount})`}
+            chipState="average"
+            serialNumber
+          />
+        </div>
         <div className={styles.information}>
           <p
             className={

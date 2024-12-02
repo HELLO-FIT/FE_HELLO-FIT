@@ -1,6 +1,7 @@
 import { ChipsProps, ChipState } from './Chips.types';
 import styles from './Chips.module.scss';
 import { formatCurrency } from '@/utils/formatCurrency';
+import IconComponent from '@/components/Asset/Icon';
 
 export default function Chips({ chipState, text, serialNumber }: ChipsProps) {
   const getChipClass = (state: ChipState) => {
@@ -15,6 +16,10 @@ export default function Chips({ chipState, text, serialNumber }: ChipsProps) {
         return styles.count; // 누적 수강 수
       case 'top':
         return serialNumber ? styles.top : styles.topSP; // top5 누적 수강 수
+      case 'like':
+        return styles.like; // 찜 개수
+      case 'average':
+        return styles.average; // 평점
       case 'label':
       default:
         return styles.label; // 기본 라벨 칩
@@ -23,6 +28,12 @@ export default function Chips({ chipState, text, serialNumber }: ChipsProps) {
 
   return (
     <div className={`${styles.container} ${getChipClass(chipState)}`}>
+      {chipState === 'like' && (
+        <IconComponent name="like" width={14} height={14} />
+      )}
+      {chipState === 'average' && (
+        <IconComponent name="average" width={12} height={12} />
+      )}
       {chipState === 'count' ? `누적 수강 ${formatCurrency(text)}` : text}
     </div>
   );
