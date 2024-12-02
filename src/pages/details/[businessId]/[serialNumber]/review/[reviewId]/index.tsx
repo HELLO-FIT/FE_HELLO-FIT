@@ -5,7 +5,6 @@ import { SSRMetaProps } from '@/components/MetaData/MetaData.type';
 import { serviceUrl } from '@/constants/serviceUrl';
 import { GetServerSideProps } from 'next';
 import ReviewEdit from '@/components/CourseDetails/ReviewEdit';
-import { tree } from 'next/dist/build/templates/app-page';
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { businessId, serialNumber, reviewId } = context.params ?? {};
