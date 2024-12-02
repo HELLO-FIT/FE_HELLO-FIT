@@ -5,6 +5,7 @@ import { SSRMetaProps } from '@/components/MetaData/MetaData.type';
 import { serviceUrl } from '@/constants/serviceUrl';
 import { GetServerSideProps } from 'next';
 import ReviewEdit from '@/components/CourseDetails/ReviewEdit';
+import { tree } from 'next/dist/build/templates/app-page';
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { businessId, serialNumber, reviewId } = context.params ?? {};
@@ -27,7 +28,7 @@ export default function ReviewEditPage({ OGTitle, OGUrl }: SSRMetaProps) {
     <>
       <InitialPageMeta title={OGTitle} url={OGUrl} />
       <Subheader subheaderText="후기 수정" />
-      <ReviewEdit reviewId={reviewId as string} />
+      <ReviewEdit reviewId={reviewId as string} isNormal={true} />
     </>
   );
 }
