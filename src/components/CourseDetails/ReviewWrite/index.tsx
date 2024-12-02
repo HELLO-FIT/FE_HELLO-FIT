@@ -6,7 +6,7 @@ import IconComponent from '@/components/Asset/Icon';
 import Rating from './Rating';
 import CustomButton from '@/components/Button/CustomButton';
 import { usePopup } from '@/utils/popupUtils';
-import { postNormalReview } from '@/apis/post/postReview';
+import { postNormalReview, postSpecialReview } from '@/apis/post/postReview';
 import router from 'next/router';
 import { hideNickname } from '@/utils/hideNickname';
 
@@ -15,7 +15,7 @@ export default function ReviewWrite({
   serialNumber,
 }: {
   businessId: string;
-  serialNumber: string;
+  serialNumber?: string;
 }) {
   const [profile, setProfile] = useState<ProfileResponse>();
   const [text, setText] = useState<string>('');
@@ -63,11 +63,13 @@ export default function ReviewWrite({
         content: text,
       };
 
-      const response = await postNormalReview(
-        businessId,
-        serialNumber,
-        reviewData
-      );
+      let response;
+
+      if (serialNumber) {
+        response = await postNormalReview(businessId, serialNumber, reviewData);
+      } else {
+        response = await postSpecialReview(businessId, reviewData);
+      }
 
       if (response.success) {
         openPopup({
@@ -109,7 +111,7 @@ export default function ReviewWrite({
       </div>
       <div className={styles.messageContainer}>
         <p className={styles.message}>최소 15자 이상 작성</p>
-        <span className={styles.counter}>
+        <span className={serialNumber ? styles.counter : styles.counterSP}>
           {text.length}
           <p className={styles.total}>/ 100</p>
         </span>
@@ -118,6 +120,7 @@ export default function ReviewWrite({
         <Rating
           onRatingChange={rating => setRating(rating)}
           currentRating={rating}
+          isNormal={serialNumber ? true : false}
         />
       </div>
       <div className={styles.btnContainer}>

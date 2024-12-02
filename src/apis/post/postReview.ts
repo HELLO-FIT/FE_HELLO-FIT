@@ -62,13 +62,13 @@ export async function postNormalReview(
 }
 
 /* 특수 회원 */
-export async function postspecialReview(
+export async function postSpecialReview(
   businessId: string,
   reviewData: ReviewRequest
 ): Promise<ReviewResponse> {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/special/facilities/${businessId}/review`,
+    const response = await BASE_URL.post(
+      `/special/facilities/${businessId}/review`,
       reviewData
     );
 
