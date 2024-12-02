@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import BASE_URL from '@/constants/baseurl';
 
 export interface ReviewRequest {
