@@ -1,27 +1,147 @@
 @import '@/styles/globals.scss';
 
 .container {
+  display: flex;
+  flex-direction: column;
   background-color: $white;
+  width: 100%;
+  height: calc(100vh - 56px);
   padding: 0 20px;
   @include Drag;
+
+  .title {
+    @include T18B;
+    color: $gray90;
+    margin-top: 12px;
+  }
+
+  .bar {
+    width: 100%;
+    height: 1px;
+    background-color: $gray10;
+    @include Drag;
+    margin: 16px 0 28px;
+  }
+
+  .cardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .meatball {
+    cursor: pointer;
+  }
 }
 
-.section {
-  width: 100%;
-  height: 64px;
+.reviewCard {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-  border-bottom: 1px solid $gray10;
-  @include B14M;
+  flex-direction: column;
+  gap: 12px;
+
+  .facilityName {
+    @include T16B;
+    color: $gray90;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .profile {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+
+    .nameDate {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .name {
+      @include B14M;
+      color: $gray90;
+    }
+
+    .date {
+      @include C12M;
+      color: $gray60;
+      margin-top: 4px;
+    }
+
+    .rating {
+      margin-top: 4px;
+    }
+  }
+
+  .content {
+    @include B14R;
+    color: $gray80;
+    margin: 0 40px;
+  }
 }
 
-.subtext {
-  @include C12M;
-  color: $gray50;
+.meatBallWrapper {
+  position: relative;
 }
 
-.cursor {
+.meatball {
   cursor: pointer;
+}
+
+.dropdown {
+  cursor: pointer;
+  position: absolute;
+  width: 80px;
+  top: 25px;
+  right: 0;
+  background-color: $white;
+  border-radius: 5px;
+  border: 1px solid $gray30;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.meatBallWrapper .dropdown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdownButton {
+  cursor: pointer;
+  @include C12M;
+  color: $gray70;
+  width: 100%;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  background: none;
+  border: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: $gray20;
+  }
+}
+
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-grow: 1;
+
+  .mainText {
+    color: $gray90;
+    @include T16B;
+  }
 }

@@ -4,6 +4,7 @@ export interface MyReviewsResponse {
   id: string;
   businessId: string;
   serialNumber?: string;
+  nickname: string;
   score: number;
   content: string;
   createdAt: Date;
