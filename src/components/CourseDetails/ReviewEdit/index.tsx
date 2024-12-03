@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './ReviewEdit.module.scss';
 import { getProfile, ProfileResponse } from '@/apis/get/getProfile';
 import { formattedDate } from '@/utils/formatDate';
@@ -9,7 +9,7 @@ import { putReview } from '@/apis/put/putReview';
 import { getMyReviews } from '@/apis/get/getMyReviews';
 import router from 'next/router';
 import { hideNickname } from '@/utils/hideNickname';
-import Rating from '../ReviewWrite/Rating';
+import StarRating from '../RatingStar/StarRating';
 
 export default function ReviewEdit({
   reviewId,
@@ -128,9 +128,9 @@ export default function ReviewEdit({
         </span>
       </div>
       <div className={styles.ratingContainer}>
-        <Rating
-          onRatingChange={rating => setRating(rating)}
+        <StarRating
           currentRating={rating}
+          onRatingChange={(newRating: number) => setRating(newRating)}
           isNormal={isNormal}
         />
       </div>

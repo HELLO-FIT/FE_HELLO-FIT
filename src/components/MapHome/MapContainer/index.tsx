@@ -84,12 +84,8 @@ export default function MapContainer() {
         toggle
       );
 
-      if (
-        !data ||
-        data.length === 0 ||
-        (data && data.length > 0 && !data[0].items)
-      ) {
-        notifyNoFacilities(); // 중복 방지된 팝업 호출
+      if (!data || data.length === 0) {
+        notifyNoFacilities();
       } else {
         setFacilities(data);
       }
@@ -396,7 +392,7 @@ export default function MapContainer() {
         selectedFacility && (
           <FacilityInfo
             facility={selectedFacility}
-            filterItem={filterItem || undefined}
+            filterItem={filterItem || undefined} // 선택된 종목 전달
             onBackClick={() => {
               setIndicatorMode('sports');
               clearMarkers();

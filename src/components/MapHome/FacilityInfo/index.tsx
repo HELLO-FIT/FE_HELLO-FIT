@@ -75,10 +75,16 @@ export default function FacilityInfo({
   }, [facility, initialPosition]);
 
   const getLabelItem = () => {
-    if (!facility || !facility.items || facility.items.length === 0)
+    if (!facility || !facility.items || facility.items.length === 0) {
       return '없음';
+    }
 
     if (filterItem && facility.items.includes(filterItem)) {
+      return filterItem;
+    }
+
+    const filteredItems = facility.items.filter(item => item === filterItem);
+    if (filteredItems.length > 0) {
       return filterItem;
     }
 
@@ -91,7 +97,7 @@ export default function FacilityInfo({
       a[1] > b[1] ? a : b
     )[0];
 
-    return mostFrequentItem;
+    return mostFrequentItem || '없음';
   };
 
   if (!facility) return null;
@@ -135,8 +141,8 @@ export default function FacilityInfo({
         </div>
         <div className={styles.chipsContainer}>
           <Chips
-            chipState="sports"
-            text={getLabelItem()}
+            chipState={filterItem ? 'sports' : 'label'}
+            text={getLabelItem() || ''}
             serialNumber={isNormalFacility ? true : false}
           />
         </div>
