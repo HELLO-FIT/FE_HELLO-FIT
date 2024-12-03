@@ -19,6 +19,7 @@ export default function LocalFilter({
   placeholderType,
   additionalBottomSheetClass,
   isSpecialMode,
+  onToggleOpen,
 }: LocalFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -35,10 +36,12 @@ export default function LocalFilter({
       document.body.style.overflow = '';
     }
 
+    onToggleOpen && onToggleOpen(isOpen);
+
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isOpen]);
+  }, [isOpen, onToggleOpen]);
 
   const handleOptionClick = (key: string) => {
     onChange(key);
