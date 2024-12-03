@@ -14,6 +14,8 @@ export default function Chips({ chipState, text, serialNumber }: ChipsProps) {
         return serialNumber ? styles.sports : styles.sportsSP; // 운동 종목
       case 'count':
         return styles.count; // 누적 수강 수
+      case 'countHigh':
+        return styles.countHigh; // 누적 수강 수 (100 이상)
       case 'top':
         return serialNumber ? styles.top : styles.topSP; // top5 누적 수강 수
       case 'like':
@@ -34,7 +36,9 @@ export default function Chips({ chipState, text, serialNumber }: ChipsProps) {
       {chipState === 'average' && (
         <IconComponent name="average" width={12} height={12} />
       )}
-      {chipState === 'count' ? `누적 수강 ${formatCurrency(text)}` : text}
+      {chipState === 'count' || chipState === 'countHigh'
+        ? `누적 수강생 ${formatCurrency(text)}`
+        : text}
     </div>
   );
 }
