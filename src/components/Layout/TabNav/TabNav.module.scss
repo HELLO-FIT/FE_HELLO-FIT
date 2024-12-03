@@ -29,12 +29,11 @@
 .tabs {
   display: flex;
   position: relative;
-  gap: 5px;
   border-bottom: 1px solid $gray10;
   padding: 4px 20px 0;
 
   .button {
-    width: 60px;
+    width: 70px;
     padding-bottom: 6px;
     background-color: $white;
     color: $gray50;
@@ -61,7 +60,7 @@
     position: absolute;
     bottom: 0;
     height: 2px;
-    width: 60px;
+    width: 70px;
     background-color: $blue60;
     transform: translateX(0);
     transition:
@@ -73,7 +72,7 @@
     position: absolute;
     bottom: 0;
     height: 2px;
-    width: 60px;
+    width: 70px;
     background-color: $green80;
     transform: translateX(0);
     transition:
