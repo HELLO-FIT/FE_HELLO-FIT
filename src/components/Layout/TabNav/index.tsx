@@ -37,7 +37,7 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
   useEffect(() => {
     const tabIndex = tab === 'lesson' ? 0 : 1;
     setUnderlineStyle({
-      transform: `translateX(${tabIndex * 60}px)`,
+      transform: `translateX(${tabIndex * 65}px)`,
       backgroundColor: toggle === 'special' ? '$green80' : '$blue60',
     });
   }, [tab, toggle]);
