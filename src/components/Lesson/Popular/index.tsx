@@ -167,7 +167,25 @@ export default function Popular() {
 
   useEffect(() => {
     if (router.query.sort) {
-      setSelectedSort(router.query.sort as string);
+      const sortValue = router.query.sort as string;
+      setSelectedSort(sortValue);
+
+      switch (sortValue) {
+        case 'total':
+          setSelectedSortName('누적 수강 수');
+          break;
+        case 'average':
+          setSelectedSortName('별점 순');
+          break;
+        case 'review':
+          setSelectedSortName('후기 개수');
+          break;
+        case 'favorite':
+          setSelectedSortName('찜 개수');
+          break;
+        default:
+          setSelectedSortName('누적 수강 수'); // 기본값
+      }
     }
   }, [router.query.sort]);
 
