@@ -40,7 +40,9 @@ export default function PopularSchedule({ facility }: PopularScheduleProps) {
           ))}
           <Chips
             text={facility.totalParticipantCount}
-            chipState="count"
+            chipState={
+              facility.totalParticipantCount > 100 ? 'countHigh' : 'count'
+            }
             serialNumber
           />
         </div>

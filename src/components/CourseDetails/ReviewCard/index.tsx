@@ -9,18 +9,21 @@ import { getProfile, ProfileResponse } from '@/apis/get/getProfile';
 import { deleteReview } from '@/apis/delete/deleteReview';
 import { useModal } from '@/utils/modalUtils';
 import useOutsideClick from '@/hooks/useOutsideClick';
+import { useRecoilValue } from 'recoil';
+import { authState } from '@/states/authState';
 
 export default function ReviewCard({
   businessId,
   serialNumber,
   averageScore,
   reviews,
-  isNormal, 
+  isNormal,
 }: ReviewCardProps & { isNormal: boolean }) {
   const [profile, setProfile] = useState<ProfileResponse>();
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { openModal } = useModal();
+  const { isLoggedIn } = useRecoilValue(authState);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -32,7 +35,9 @@ export default function ReviewCard({
       }
     };
 
-    fetchProfile();
+    if (isLoggedIn) {
+      fetchProfile();
+    }
   }, []);
 
   const handleOpenReviewWrite = () => {
@@ -80,7 +85,7 @@ export default function ReviewCard({
           <span className={styles.reviewTitle}>시설 후기</span>
           <div className={styles.ratingSummary}>
             <IconComponent
-              name={isNormal ? 'starFull' : 'starFullSP'} 
+              name={isNormal ? 'starFull' : 'starFullSP'}
               width={14}
               height={14}
             />
@@ -88,7 +93,7 @@ export default function ReviewCard({
             <span className={styles.reviewCount}>({reviews.length})</span>
           </div>
         </div>
-        {!hasReviewed && (
+        {isLoggedIn && !hasReviewed && (
           <button
             className={
               isNormal ? styles.writeReviewButton : styles.writeReviewButtonSP
