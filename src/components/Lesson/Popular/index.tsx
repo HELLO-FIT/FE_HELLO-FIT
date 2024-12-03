@@ -280,7 +280,7 @@ export default function Popular() {
                       </div>
                       <Chips
                         chipState="top"
-                        text={`누적 수강 ${formatCurrency(facility.totalParticipantCount)}`}
+                        text={`누적 수강생 ${formatCurrency(facility.totalParticipantCount)}명`}
                         serialNumber={toggle === 'general' ? true : false}
                       />
                     </Link>
