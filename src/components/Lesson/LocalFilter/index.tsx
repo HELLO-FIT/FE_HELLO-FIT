@@ -36,7 +36,9 @@ export default function LocalFilter({
       document.body.style.overflow = '';
     }
 
-    onToggleOpen && onToggleOpen(isOpen);
+    if (onToggleOpen) {
+      onToggleOpen(isOpen);
+    }
 
     return () => {
       document.body.style.overflow = '';
