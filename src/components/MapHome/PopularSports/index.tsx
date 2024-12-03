@@ -31,6 +31,7 @@ export default function PopularSports({
   const [isNextStep, setIsNextStep] = useState(false);
   const [selectedCityCode, setSelectedCityCode] = useState<string>('11');
   const [selectedLocalCode, setSelectedLocalCode] = useState<string>('');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // 시도 선택 시 구/군 옵션 설정
   useEffect(() => {
@@ -75,13 +76,14 @@ export default function PopularSports({
 
   // 드래그 이벤트 핸들러
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
+    if (isFilterOpen) return; // 필터가 열려 있을 때 드래그 막기
     setIsDragging(true);
     initialY.current =
       'touches' in event ? event.touches[0].clientY : event.clientY;
   };
 
   const handleDragMove = (event: React.MouseEvent | React.TouchEvent) => {
-    if (!isDragging) return;
+    if (!isDragging || isFilterOpen) return;
 
     const currentY =
       'touches' in event ? event.touches[0].clientY : event.clientY;
@@ -108,6 +110,15 @@ export default function PopularSports({
     setPosition(prevPosition =>
       prevPosition === maxDragDistance ? 0 : maxDragDistance
     );
+  };
+
+  // 바텀시트 열림 상태 변경 핸들러
+  const handleToggleFilterOpen = (isOpen: boolean) => {
+    setIsFilterOpen(isOpen);
+    if (isOpen) {
+      // 필터가 열리면 PopularSports의 위치를 초기화
+      setPosition(0);
+    }
   };
 
   return (
@@ -144,6 +155,7 @@ export default function PopularSports({
               isNextStep={isNextStep}
               additionalBottomSheetClass={styles.customBottomSheet}
               isSpecialMode={mode === 'special'}
+              onToggleOpen={handleToggleFilterOpen}
             />
           </div>
         </header>
