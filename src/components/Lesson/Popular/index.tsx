@@ -325,11 +325,7 @@ export default function Popular() {
                 </div>
               </div>
               <div className={styles.sortContainer}>
-                <div
-                  className={styles.selectedSort}
-                  onClick={toggleDropdown}
-                  ref={dropdownRef}
-                >
+                <div className={styles.selectedSort} onClick={toggleDropdown}>
                   <span>{selectedSortName}</span>
                   <IconComponent
                     name={isDropdownOpen ? 'up' : 'down'}
