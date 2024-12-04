@@ -284,7 +284,7 @@ export default function MapContainer() {
                 toggle === 'special'
                   ? '/image/address-marker-special.svg'
                   : '/image/address-marker-normal.svg',
-                1.8 // 1.8배로 크기 조정
+                1.5 // 1.5배로 크기 조정
               );
 
               const marker = new kakao.maps.Marker({
