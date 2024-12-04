@@ -136,7 +136,7 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
         )}
       </div>
       <div className={styles.tabs}>
-        <button
+        <div
           className={classNames(styles.button, {
             [styles.active]:
               tab === 'lesson' && isClient && toggle === 'general',
@@ -144,19 +144,30 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
               tab === 'lesson' && isClient && toggle === 'special',
           })}
           onClick={() => handleTabClick('lesson', 0)}
+          role="button"
+          tabIndex={0}
         >
           전체
-        </button>
+        </div>
         <Tooltip text="시설을 추천해드려요!" position="left">
-          <button
+          <div
             className={classNames(styles.button, {
               [styles.active]: tab === 'popular' && toggle === 'general',
               [styles.activeSP]: tab === 'popular' && toggle === 'special',
             })}
             onClick={() => handleTabClick('popular', 1)}
+            role="button"
+            tabIndex={0}
           >
             인기
-          </button>
+            <div className={styles.dot}>
+              <IconComponent
+                name={toggle === 'general' ? 'dot' : 'dotSP'}
+                width={4}
+                height={4}
+              />
+            </div>
+          </div>
         </Tooltip>
         <div
           className={`${toggle === 'general' ? styles.underline : styles.underlineSP}`}

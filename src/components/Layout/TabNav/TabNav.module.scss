@@ -33,6 +33,8 @@
   padding: 4px 20px 0;
 
   .button {
+    display: flex;
+    justify-content: center;
     width: 70px;
     padding-bottom: 6px;
     background-color: $white;
@@ -42,6 +44,12 @@
     cursor: pointer;
     @include Drag;
     position: relative;
+
+    .dot {
+      position: absolute;
+      right: 15px;
+      bottom: 18px;
+    }
 
     &:hover {
       color: $gray70;
