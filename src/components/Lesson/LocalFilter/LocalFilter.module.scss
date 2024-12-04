@@ -12,7 +12,7 @@
   height: 100%;
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 19;
+  z-index: 201;
 }
 
 .selectedValue {
@@ -64,7 +64,7 @@
   border-radius: 12px 12px 0 0;
   overflow: hidden;
   transition: transform 0.3s ease-out;
-  z-index: 20;
+  z-index: 202;
   border: 1px solid $gray20;
   padding: 0 24px 32px;
   @include Drag;
