@@ -29,12 +29,13 @@
 .tabs {
   display: flex;
   position: relative;
-  gap: 20px;
   border-bottom: 1px solid $gray10;
   padding: 4px 20px 0;
 
   .button {
-    width: 50px;
+    display: flex;
+    justify-content: center;
+    width: 70px;
     padding-bottom: 6px;
     background-color: $white;
     color: $gray50;
@@ -43,6 +44,12 @@
     cursor: pointer;
     @include Drag;
     position: relative;
+
+    .dot {
+      position: absolute;
+      right: 15px;
+      bottom: 18px;
+    }
 
     &:hover {
       color: $gray70;
@@ -61,7 +68,7 @@
     position: absolute;
     bottom: 0;
     height: 2px;
-    width: 50px;
+    width: 70px;
     background-color: $blue60;
     transform: translateX(0);
     transition:
@@ -73,7 +80,7 @@
     position: absolute;
     bottom: 0;
     height: 2px;
-    width: 50px;
+    width: 70px;
     background-color: $green80;
     transform: translateX(0);
     transition:

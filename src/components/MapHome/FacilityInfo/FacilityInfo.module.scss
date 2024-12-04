@@ -22,13 +22,14 @@
   }
 
   .content {
-    padding: 0 24px 24px 24px;
+    padding: 0 24px 34px 24px;
   }
 
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin: 4px 0;
 
     h1 {
       @include T20B;
@@ -36,6 +37,10 @@
       margin-right: 2px;
       display: inline-block;
       cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .rightIconWrapper {
@@ -60,7 +65,7 @@
 
     .addressInfo {
       @include B14R;
-      color: $gray70;
+      color: $gray80;
 
       .iconPlaceholder {
         margin-right: 8px;
@@ -73,27 +78,25 @@
     padding: 16px;
     background-color: $gray10;
     border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     .contactRow {
       display: flex;
-      justify-content: space-between;
-      margin: 12px 0;
+      gap: 16px;
 
       .label {
-        color: $blue60;
+        color: $gray50;
         font-weight: 600;
         font-size: 14px;
-      }
-
-      .labelSP {
-        color: $green80;
-        font-weight: 600;
-        font-size: 14px;
+        width: 48px;
+        @include B14M;
       }
 
       .value {
         color: $gray80;
-        font-size: 14px;
+        @include B14M;
       }
     }
   }

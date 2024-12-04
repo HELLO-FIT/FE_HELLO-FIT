@@ -167,7 +167,25 @@ export default function Popular() {
 
   useEffect(() => {
     if (router.query.sort) {
-      setSelectedSort(router.query.sort as string);
+      const sortValue = router.query.sort as string;
+      setSelectedSort(sortValue);
+
+      switch (sortValue) {
+        case 'total':
+          setSelectedSortName('누적 수강 수');
+          break;
+        case 'average':
+          setSelectedSortName('별점 순');
+          break;
+        case 'review':
+          setSelectedSortName('후기 개수');
+          break;
+        case 'favorite':
+          setSelectedSortName('찜 개수');
+          break;
+        default:
+          setSelectedSortName('누적 수강 수'); // 기본값
+      }
     }
   }, [router.query.sort]);
 
@@ -262,7 +280,7 @@ export default function Popular() {
                       </div>
                       <Chips
                         chipState="top"
-                        text={`누적 수강 ${formatCurrency(facility.totalParticipantCount)}`}
+                        text={formatCurrency(facility.totalParticipantCount)}
                         serialNumber={toggle === 'general' ? true : false}
                       />
                     </Link>
@@ -307,11 +325,7 @@ export default function Popular() {
                 </div>
               </div>
               <div className={styles.sortContainer}>
-                <div
-                  className={styles.selectedSort}
-                  onClick={toggleDropdown}
-                  ref={dropdownRef}
-                >
+                <div className={styles.selectedSort} onClick={toggleDropdown}>
                   <span>{selectedSortName}</span>
                   <IconComponent
                     name={isDropdownOpen ? 'up' : 'down'}

@@ -34,7 +34,9 @@ export default function Chips({ chipState, text, serialNumber }: ChipsProps) {
       {chipState === 'average' && (
         <IconComponent name="average" width={12} height={12} />
       )}
-      {chipState === 'count' ? `누적 수강 ${formatCurrency(text)}` : text}
+      {chipState === 'count' || chipState === 'top'
+        ? `누적 수강생 ${formatCurrency(text)}명`
+        : text}
     </div>
   );
 }

@@ -62,9 +62,9 @@ export default function ReviewEdit({
   };
 
   const handleSubmit = async () => {
-    if (text.length < 15) {
+    if (text.length < 10) {
       openPopup({
-        content: '내용은 15자 이상 작성해 주세요.',
+        content: '내용은 10자 이상 작성해 주세요.',
       });
       return;
     }
@@ -121,7 +121,7 @@ export default function ReviewEdit({
         )}
       </div>
       <div className={styles.messageContainer}>
-        <p className={styles.message}>최소 15자 이상 작성</p>
+        <p className={styles.message}>최소 10자 이상 작성</p>
         <span className={isNormal ? styles.counter : styles.counterSP}>
           {text.length}
           <p className={styles.total}>/ 100</p>
