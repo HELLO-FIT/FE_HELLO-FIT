@@ -53,10 +53,8 @@
   border-radius: 12px;
   background-color: $blue60;
   color: $white;
-  font-family: 'Pretendard-Regular', sans-serif;
+  @include BOLD;
   font-size: 14px;
-  font-style: normal;
-  font-weight: 600;
   line-height: 120%;
   letter-spacing: -0.28px;
   outline: none;
@@ -77,10 +75,8 @@
   border-radius: 12px;
   background-color: $green70;
   color: $white;
-  font-family: 'Pretendard-Regular', sans-serif;
+  @include BOLD;
   font-size: 14px;
-  font-style: normal;
-  font-weight: 600;
   line-height: 120%;
   letter-spacing: -0.28px;
   outline: none;
