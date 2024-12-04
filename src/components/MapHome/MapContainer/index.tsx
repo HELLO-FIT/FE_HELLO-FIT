@@ -21,7 +21,6 @@ import {
 import { usePopup } from '@/utils/popupUtils';
 import throttle from 'lodash/throttle';
 
-/* eslint-disable */
 type Facility = NomalFacility | SpecialFacility;
 
 export default function MapContainer() {
@@ -415,4 +414,3 @@ export default function MapContainer() {
     </>
   );
 }
-/* eslint-enable */

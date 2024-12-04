@@ -1,29 +1,27 @@
-import { atom, selector } from 'recoil';
+import { atom } from 'recoil';
 
-const getHasSeenTooltip = (): boolean => {
-  if (typeof window === 'undefined') return true;
+// 현재 날짜와 비교해서 하루에 한번 초기화
+const initializeTooltip = (): boolean => {
+  const lastVisit = localStorage.getItem('lastVisit');
+  const currentDate = new Date().toISOString().split('T')[0];
+
+  if (lastVisit !== currentDate) {
+    localStorage.setItem('lastVisit', currentDate);
+    localStorage.setItem('hasSeenTooltip', 'false');
+    return false;
+  }
+
   return localStorage.getItem('hasSeenTooltip') === 'true';
 };
 
-const setHasSeenTooltip = (value: boolean) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('hasSeenTooltip', value.toString());
-  }
-};
-
 export const tooltipAtom = atom<boolean>({
-  key: 'tootltipAtom',
-  default: getHasSeenTooltip(),
+  key: 'tooltipAtom',
+  default: typeof window !== 'undefined' ? initializeTooltip() : true,
   effects: [
     ({ onSet }) => {
       onSet(newValue => {
-        setHasSeenTooltip(newValue);
+        localStorage.setItem('hasSeenTooltip', newValue.toString());
       });
     },
   ],
-});
-
-export const tooltipSelector = selector<boolean>({
-  key: 'tooltipSelector',
-  get: ({ get }) => get(tooltipAtom),
 });
