@@ -6,15 +6,11 @@
   background-color: $gray10;
   border-radius: 100px;
   padding: 4px;
-  width: fit-content;
   position: relative;
 }
 
 .slider {
   position: absolute;
-  top: 2px;
-  width: calc(50% - 4px);
-  height: calc(100% - 4px);
   background-color: $white;
   border-radius: 100px;
   transition: transform 0.4s ease-in-out;
@@ -23,6 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 4px 20px;
 
   .stateText {
     @include T14B;
@@ -48,7 +45,7 @@
   color: $gray40;
   background: none;
   border: none;
-  padding: 4px 16px;
+  padding: 4px 20px;
   border-radius: 100px;
   cursor: pointer;
   transition:
