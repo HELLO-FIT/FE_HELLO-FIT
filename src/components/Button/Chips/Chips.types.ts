@@ -4,7 +4,6 @@ export type ChipState =
   | 'label'
   | 'sports'
   | 'count'
-  | 'countHigh'
   | 'top'
   | 'like'
   | 'average';

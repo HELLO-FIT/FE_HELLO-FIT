@@ -143,7 +143,8 @@ export default function FacilityInfo({
         <div className={styles.addressWrapper}>
           <IconComponent
             name={toggle === 'general' ? 'addressMarker' : 'addressMarkerSP'}
-            size="s"
+            width={16}
+            height={16}
             alt="Address Marker Icon"
           />
           <p className={styles.addressInfo}>
@@ -152,11 +153,7 @@ export default function FacilityInfo({
         </div>
         <div className={styles.facilityDetails}>
           <div className={styles.contactRow}>
-            <span
-              className={toggle === 'general' ? styles.label : styles.labelSP}
-            >
-              연락처
-            </span>
+            <span className={styles.label}>연락처</span>
             <span className={styles.value}>
               {facility.phone
                 ? formatPhoneNumber(facility.phone)
