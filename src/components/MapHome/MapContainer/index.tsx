@@ -70,6 +70,13 @@ export default function MapContainer() {
     });
   };
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const notifyNoFacilities = () => {
     openPopup({
       content: '등록된 시설이 없습니다.',
