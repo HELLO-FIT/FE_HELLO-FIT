@@ -1,31 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TooltipProps } from './Tooltip.types';
 import styles from './Tooltip.module.scss';
 import { toggleState } from '@/states/toggleState';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { tooltipAtom } from '@/states/tooltipState';
 import classNames from 'classnames';
 
 export default function Tooltip({ text, children, position }: TooltipProps) {
   const [visible, setVisible] = useState(false);
-  const [firstVisit, setFirstVisit] = useState(false);
+  const [hasSeenTooltip, setHasSeenTooltip] = useRecoilState(tooltipAtom);
   const toggle = useRecoilValue(toggleState);
 
-  useEffect(() => {
-    const hasSeenTooltip = localStorage.getItem('hasSeenTooltip');
-    if (!hasSeenTooltip) {
-      setFirstVisit(true);
-      localStorage.setItem('hasSeenTooltip', 'true');
-    }
-  }, []);
-
   const handleMouseEnter = () => {
-    if (firstVisit) {
+    if (!hasSeenTooltip) {
       setVisible(true);
     }
   };
 
   const handleMouseLeave = () => {
     setVisible(false);
+    if (!hasSeenTooltip) {
+      setHasSeenTooltip(true);
+    }
   };
 
   return (

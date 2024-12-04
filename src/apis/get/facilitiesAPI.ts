@@ -1,4 +1,3 @@
-// 유지보수
 import {
   getNomalFacilities,
   getSpecialFacilities,
