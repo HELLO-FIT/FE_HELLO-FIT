@@ -100,6 +100,7 @@ export default function TabNav({ showmenu = true }: TabNavProps) {
   const handleValueChange = (key: string) => {
     if (isNextStep) {
       setSelectedLocalCode(key);
+      localStorage.setItem('localCode', key);
     } else {
       setSelectedCityCode(key);
     }
