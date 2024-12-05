@@ -1,14 +1,23 @@
-// 유지보수
 import { Facility } from '@/apis/get/getFacilities';
 import {
   getNomalFacilityDetails,
   getSpecialFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 /* eslint-disable */
-export const createMarkerImage = (src: string): kakao.maps.MarkerImage => {
-  return new kakao.maps.MarkerImage(src, new kakao.maps.Size(28, 28), {
-    offset: new kakao.maps.Point(14, 14),
-  });
+export const createMarkerImage = (
+  src: string,
+  scale: number = 1 // 스케일 인자 추가, 기본값은 1
+): kakao.maps.MarkerImage => {
+  const originalSize = 28; // 기존 마커 이미지 크기
+  const newSize = originalSize * scale; // 스케일에 따라 이미지 크기 조정
+
+  return new kakao.maps.MarkerImage(
+    src,
+    new kakao.maps.Size(newSize, newSize),
+    {
+      offset: new kakao.maps.Point(newSize / 2, newSize / 2), // 중심점 유지
+    }
+  );
 };
 
 export const renderMarkers = (

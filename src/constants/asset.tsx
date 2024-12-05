@@ -183,6 +183,8 @@ export const ICONS = {
   starFullSP: '/icon/custom/star-full-sp.svg',
   like: '/icon/custom/like-icon.svg',
   average: '/icon/custom/average-icon.svg',
+  dot: '/icon/custom/icon-dot.svg',
+  dotSP: '/icon/custom/icon-dot-sp.svg',
 };
 
 export const IMAGES = {

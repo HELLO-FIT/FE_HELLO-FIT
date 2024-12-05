@@ -66,17 +66,6 @@
   color: $gray70;
 }
 
-.countHigh {
-  display: flex;
-  padding: 3px 6px;
-  align-items: center;
-  border-radius: 4px;
-  background-color: $gray10;
-  @include C10M;
-  color: $gray70;
-  animation: blink 1.5s infinite;
-}
-
 .top {
   display: flex;
   padding: 3px 6px;
@@ -111,16 +100,4 @@
   gap: 1px;
   @include C10M;
   color: $gray70;
-}
-
-@keyframes blink {
-  0% {
-    box-shadow: 0 0 0 rgb(255, 234, 0);
-  }
-  50% {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-  }
-  100% {
-    box-shadow: 0 0 0 rgb(255, 234, 0);
-  }
 }

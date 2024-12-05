@@ -20,8 +20,8 @@ import {
 } from '@/apis/get/getFacilityDetails';
 import { usePopup } from '@/utils/popupUtils';
 import throttle from 'lodash/throttle';
-
 /* eslint-disable */
+
 type Facility = NomalFacility | SpecialFacility;
 
 export default function MapContainer() {
@@ -69,6 +69,13 @@ export default function MapContainer() {
         reject(new Error('카카오 지도 API 로드에 실패했습니다.'));
     });
   };
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   const notifyNoFacilities = () => {
     openPopup({
@@ -284,7 +291,8 @@ export default function MapContainer() {
               const selectedMarkerImage = createMarkerImage(
                 toggle === 'special'
                   ? '/image/address-marker-special.svg'
-                  : '/image/address-marker-normal.svg'
+                  : '/image/address-marker-normal.svg',
+                1.5 // 1.5배로 크기 조정
               );
 
               const marker = new kakao.maps.Marker({
