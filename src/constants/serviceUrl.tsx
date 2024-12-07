@@ -1,1 +1,1 @@
-export const serviceUrl = 'https://hello-fit.vercel.app/';
+export const serviceUrl = 'https://www.hellofit.site/';
