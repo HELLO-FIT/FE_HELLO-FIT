@@ -181,7 +181,7 @@ export default function MapContainer() {
               selectedLocation ||
               userLocation ||
               new kakao.maps.LatLng(37.5665, 126.978),
-            level: 3,
+            level: 6,
           };
           const kakaoMap = new kakao.maps.Map(
             container as HTMLElement,
