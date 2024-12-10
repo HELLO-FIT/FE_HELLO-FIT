@@ -384,7 +384,11 @@ export default function MapContainer() {
       </div>
       <div
         id="map"
-        style={{ width: '100%', height: '100vh', position: 'relative' }}
+        style={{
+          width: '100%',
+          height: 'calc(100vh - 121px)',
+          position: 'relative',
+        }}
       ></div>
       {indicatorMode === 'sports' ? (
         <PopularSports
