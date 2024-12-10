@@ -23,7 +23,7 @@ export default function PopularSports({
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const initialY = useRef(0);
-  const maxDragDistance = 170;
+  const maxDragDistance = 130;
 
   const [currentOptions, setCurrentOptions] = useState<{
     [key: string]: string;

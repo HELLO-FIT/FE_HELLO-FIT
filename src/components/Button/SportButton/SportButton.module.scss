@@ -17,7 +17,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
+  margin-bottom: 3px; // 간격 조정
   transition:
     background-color 0.3s ease,
     transform 0.2s ease;
@@ -40,7 +40,6 @@
 }
 
 .label {
-  margin-top: 8px;
   @include B14R;
   color: $gray80;
   text-align: center;
