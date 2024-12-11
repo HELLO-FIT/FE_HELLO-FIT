@@ -60,6 +60,9 @@ export const ICONS = {
     m: '/icon/m/icon-left.svg',
     s: '/icon/s/icon-left.svg',
   },
+  left2: {
+    l: '/icon/l/icon-left2.svg',
+  },
   menu: {
     l: '/icon/l/icon-menu.svg',
     m: '/icon/m/icon-menu.svg',

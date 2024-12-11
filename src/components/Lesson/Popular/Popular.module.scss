@@ -13,6 +13,7 @@
   padding: 20px 20px 32px;
   display: flex;
   flex-direction: column;
+  position: relative;
   gap: 11px;
 
   .titleContainer {
@@ -69,6 +70,28 @@
       }
     }
   }
+}
+
+.navButtonLeft {
+  position: absolute;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  z-index: 10;
+  top: 40%;
+  left: 0;
+}
+
+.navButtonRight {
+  position: absolute;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  z-index: 10;
+  top: 40%;
+  right: 0;
 }
 
 .midContainer {
