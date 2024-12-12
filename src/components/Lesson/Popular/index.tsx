@@ -23,7 +23,9 @@ import SportsImageComponent from '@/components/Asset/SportsImage';
 import { SPORTSIMAGES } from '@/constants/asset';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/navigation';
 import useOutsideClick from '@/hooks/useOutsideClick';
 import { toggleState } from '@/states/toggleState';
 import PopularSchedule from '@/components/Schedule/PopularSchedule';
@@ -235,22 +237,32 @@ export default function Popular() {
               {`인기 시설 TOP ${topFacilities.length}`}
             </div>
             <div className={styles.bestContainer}>
+              <div className={styles.navigationButtons}>
+                <button className={`${styles.navButtonLeft} custom-prev`}>
+                  <IconComponent name="left2" size="l" />
+                </button>
+              </div>
               <Swiper
                 spaceBetween={12}
                 loop={true}
                 pagination={{ clickable: true }}
+                navigation={{
+                  nextEl: '.custom-next',
+                  prevEl: '.custom-prev',
+                }}
+                modules={[Navigation]}
                 breakpoints={{
                   0: {
                     slidesPerView: 2,
                   },
-                  390: {
+                  430: {
                     slidesPerView: 2.2,
                   },
-                  430: {
+                  600: {
                     slidesPerView: 3,
                   },
                   1024: {
-                    slidesPerView: 3.5,
+                    slidesPerView: 3.2,
                   },
                 }}
               >
@@ -287,6 +299,11 @@ export default function Popular() {
                   </SwiperSlide>
                 ))}
               </Swiper>
+              <div className={styles.navigationButtons}>
+                <button className={`${styles.navButtonRight} custom-next`}>
+                  <IconComponent name="right" size="l" />
+                </button>
+              </div>
             </div>
           </div>
           <div className={styles.midContainer} />
