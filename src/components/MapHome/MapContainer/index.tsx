@@ -56,8 +56,13 @@ export default function MapContainer() {
     };
   }, []);
 
-  const loadKakaoMapScript = () => {
+  const loadKakaoMapScript = async (): Promise<void> => {
+    if (document.getElementById('kakao-map-script')) {
+      return; // 이미 로드된 경우 다시 추가하지 않음
+    }
+
     const script = document.createElement('script');
+    script.id = 'kakao-map-script';
     script.async = true;
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services`;
 
@@ -163,72 +168,85 @@ export default function MapContainer() {
     [map, updateLocalCodeAndFetchFacilities, fetchFacilitiesBySport]
   );
 
-  // 초기 카카오 지도 로드 및 위치 설정
   useEffect(() => {
-    loadKakaoMapScript()
-      .then(() => {
+    const initializeMap = async () => {
+      try {
+        await loadKakaoMapScript(); // 카카오 맵 스크립트 로드
         kakao.maps.load(() => {
-          const container = document.getElementById('map');
-          const options = {
-            center:
-              selectedLocation ||
-              userLocation ||
-              new kakao.maps.LatLng(37.5665, 126.978),
-            level: 6,
-          };
-          const kakaoMap = new kakao.maps.Map(
-            container as HTMLElement,
-            options
-          );
-          setMap(kakaoMap);
-
-          if (navigator.geolocation && !selectedLocation) {
-            navigator.geolocation.getCurrentPosition(
-              position => {
-                const userLatLng = new kakao.maps.LatLng(
-                  position.coords.latitude,
-                  position.coords.longitude
-                );
-                setUserLocation(userLatLng);
-                kakaoMap.setCenter(userLatLng);
-
-                const userMarkerImage = createMarkerImage(
-                  toggle === 'special'
-                    ? '/image/my-location-special.svg'
-                    : '/image/my-location.svg'
-                );
-
-                const userMarker = new kakao.maps.Marker({
-                  map: kakaoMap,
-                  position: userLatLng,
-                  image: userMarkerImage,
-                  title: '현재 위치',
-                });
-
-                kakao.maps.event.addListener(userMarker, 'click', () => {
-                  moveToUserLocation();
-                });
-
-                updateLocalCodeAndFetchFacilities(
-                  position.coords.latitude,
-                  position.coords.longitude
-                );
-              },
-              error => {
-                console.error('현재 위치를 가져오는 데 실패했습니다:', error);
-                setFacilities([]);
-              }
-            );
-          }
+          createKakaoMap(); // 지도 초기화 함수 호출
         });
-      })
-      .catch(console.error);
-  }, [
-    KAKAO_MAP_KEY,
-    toggle,
-    updateLocalCodeAndFetchFacilities,
-    selectedLocation,
-  ]);
+      } catch (error) {
+        console.error('카카오 지도 로드 실패:', error);
+      }
+    };
+
+    initializeMap();
+  }, []);
+
+  // ✅ 카카오 지도 초기화 함수 분리
+  const createKakaoMap = () => {
+    const container = document.getElementById('map');
+    if (!container) return;
+
+    const options = {
+      center:
+        selectedLocation ||
+        userLocation ||
+        new kakao.maps.LatLng(37.5665, 126.978),
+      level: 6,
+    };
+
+    const kakaoMap = new kakao.maps.Map(container, options);
+    setMap(kakaoMap);
+
+    // ✅ 현재 위치 설정 (selectedLocation이 없을 경우만 실행)
+    if (!selectedLocation) {
+      setUserCurrentLocation(kakaoMap);
+    }
+  };
+
+  // ✅ 현재 위치를 가져오는 함수 분리
+  const setUserCurrentLocation = (kakaoMap: kakao.maps.Map) => {
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const userLatLng = new kakao.maps.LatLng(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+        setUserLocation(userLatLng);
+        kakaoMap.setCenter(userLatLng);
+
+        // 사용자 위치 마커 생성
+        const userMarkerImage = createMarkerImage(
+          toggle === 'special'
+            ? '/image/my-location-special.svg'
+            : '/image/my-location.svg'
+        );
+
+        const userMarker = new kakao.maps.Marker({
+          map: kakaoMap,
+          position: userLatLng,
+          image: userMarkerImage,
+          title: '현재 위치',
+        });
+
+        kakao.maps.event.addListener(userMarker, 'click', () => {
+          moveToUserLocation();
+        });
+
+        updateLocalCodeAndFetchFacilities(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+      },
+      error => {
+        console.error('현재 위치를 가져오는 데 실패했습니다:', error);
+        setFacilities([]);
+      }
+    );
+  };
 
   // 현재 위치로 이동 함수
   const moveToUserLocation = () => {
