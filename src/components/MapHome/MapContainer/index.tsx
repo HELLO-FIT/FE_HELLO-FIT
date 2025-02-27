@@ -24,7 +24,7 @@ import {
 import { usePopup } from '@/utils/popupUtils';
 import throttle from 'lodash/throttle';
 import useFetchFacilities from './hooks/useFetchFacilities';
-import useUpdateLocalCode from './hooks/useUpdateLocalCode'; // ✅ 새롭게 분리한 훅 임포트
+import useUpdateLocalCode from './hooks/useUpdateLocalCode';
 
 const loadKakaoMapScript = () => {
   const script = document.createElement('script');
@@ -66,7 +66,7 @@ export default function MapContainer() {
     openPopup,
     toggle
   );
-  const { updateLocalCodeAndFetchFacilities } = useUpdateLocalCode( // ✅ 새로운 훅 사용
+  const { updateLocalCodeAndFetchFacilities } = useUpdateLocalCode(
     setSelectedRegion,
     fetchFacilitiesBySport
   );
@@ -147,6 +147,11 @@ export default function MapContainer() {
                 );
                 setUserLocation(userLatLng);
                 kakaoMap.setCenter(userLatLng);
+
+                updateLocalCodeAndFetchFacilities(
+                  position.coords.latitude,
+                  position.coords.longitude
+                );
               },
               error => {
                 console.error('현재 위치를 가져오는 데 실패했습니다:', error);
