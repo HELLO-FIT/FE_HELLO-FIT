@@ -15,6 +15,7 @@ import { usePopup } from '@/utils/popupUtils';
 import useFetchFacilities from './hooks/useFetchFacilities';
 import useUpdateLocalCode from './hooks/useUpdateLocalCode';
 import useFacilityMarkers from './hooks/useFacilityMarkers';
+import usePositionButton from './hooks/usePositionButton';
 
 const loadKakaoMapScript = () => {
   const script = document.createElement('script');
@@ -67,6 +68,14 @@ export default function MapContainer() {
     setSelectedRegion,
     fetchFacilitiesBySport
   );
+
+  const { moveToUserLocation, buttonProps } = usePositionButton({
+    map,
+    userLocation,
+    setSelectedLocation,
+    setSelectedRegion,
+    updateLocalCodeAndFetchFacilities,
+  });
 
   const handleRegionSelect = useCallback(
     (localCode: string, fullRegionName: string) => {
@@ -169,6 +178,9 @@ export default function MapContainer() {
   return (
     <>
       <Header />
+      <div {...buttonProps} onClick={moveToUserLocation}>
+        <img src={buttonProps.src} alt={buttonProps.alt} />
+      </div>
       <div id="map" style={{ width: '100%', height: '100vh' }}></div>
       {indicatorMode === 'sports' ? (
         <PopularSports
