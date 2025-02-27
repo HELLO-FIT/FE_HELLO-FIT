@@ -3,7 +3,6 @@ import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import { fetchFacilities } from '@/apis/get/facilitiesAPI';
-import { simplifyRegionName } from '@/utils/regionUtils';
 import { createMarkerImage } from '@/utils/markerUtils';
 import useKakaoMap from '@/hooks/useMap';
 import { useRecoilValue } from 'recoil';
@@ -25,7 +24,7 @@ import {
 import { usePopup } from '@/utils/popupUtils';
 import throttle from 'lodash/throttle';
 import useFetchFacilities from './hooks/useFetchFacilities';
-import useLocationHandler from './hooks/useLocationHandler';
+import useUpdateLocalCode from './hooks/useUpdateLocalCode'; // ✅ 새롭게 분리한 훅 임포트
 
 const loadKakaoMapScript = () => {
   const script = document.createElement('script');
@@ -67,7 +66,7 @@ export default function MapContainer() {
     openPopup,
     toggle
   );
-  const { updateLocalCodeAndFetchFacilities } = useLocationHandler(
+  const { updateLocalCodeAndFetchFacilities } = useUpdateLocalCode( // ✅ 새로운 훅 사용
     setSelectedRegion,
     fetchFacilitiesBySport
   );
