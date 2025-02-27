@@ -75,6 +75,7 @@ export default function MapContainer() {
     setSelectedLocation,
     setSelectedRegion,
     updateLocalCodeAndFetchFacilities,
+    fetchFacilitiesBySport,
   });
 
   const handleRegionSelect = useCallback(

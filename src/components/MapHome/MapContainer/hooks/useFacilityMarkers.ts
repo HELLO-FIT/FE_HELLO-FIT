@@ -85,7 +85,6 @@ export default function useFacilityMarkers({
                       facility.businessId
                     );
                   } else if (facility.serialNumber) {
-                    // ✅ serialNumber가 있을 경우에만 호출
                     details = await getNomalFacilityDetails(
                       facility.businessId,
                       facility.serialNumber

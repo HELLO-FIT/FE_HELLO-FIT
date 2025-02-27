@@ -13,6 +13,7 @@ type UsePositionButtonProps = {
     latitude: number,
     longitude: number
   ) => void;
+  fetchFacilitiesBySport: (sport?: string | null) => void;
 };
 
 export default function usePositionButton({
@@ -21,6 +22,7 @@ export default function usePositionButton({
   setSelectedLocation,
   setSelectedRegion,
   updateLocalCodeAndFetchFacilities,
+  fetchFacilitiesBySport,
 }: UsePositionButtonProps) {
   const toggle = useRecoilValue(toggleState);
 
@@ -28,10 +30,13 @@ export default function usePositionButton({
     if (map && userLocation) {
       map.setCenter(userLocation);
       setSelectedLocation(userLocation);
+
       updateLocalCodeAndFetchFacilities(
         userLocation.getLat(),
         userLocation.getLng()
       );
+
+      fetchFacilitiesBySport();
     } else {
       console.warn('지도 객체 또는 사용자 위치가 사용 가능하지 않습니다.');
     }
@@ -40,6 +45,7 @@ export default function usePositionButton({
     userLocation,
     setSelectedLocation,
     updateLocalCodeAndFetchFacilities,
+    fetchFacilitiesBySport,
   ]);
 
   return {

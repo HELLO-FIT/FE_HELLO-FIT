@@ -31,7 +31,7 @@ export default function useUpdateLocalCode(
         }
       );
     }, 2000),
-    [setSelectedRegion, fetchFacilitiesBySport] // ✅ 최소한의 의존성
+    [setSelectedRegion, fetchFacilitiesBySport]
   );
 
   return { updateLocalCodeAndFetchFacilities };
