@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import { createMarkerImage } from '@/utils/markerUtils';
 import throttle from 'lodash/throttle';
+import { useRouter } from 'next/router';
 import {
   getSpecialFacilityDetails,
   getNomalFacilityDetails,
@@ -23,6 +24,7 @@ export default function useFacilityMarkers({
   setIndicatorMode,
 }: UseFacilityMarkersProps) {
   const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
+  const router = useRouter();
 
   const clearMarkers = () => {
     markers.forEach(marker => marker.setMap(null));
@@ -101,6 +103,10 @@ export default function useFacilityMarkers({
                     error
                   );
                 }
+              });
+
+              kakao.maps.event.addListener(marker, 'dblclick', () => {
+                router.push(`/details/${facility.businessId}`);
               });
             }
           }

@@ -198,7 +198,17 @@ export default function MapContainer() {
           <FacilityInfo
             facility={selectedFacility}
             onBackClick={() => setIndicatorMode('sports')}
-            onMoveToDetail={() => {}}
+            onMoveToDetail={() => {
+              if (selectedFacility) {
+                router.push(
+                  `/details/${selectedFacility.businessId}${
+                    'serialNumber' in selectedFacility
+                      ? `/${selectedFacility.serialNumber}`
+                      : ''
+                  }`
+                );
+              }
+            }}
           />
         )
       )}
