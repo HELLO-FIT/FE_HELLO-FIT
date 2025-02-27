@@ -31,6 +31,7 @@ export default function useFacilityMarkers({
     setMarkers([]);
   };
 
+  // TO DO: 선택된 마커에서 디폴트 마커로 변경
   const renderMarkers = useCallback(
     throttle(() => {
       if (!map || facilities.length === 0) return;
