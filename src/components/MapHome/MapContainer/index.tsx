@@ -2,29 +2,19 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import { fetchFacilities } from '@/apis/get/facilitiesAPI';
-import { createMarkerImage } from '@/utils/markerUtils';
 import useKakaoMap from '@/hooks/useMap';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
-import styles from './MapContainer.module.scss';
 import { useRouter } from 'next/router';
-import classNames from 'classnames';
-import {
-  Facility,
-  NomalFacility,
-  SpecialFacility,
-} from '@/apis/get/getFacilities';
+import { Facility } from '@/apis/get/getFacilities';
 import {
   NomalFacilityDetails,
   SpecialFacilityDetails,
-  getSpecialFacilityDetails,
-  getNomalFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 import { usePopup } from '@/utils/popupUtils';
-import throttle from 'lodash/throttle';
 import useFetchFacilities from './hooks/useFetchFacilities';
 import useUpdateLocalCode from './hooks/useUpdateLocalCode';
+import useFacilityMarkers from './hooks/useFacilityMarkers';
 
 const loadKakaoMapScript = () => {
   const script = document.createElement('script');
@@ -56,7 +46,6 @@ export default function MapContainer() {
   );
   const [selectedLocation, setSelectedLocation] =
     useState<kakao.maps.LatLng | null>(null);
-  const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
   const { openPopup } = usePopup();
@@ -66,6 +55,14 @@ export default function MapContainer() {
     openPopup,
     toggle
   );
+  const { markers } = useFacilityMarkers({
+    map,
+    facilities,
+    toggle,
+    setSelectedFacility,
+    setIndicatorMode,
+  });
+
   const { updateLocalCodeAndFetchFacilities } = useUpdateLocalCode(
     setSelectedRegion,
     fetchFacilitiesBySport
@@ -128,7 +125,7 @@ export default function MapContainer() {
           const options = {
             center:
               selectedLocation ||
-              userLocation || // 🚀 userLocation이 있으면 기본값으로 설정
+              userLocation ||
               new kakao.maps.LatLng(37.5665, 126.978),
             level: 6,
           };
@@ -165,7 +162,7 @@ export default function MapContainer() {
 
   useEffect(() => {
     if (map && selectedLocation) {
-      map.setCenter(selectedLocation); // 🚀 지역 변경 시 지도 이동 적용
+      map.setCenter(selectedLocation);
     }
   }, [map, selectedLocation]);
 
