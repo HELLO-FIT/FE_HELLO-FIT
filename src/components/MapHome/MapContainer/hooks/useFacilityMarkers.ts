@@ -14,7 +14,7 @@ type FacilityDetails = NomalFacilityDetails | SpecialFacilityDetails | null;
 type UseFacilityMarkersProps = {
   map: kakao.maps.Map | null;
   facilities: Facility[];
-  toggle: 'normal' | 'special';
+  toggle: 'general' | 'special';
   setSelectedFacility: (facility: FacilityDetails) => void;
   setIndicatorMode: (mode: 'sports' | 'facilityInfo') => void;
 };

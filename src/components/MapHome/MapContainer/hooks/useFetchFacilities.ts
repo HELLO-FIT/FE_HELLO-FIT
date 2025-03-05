@@ -5,7 +5,7 @@ import { Facility } from '@/apis/get/getFacilities';
 type FetchFacilitiesHook = (
   setFacilities: (facilities: Facility[]) => void,
   openPopup: (args: { content: string }) => void,
-  toggle: 'normal' | 'special'
+  toggle: 'general' | 'special'
 ) => (sport?: string | null) => Promise<void>;
 
 const useFetchFacilities: FetchFacilitiesHook = (
