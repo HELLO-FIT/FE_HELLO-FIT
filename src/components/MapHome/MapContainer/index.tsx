@@ -56,7 +56,7 @@ export default function MapContainer() {
     openPopup,
     toggle
   );
-  const { markers } = useFacilityMarkers({
+  const { resetSelectedMarker } = useFacilityMarkers({
     map,
     facilities,
     toggle,
@@ -197,7 +197,10 @@ export default function MapContainer() {
         selectedFacility && (
           <FacilityInfo
             facility={selectedFacility}
-            onBackClick={() => setIndicatorMode('sports')}
+            onBackClick={() => {
+              resetSelectedMarker();
+              setIndicatorMode('sports');
+            }}
             onMoveToDetail={() => {
               if (selectedFacility) {
                 router.push(
@@ -209,6 +212,7 @@ export default function MapContainer() {
                 );
               }
             }}
+            resetSelectedMarker={resetSelectedMarker}
           />
         )
       )}

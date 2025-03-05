@@ -15,6 +15,7 @@ interface FacilityInfoProps {
   onBackClick: () => void;
   onMoveToDetail: () => void;
   filterItem?: string | null;
+  resetSelectedMarker: () => void;
 }
 
 export default function FacilityInfo({
@@ -22,12 +23,13 @@ export default function FacilityInfo({
   onBackClick,
   onMoveToDetail,
   filterItem,
+  resetSelectedMarker,
 }: FacilityInfoProps) {
   const initialPosition = -50;
   const maxDragDistance = 150;
   const [position, setPosition] = useState(initialPosition);
   const [isDragging, setIsDragging] = useState(false);
-  const initialY = useRef(0);
+  const initialY = useRef<number | null>(null);
   const toggle = useRecoilValue(toggleState);
 
   const isNormalFacility =
@@ -35,23 +37,24 @@ export default function FacilityInfo({
 
   const handleDragStart = (event: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true);
-    initialY.current =
+    const clientY =
       'touches' in event ? event.touches[0].clientY : event.clientY;
+    initialY.current = clientY;
   };
 
   const handleDragMove = (event: React.MouseEvent | React.TouchEvent) => {
-    if (!isDragging) return;
+    if (!isDragging || initialY.current === null) return;
 
-    const currentY =
+    const clientY =
       'touches' in event ? event.touches[0].clientY : event.clientY;
-    const delta = currentY - initialY.current;
+    const delta = clientY - initialY.current;
 
     setPosition(prevPosition => {
       const newPosition = prevPosition + delta;
       return Math.max(Math.min(newPosition, maxDragDistance), initialPosition);
     });
 
-    initialY.current = currentY;
+    initialY.current = clientY;
   };
 
   const handleDragEnd = () => {
@@ -68,6 +71,11 @@ export default function FacilityInfo({
     setPosition(prevPosition =>
       prevPosition === maxDragDistance ? initialPosition : maxDragDistance
     );
+  };
+
+  const handleClose = () => {
+    resetSelectedMarker();
+    onBackClick();
   };
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { createMarkerImage } from '@/utils/markerUtils';
 import throttle from 'lodash/throttle';
 import { useRouter } from 'next/router';
@@ -24,6 +24,7 @@ export default function useFacilityMarkers({
   setIndicatorMode,
 }: UseFacilityMarkersProps) {
   const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
+  const selectedMarkerRef = useRef<kakao.maps.Marker | null>(null);
   const router = useRouter();
 
   const clearMarkers = () => {
@@ -31,21 +32,34 @@ export default function useFacilityMarkers({
     setMarkers([]);
   };
 
-  // TO DO: 선택된 마커에서 디폴트 마커로 변경
+  // 선택된 마커 초기화 함수 (FacilityInfo 패널 닫힐 때 호출)
+  const resetSelectedMarker = () => {
+    if (selectedMarkerRef.current) {
+      selectedMarkerRef.current.setImage(
+        createMarkerImage(
+          toggle === 'special'
+            ? '/image/marker-special.svg'
+            : '/image/marker.svg'
+        )
+      );
+      selectedMarkerRef.current = null; // 상태 초기화
+    }
+  };
+
+  // 마커 렌더링 함수
   const renderMarkers = useCallback(
     throttle(() => {
       if (!map || facilities.length === 0) return;
       clearMarkers();
 
       const newMarkers: kakao.maps.Marker[] = [];
-      let selectedMarker: kakao.maps.Marker | null = null;
 
       facilities.forEach(facility => {
         const geocoder = new kakao.maps.services.Geocoder();
         geocoder.addressSearch(
           facility.address,
           (result: any[], status: string) => {
-            if (status === kakao.maps.services.Status.OK) {
+            if (status === kakao.maps.services.Status.OK && result.length > 0) {
               const coords = new kakao.maps.LatLng(
                 parseFloat(result[0].y),
                 parseFloat(result[0].x)
@@ -73,13 +87,17 @@ export default function useFacilityMarkers({
 
               newMarkers.push(marker);
 
+              // 마커 클릭 이벤트 (기존 선택된 마커 초기화 후 새로운 마커 선택)
               kakao.maps.event.addListener(marker, 'click', async () => {
-                if (selectedMarker && selectedMarker !== marker) {
-                  selectedMarker.setImage(defaultMarkerImage);
+                if (
+                  selectedMarkerRef.current &&
+                  selectedMarkerRef.current !== marker
+                ) {
+                  selectedMarkerRef.current.setImage(defaultMarkerImage); // 이전 마커 기본 상태로 변경
                 }
 
                 marker.setImage(selectedMarkerImage);
-                selectedMarker = marker;
+                selectedMarkerRef.current = marker; // useRef로 선택된 마커 관리
 
                 try {
                   let details;
@@ -105,10 +123,6 @@ export default function useFacilityMarkers({
                   );
                 }
               });
-
-              kakao.maps.event.addListener(marker, 'dblclick', () => {
-                router.push(`/details/${facility.businessId}`);
-              });
             }
           }
         );
@@ -119,13 +133,14 @@ export default function useFacilityMarkers({
     [map, facilities, toggle]
   );
 
+  // 마커 새로고침 로직
   useEffect(() => {
-    if (facilities.length > 0) {
+    if (map && facilities.length > 0) {
       renderMarkers();
     } else {
       clearMarkers();
     }
-  }, [facilities, renderMarkers]);
+  }, [map, facilities, renderMarkers]);
 
-  return { markers };
+  return { markers, resetSelectedMarker };
 }
