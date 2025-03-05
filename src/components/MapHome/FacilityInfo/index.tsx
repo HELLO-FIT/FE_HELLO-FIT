@@ -73,11 +73,6 @@ export default function FacilityInfo({
     );
   };
 
-  const handleClose = () => {
-    resetSelectedMarker();
-    onBackClick();
-  };
-
   useEffect(() => {
     setPosition(initialPosition);
   }, [facility, initialPosition]);

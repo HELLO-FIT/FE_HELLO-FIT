@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import classNames from 'classnames';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
@@ -20,7 +20,6 @@ export default function usePositionButton({
   map,
   userLocation,
   setSelectedLocation,
-  setSelectedRegion,
   updateLocalCodeAndFetchFacilities,
   fetchFacilitiesBySport,
 }: UsePositionButtonProps) {

@@ -17,6 +17,13 @@ import useUpdateLocalCode from './hooks/useUpdateLocalCode';
 import useFacilityMarkers from './hooks/useFacilityMarkers';
 import usePositionButton from './hooks/usePositionButton';
 
+interface KakaoMapResult {
+  address_name: string;
+  code: string;
+  x: string;
+  y: string;
+}
+
 const loadKakaoMapScript = () => {
   const script = document.createElement('script');
   script.async = true;
@@ -40,7 +47,6 @@ export default function MapContainer() {
     'sports'
   );
   const [selectedRegion, setSelectedRegion] = useState('지역');
-  const [filterItem, setFilterItem] = useState<string | null>(null);
   const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY!;
   const [userLocation, setUserLocation] = useState<kakao.maps.LatLng | null>(
     null
@@ -88,7 +94,10 @@ export default function MapContainer() {
       const geocoder = new kakao.maps.services.Geocoder();
       geocoder.addressSearch(
         fullRegionName,
-        (result: any[], status: string) => {
+        (
+          result: KakaoMapResult[],
+          status: string
+        ) => {
           if (status === kakao.maps.services.Status.OK && result.length > 0) {
             const { y: latitude, x: longitude } = result[0];
             const coords = new kakao.maps.LatLng(
@@ -186,7 +195,6 @@ export default function MapContainer() {
       {indicatorMode === 'sports' ? (
         <PopularSports
           onSelectSport={sport => {
-            setFilterItem(sport);
             fetchFacilitiesBySport(sport);
           }}
           mode={toggle}
