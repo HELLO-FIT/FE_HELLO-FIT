@@ -93,10 +93,7 @@ export default function MapContainer() {
       const geocoder = new kakao.maps.services.Geocoder();
       geocoder.addressSearch(
         fullRegionName,
-        (
-          result: KakaoMapResult[],
-          status: string
-        ) => {
+        (result: KakaoMapResult[], status: string) => {
           if (status === kakao.maps.services.Status.OK && result.length > 0) {
             const { y: latitude, x: longitude } = result[0];
             const coords = new kakao.maps.LatLng(
@@ -135,6 +132,13 @@ export default function MapContainer() {
     };
   }, []);
 
+  const stableUpdateLocalCodeAndFetchFacilities = useCallback(
+    (latitude: number, longitude: number) => {
+      updateLocalCodeAndFetchFacilities(latitude, longitude);
+    },
+    [updateLocalCodeAndFetchFacilities]
+  );
+
   useEffect(() => {
     loadKakaoMapScript()
       .then(() => {
@@ -163,7 +167,7 @@ export default function MapContainer() {
                 setUserLocation(userLatLng);
                 kakaoMap.setCenter(userLatLng);
 
-                updateLocalCodeAndFetchFacilities(
+                stableUpdateLocalCodeAndFetchFacilities(
                   position.coords.latitude,
                   position.coords.longitude
                 );
@@ -176,7 +180,12 @@ export default function MapContainer() {
         });
       })
       .catch(console.error);
-  }, [KAKAO_MAP_KEY, toggle, selectedLocation]);
+  }, [
+    setMap,
+    stableUpdateLocalCodeAndFetchFacilities,
+    userLocation,
+    selectedLocation,
+  ]);
 
   useEffect(() => {
     if (map && selectedLocation) {
