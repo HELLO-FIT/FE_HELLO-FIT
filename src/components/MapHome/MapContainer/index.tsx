@@ -79,7 +79,6 @@ export default function MapContainer() {
     map,
     userLocation,
     setSelectedLocation,
-    setSelectedRegion,
     updateLocalCodeAndFetchFacilities,
     fetchFacilitiesBySport,
   });
