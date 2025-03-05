@@ -1,15 +1,24 @@
 import { useCallback } from 'react';
 import { fetchFacilities } from '@/apis/get/facilitiesAPI';
+import { Facility } from '@/apis/get/getFacilities';
 
-export default function useFetchFacilities(
-  setFacilities: (facilities: any[]) => void,
+type FetchFacilitiesHook = (
+  setFacilities: (facilities: Facility[]) => void,
   openPopup: (args: { content: string }) => void,
-  toggle: string
-) {
+  toggle: 'normal' | 'special'
+) => (sport?: string | null) => Promise<void>;
+
+const useFetchFacilities: FetchFacilitiesHook = (
+  setFacilities,
+  openPopup,
+  toggle
+) => {
   const fetchFacilitiesBySport = useCallback(
     async (sport: string | null = null) => {
-      const data = await fetchFacilities(
-        localStorage.getItem('localCode'),
+      const localCode = localStorage.getItem('localCode') ?? '';
+
+      const data: Facility[] | null = await fetchFacilities(
+        localCode,
         sport,
         toggle
       );
@@ -24,4 +33,6 @@ export default function useFetchFacilities(
   );
 
   return fetchFacilitiesBySport;
-}
+};
+
+export default useFetchFacilities;
