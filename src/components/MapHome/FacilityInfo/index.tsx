@@ -23,7 +23,6 @@ export default function FacilityInfo({
   onBackClick,
   onMoveToDetail,
   filterItem,
-  resetSelectedMarker,
 }: FacilityInfoProps) {
   const initialPosition = -50;
   const maxDragDistance = 150;

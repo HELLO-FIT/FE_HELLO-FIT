@@ -4,14 +4,18 @@ import throttle from 'lodash/throttle';
 import {
   getSpecialFacilityDetails,
   getNomalFacilityDetails,
+  NomalFacilityDetails,
+  SpecialFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 import { Facility } from '@/apis/get/getFacilities';
+
+type FacilityDetails = NomalFacilityDetails | SpecialFacilityDetails | null;
 
 type UseFacilityMarkersProps = {
   map: kakao.maps.Map | null;
   facilities: Facility[];
-  toggle: string;
-  setSelectedFacility: (facility: any) => void;
+  toggle: 'normal' | 'special';
+  setSelectedFacility: (facility: FacilityDetails) => void;
   setIndicatorMode: (mode: 'sports' | 'facilityInfo') => void;
 };
 
@@ -56,7 +60,6 @@ export default function useFacilityMarkers({
         }
 
         const geocoder = new kakao.maps.services.Geocoder();
-
         geocoder.addressSearch(facility.address, (result, status) => {
           if (status === kakao.maps.services.Status.OK && result.length > 0) {
             resolve({
@@ -119,7 +122,7 @@ export default function useFacilityMarkers({
           selectedMarkerRef.current = marker;
 
           try {
-            let details = null;
+            let details: FacilityDetails = null;
             if (toggle === 'special') {
               details = await getSpecialFacilityDetails(facility.businessId);
             } else if (facility.serialNumber) {
@@ -140,7 +143,7 @@ export default function useFacilityMarkers({
       }
 
       setMarkers(newMarkers);
-    }, 3000), // 3초 단위로 API 요청 제한
+    }, 3000),
     [map, facilities, toggle]
   );
 
