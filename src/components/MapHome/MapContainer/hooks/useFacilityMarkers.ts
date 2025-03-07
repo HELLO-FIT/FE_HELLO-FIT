@@ -30,15 +30,16 @@ export default function useFacilityMarkers({
 }: UseFacilityMarkersProps) {
   const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
   const selectedMarkerRef = useRef<kakao.maps.Marker | null>(null);
-  const fetchRequestRef = useRef<number | null>(null); // 🔥 현재 요청 ID 추적
+  const isFetchingRef = useRef<boolean>(false);
+  const latestRequestRef = useRef<Promise<void> | null>(null);
 
-  // ✅ 기존 마커 제거
+  // 기존 마커 제거
   const clearMarkers = () => {
     markers.forEach(marker => marker.setMap(null));
     setMarkers([]);
   };
 
-  // ✅ 선택된 마커 초기화
+  // 선택된 마커 초기화
   const resetSelectedMarker = () => {
     if (selectedMarkerRef.current) {
       selectedMarkerRef.current.setImage(
@@ -52,7 +53,7 @@ export default function useFacilityMarkers({
     }
   };
 
-  // ✅ 시설 주소를 좌표로 변환하는 함수
+  // 시설 주소를 좌표로 변환하는 함수
   const fetchCoordinates = useCallback(
     (facility: Facility): Promise<{ lat: number; lng: number } | null> =>
       new Promise(resolve => {
@@ -78,12 +79,18 @@ export default function useFacilityMarkers({
     []
   );
 
-  // ✅ 마커 렌더링 함수 (비동기 요청 관리 추가)
+  // 마커 렌더링 함수 (비동기 요청 관리 추가)
   const renderMarkers = useCallback(
     throttle(async () => {
       if (!map || facilities.length === 0) return;
 
-      clearMarkers(); // ✅ 기존 마커 삭제
+      // 현재 실행 중인 요청이 있다면 대기
+      if (latestRequestRef.current) {
+        await latestRequestRef.current;
+      }
+
+      clearMarkers(); // 기존 마커 삭제
+      isFetchingRef.current = true; // 요청 시작
 
       const newMarkers: kakao.maps.Marker[] = [];
 
@@ -113,7 +120,7 @@ export default function useFacilityMarkers({
 
         newMarkers.push(marker);
 
-        // ✅ 마커 클릭 이벤트 (선택된 마커 초기화 후 새로운 마커 선택)
+        // 마커 클릭 이벤트 (선택된 마커 초기화 후 새로운 마커 선택)
         kakao.maps.event.addListener(marker, 'click', async () => {
           if (
             selectedMarkerRef.current &&
@@ -153,25 +160,25 @@ export default function useFacilityMarkers({
       }
 
       setMarkers(newMarkers);
+      isFetchingRef.current = false; // 요청 완료
     }, 2000),
     [map, facilities, toggle]
   );
 
-  // ✅ 🔥 토글 변경 시 기존 시설 데이터 및 마커 초기화 + 기존 요청 취소
+  // 토글 변경 시 기존 시설 데이터 및 마커 초기화 + 이전 요청 대기
   useEffect(() => {
-    clearMarkers(); // ✅ 기존 마커 삭제
-    setFacilities([]); // ✅ 기존 시설 데이터 초기화
+    // 이미 요청 중이라면 새로운 요청 무시
+    if (isFetchingRef.current) return;
 
-    // ✅ 기존 요청이 있으면 취소
-    if (fetchRequestRef.current) {
-      clearTimeout(fetchRequestRef.current);
-    }
+    clearMarkers(); // 기존 마커 삭제
+    setFacilities([]); // 기존 시설 데이터 초기화
 
-    // ✅ 새로운 요청 실행 (500ms 이후)
-    fetchRequestRef.current = window.setTimeout(() => {
+    // 이전 요청이 있다면 기다린 후 실행
+    latestRequestRef.current = (async () => {
       console.log(`🚀 ${toggle === 'special' ? '특수' : '일반'} 시설 불러오기`);
-    }, 500);
-  }, [toggle]); // ✅ toggle 변경 감지
+      await new Promise(resolve => setTimeout(resolve, 500));
+    })();
+  }, [toggle]); // toggle 변경 감지
 
   useEffect(() => {
     if (!map) return;
@@ -181,7 +188,7 @@ export default function useFacilityMarkers({
     } else {
       clearMarkers();
     }
-  }, [map, facilities]); // ✅ toggle 제거 (toggle 변경은 시설 리스트가 업데이트될 때 자동 반영)
+  }, [map, facilities]); // toggle 제거 (toggle 변경은 시설 리스트가 업데이트될 때 자동 반영)
 
   return { markers, resetSelectedMarker, clearMarkers };
 }

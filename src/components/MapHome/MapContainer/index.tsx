@@ -24,7 +24,6 @@ interface KakaoMapResult {
   y: string;
 }
 
-// ✅ 카카오 맵 스크립트 로드 함수
 const loadKakaoMapScript = () => {
   const script = document.createElement('script');
   script.async = true;
@@ -59,14 +58,14 @@ export default function MapContainer() {
   const { openPopup } = usePopup();
   const { map, setMap } = useKakaoMap(KAKAO_MAP_KEY, null);
 
-  // ✅ 시설 데이터 가져오기
+  // 시설 데이터 가져오기
   const fetchFacilitiesBySport = useFetchFacilities(
     setFacilities,
     openPopup,
     toggle
   );
 
-  // ✅ 마커 관련 기능 (토글 변경 시 마커 갱신)
+  // 마커 관련 기능 (토글 변경 시 마커 갱신)
   const { resetSelectedMarker, clearMarkers } = useFacilityMarkers({
     map,
     facilities,
@@ -89,7 +88,7 @@ export default function MapContainer() {
     fetchFacilitiesBySport,
   });
 
-  // ✅ 지역 선택 시 지도 이동 & 시설 목록 업데이트
+  // 지역 선택 시 지도 이동 & 시설 목록 업데이트
   const handleRegionSelect = useCallback(
     (localCode: string, fullRegionName: string) => {
       if (!fullRegionName) {
@@ -112,7 +111,7 @@ export default function MapContainer() {
               map.setCenter(coords);
             }
 
-            // ✅ 기존 시설 데이터 초기화 후 새로운 데이터 가져오기
+            // 기존 시설 데이터 초기화 후 새로운 데이터 가져오기
             setFacilities([]);
             clearMarkers();
             setSelectedLocation(coords);
@@ -135,7 +134,7 @@ export default function MapContainer() {
     [map, updateLocalCodeAndFetchFacilities, fetchFacilitiesBySport]
   );
 
-  // ✅ 토글 변경 시 기존 데이터 초기화 후 새로운 시설 요청
+  // 토글 변경 시 기존 데이터 초기화 후 새로운 시설 요청
   useEffect(() => {
     setFacilities([]); // 기존 시설 데이터 초기화
     clearMarkers(); // 기존 마커 제거
@@ -213,8 +212,8 @@ export default function MapContainer() {
       {indicatorMode === 'sports' ? (
         <PopularSports
           onSelectSport={sport => {
-            setFacilities([]); // ✅ 기존 시설 데이터 초기화
-            clearMarkers(); // ✅ 기존 마커 제거
+            setFacilities([]); // 기존 시설 데이터 초기화
+            clearMarkers(); // 기존 마커 제거
             fetchFacilitiesBySport(sport);
           }}
           mode={toggle}
