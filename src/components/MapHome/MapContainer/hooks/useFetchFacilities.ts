@@ -17,6 +17,9 @@ const useFetchFacilities: FetchFacilitiesHook = (
     async (sport: string | null = null) => {
       const localCode = localStorage.getItem('localCode') ?? '';
 
+      // ✅ 기존 시설을 즉시 초기화하여 중복 마커 방지
+      setFacilities([]);
+
       const data: Facility[] | null = await fetchFacilities(
         localCode,
         sport,

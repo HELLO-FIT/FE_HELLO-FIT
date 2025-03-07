@@ -24,6 +24,7 @@ interface KakaoMapResult {
   y: string;
 }
 
+// ✅ 카카오 맵 스크립트 로드 함수
 const loadKakaoMapScript = () => {
   const script = document.createElement('script');
   script.async = true;
@@ -57,17 +58,22 @@ export default function MapContainer() {
   const router = useRouter();
   const { openPopup } = usePopup();
   const { map, setMap } = useKakaoMap(KAKAO_MAP_KEY, null);
+
+  // ✅ 시설 데이터 가져오기
   const fetchFacilitiesBySport = useFetchFacilities(
     setFacilities,
     openPopup,
     toggle
   );
-  const { resetSelectedMarker } = useFacilityMarkers({
+
+  // ✅ 마커 관련 기능 (토글 변경 시 마커 갱신)
+  const { resetSelectedMarker, clearMarkers } = useFacilityMarkers({
     map,
     facilities,
     toggle,
     setSelectedFacility,
     setIndicatorMode,
+    setFacilities,
   });
 
   const { updateLocalCodeAndFetchFacilities } = useUpdateLocalCode(
@@ -83,6 +89,7 @@ export default function MapContainer() {
     fetchFacilitiesBySport,
   });
 
+  // ✅ 지역 선택 시 지도 이동 & 시설 목록 업데이트
   const handleRegionSelect = useCallback(
     (localCode: string, fullRegionName: string) => {
       if (!fullRegionName) {
@@ -105,6 +112,9 @@ export default function MapContainer() {
               map.setCenter(coords);
             }
 
+            // ✅ 기존 시설 데이터 초기화 후 새로운 데이터 가져오기
+            setFacilities([]);
+            clearMarkers();
             setSelectedLocation(coords);
             updateLocalCodeAndFetchFacilities(
               parseFloat(latitude),
@@ -125,19 +135,19 @@ export default function MapContainer() {
     [map, updateLocalCodeAndFetchFacilities, fetchFacilitiesBySport]
   );
 
+  // ✅ 토글 변경 시 기존 데이터 초기화 후 새로운 시설 요청
+  useEffect(() => {
+    setFacilities([]); // 기존 시설 데이터 초기화
+    clearMarkers(); // 기존 마커 제거
+    fetchFacilitiesBySport(); // 새로운 시설 불러오기
+  }, [toggle]);
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, []);
-
-  const stableUpdateLocalCodeAndFetchFacilities = useCallback(
-    (latitude: number, longitude: number) => {
-      updateLocalCodeAndFetchFacilities(latitude, longitude);
-    },
-    [updateLocalCodeAndFetchFacilities]
-  );
 
   useEffect(() => {
     loadKakaoMapScript()
@@ -167,7 +177,7 @@ export default function MapContainer() {
                 setUserLocation(userLatLng);
                 kakaoMap.setCenter(userLatLng);
 
-                stableUpdateLocalCodeAndFetchFacilities(
+                updateLocalCodeAndFetchFacilities(
                   position.coords.latitude,
                   position.coords.longitude
                 );
@@ -182,7 +192,7 @@ export default function MapContainer() {
       .catch(console.error);
   }, [
     setMap,
-    stableUpdateLocalCodeAndFetchFacilities,
+    updateLocalCodeAndFetchFacilities,
     userLocation,
     selectedLocation,
   ]);
@@ -203,6 +213,8 @@ export default function MapContainer() {
       {indicatorMode === 'sports' ? (
         <PopularSports
           onSelectSport={sport => {
+            setFacilities([]); // ✅ 기존 시설 데이터 초기화
+            clearMarkers(); // ✅ 기존 마커 제거
             fetchFacilitiesBySport(sport);
           }}
           mode={toggle}
