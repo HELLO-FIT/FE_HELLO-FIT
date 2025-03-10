@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import useKakaoMap from '@/hooks/useMap';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
 import { useRouter } from 'next/router';
@@ -12,6 +11,7 @@ import {
   SpecialFacilityDetails,
 } from '@/apis/get/getFacilityDetails';
 import { usePopup } from '@/utils/popupUtils';
+import useKakaoMap from './hooks/useMap';
 import useFetchFacilities from './hooks/useFetchFacilities';
 import useUpdateLocalCode from './hooks/useUpdateLocalCode';
 import useFacilityMarkers from './hooks/useFacilityMarkers';

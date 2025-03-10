@@ -185,7 +185,7 @@ export default function useFacilityMarkers({
   useEffect(() => {
     if (!map) return;
 
-    clearMarkers(); // ✅ 기존 마커 제거 후 새 마커 추가
+    clearMarkers(); // 기존 마커 제거 후 새 마커 추가
 
     if (facilities.length > 0) {
       renderMarkers();
