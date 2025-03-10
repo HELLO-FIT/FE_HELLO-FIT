@@ -34,8 +34,7 @@ export default function MapContainer() {
   const [userLocation, setUserLocation] = useState<kakao.maps.LatLng | null>(
     null
   );
-  const [selectedLocation, setSelectedLocation] =
-    useState<kakao.maps.LatLng | null>(null);
+  const [, setSelectedLocation] = useState<kakao.maps.LatLng | null>(null);
 
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
