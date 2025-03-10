@@ -85,12 +85,20 @@ export default function MapContainer() {
   );
 
   useEffect(() => {
+    let isMounted = true; // 컴포넌트가 마운트된 상태 확인
     clearMarkers();
     setFacilities([]);
     setSelectedFacility(null);
-
-    fetchFacilitiesBySport();
+  
+    fetchFacilitiesBySport().then(() => {
+      if (!isMounted) return; // 비동기 요청 완료 전에 언마운트되면 실행 취소
+    });
+  
+    return () => {
+      isMounted = false; // 언마운트 시 상태 업데이트 방지
+    };
   }, [toggle]);
+  
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, useRef } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { createMarkerImage } from '@/utils/markerUtils';
 import throttle from 'lodash/throttle';
 import {
@@ -28,17 +28,15 @@ export default function useFacilityMarkers({
   setSelectedFacility,
   setIndicatorMode,
 }: UseFacilityMarkersProps) {
-  const [markers, setMarkers] = useState<kakao.maps.Marker[]>([]);
+  const markersRef = useRef<kakao.maps.Marker[]>([]);
   const selectedMarkerRef = useRef<kakao.maps.Marker | null>(null);
   const isFetchingRef = useRef<boolean>(false);
   const latestRequestRef = useRef<Promise<void> | null>(null);
 
   // 기존 마커 제거
   const clearMarkers = () => {
-    markers.forEach(marker => {
-      if (marker) marker.setMap(null);
-    });
-    setMarkers([]);
+    markersRef.current.forEach(marker => marker.setMap(null));
+    markersRef.current = [];
   };
 
   // 선택된 마커 초기화
@@ -73,7 +71,6 @@ export default function useFacilityMarkers({
               lng: parseFloat(result[0].x),
             });
           } else {
-            console.error('주소 변환 실패:', facility.address);
             resolve(null);
           }
         });
@@ -161,7 +158,7 @@ export default function useFacilityMarkers({
         });
       }
 
-      setMarkers(newMarkers);
+      markersRef.current = newMarkers;
       isFetchingRef.current = false; // 요청 완료
     }, 2000),
     [map, facilities, toggle]
@@ -169,18 +166,16 @@ export default function useFacilityMarkers({
 
   // 토글 변경 시 기존 시설 데이터 및 마커 초기화 + 이전 요청 대기
   useEffect(() => {
-    // 이미 요청 중이라면 새로운 요청 무시
     if (isFetchingRef.current) return;
 
-    clearMarkers(); // 기존 마커 삭제
-    setFacilities([]); // 기존 시설 데이터 초기화
+    clearMarkers();
+    setFacilities([]);
 
-    // 이전 요청이 있다면 기다린 후 실행
     latestRequestRef.current = (async () => {
       console.log(`🚀 ${toggle === 'special' ? '특수' : '일반'} 시설 불러오기`);
       await new Promise(resolve => setTimeout(resolve, 500));
     })();
-  }, [toggle]); // toggle 변경 감지
+  }, [toggle]);
 
   useEffect(() => {
     if (!map) return;
@@ -192,5 +187,5 @@ export default function useFacilityMarkers({
     }
   }, [map, facilities]);
 
-  return { markers, resetSelectedMarker, clearMarkers };
+  return { resetSelectedMarker, clearMarkers };
 }

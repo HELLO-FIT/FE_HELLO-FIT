@@ -38,7 +38,6 @@ export default function useRegionSearch(
               map.setCenter(coords);
             }
 
-            // ✅ 기존 시설 초기화 후 새로운 시설 데이터 가져오기
             setFacilities([]);
             clearMarkers();
             setSelectedLocation(coords);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
@@ -23,15 +23,15 @@ export default function usePositionButton({
   fetchFacilitiesBySport,
 }: UsePositionButtonProps) {
   const toggle = useRecoilValue(toggleState);
-  const [userMarker, setUserMarker] = useState<kakao.maps.Marker | null>(null);
+  const userMarkerRef = useRef<kakao.maps.Marker | null>(null); 
 
   // 사용자 위치에 my-location 마커를 표시하는 함수
   const updateUserMarker = useCallback(() => {
     if (!map || !userLocation) return;
 
     // 기존 마커가 있다면 삭제
-    if (userMarker) {
-      userMarker.setMap(null);
+    if (userMarkerRef.current) {
+      userMarkerRef.current.setMap(null);
     }
 
     // 새로운 마커 생성
@@ -47,8 +47,8 @@ export default function usePositionButton({
       map,
     });
 
-    setUserMarker(newMarker);
-  }, [map, userLocation, userMarker, toggle]);
+    userMarkerRef.current = newMarker;
+  }, [map, userLocation, toggle]); // userMarkerRef는 의존성에서 제거
 
   // 현재 위치로 이동하는 기능
   const moveToUserLocation = useCallback(() => {
@@ -82,9 +82,9 @@ export default function usePositionButton({
     }
   }, [userLocation, updateUserMarker]);
 
-  return {
-    moveToUserLocation,
-    buttonProps: {
+  // useMemo로 buttonProps 최적화
+  const buttonProps = useMemo(
+    () => ({
       className: classNames(styles.positionButton, {
         [styles['position-special']]: toggle === 'special',
       }),
@@ -93,6 +93,9 @@ export default function usePositionButton({
           ? '/image/position-special.svg'
           : '/image/position.svg',
       alt: '현재 위치로 돌아가기',
-    },
-  };
+    }),
+    [toggle]
+  );
+
+  return { moveToUserLocation, buttonProps };
 }
