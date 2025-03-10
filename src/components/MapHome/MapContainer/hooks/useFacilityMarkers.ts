@@ -172,7 +172,6 @@ export default function useFacilityMarkers({
     setFacilities([]);
 
     latestRequestRef.current = (async () => {
-      console.log(`🚀 ${toggle === 'special' ? '특수' : '일반'} 시설 불러오기`);
       await new Promise(resolve => setTimeout(resolve, 500));
     })();
   }, [toggle]);

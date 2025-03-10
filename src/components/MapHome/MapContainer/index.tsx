@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { useRouter } from 'next/router';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
-import { useRouter } from 'next/router';
 import { Facility } from '@/apis/get/getFacilities';
 import {
   NomalFacilityDetails,
@@ -29,29 +29,27 @@ export default function MapContainer() {
   const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>(
     'sports'
   );
+
   const [selectedRegion, setSelectedRegion] = useState('지역');
   const [userLocation, setUserLocation] = useState<kakao.maps.LatLng | null>(
     null
   );
   const [selectedLocation, setSelectedLocation] =
     useState<kakao.maps.LatLng | null>(null);
+
   const toggle = useRecoilValue(toggleState);
   const router = useRouter();
   const { openPopup } = usePopup();
 
   const { map, setMap } = useKakaoMap(KAKAO_MAP_KEY, null);
-
-  // 지역명을 `setSelectedRegion`을 통해 업데이트하도록 훅 적용
   useKakaoMapLoader(setMap, setUserLocation, setSelectedRegion);
 
-  // 시설 데이터 가져오기
   const fetchFacilitiesBySport = useFetchFacilities(
     setFacilities,
     openPopup,
     toggle
   );
 
-  // 마커 관련 기능
   const { resetSelectedMarker, clearMarkers } = useFacilityMarkers({
     map,
     facilities,
@@ -74,7 +72,6 @@ export default function MapContainer() {
     fetchFacilitiesBySport,
   });
 
-  // 지역 검색 기능 분리
   const { handleRegionSelect } = useRegionSearch(
     map,
     setFacilities,
@@ -85,20 +82,23 @@ export default function MapContainer() {
   );
 
   useEffect(() => {
-    let isMounted = true; // 컴포넌트가 마운트된 상태 확인
-    clearMarkers();
-    setFacilities([]);
-    setSelectedFacility(null);
-  
-    fetchFacilitiesBySport().then(() => {
-      if (!isMounted) return; // 비동기 요청 완료 전에 언마운트되면 실행 취소
-    });
-  
+    let isMounted = true;
+
+    const updateFacilities = async () => {
+      clearMarkers();
+      setFacilities([]);
+      setSelectedFacility(null);
+
+      await fetchFacilitiesBySport();
+      if (!isMounted) return;
+    };
+
+    updateFacilities();
+
     return () => {
-      isMounted = false; // 언마운트 시 상태 업데이트 방지
+      isMounted = false;
     };
   }, [toggle]);
-  
 
   return (
     <>
@@ -107,6 +107,7 @@ export default function MapContainer() {
         <img src={buttonProps.src} alt={buttonProps.alt} />
       </div>
       <div id="map" style={{ width: '100%', height: '100vh' }}></div>
+
       {indicatorMode === 'sports' ? (
         <PopularSports
           onSelectSport={sport => {
