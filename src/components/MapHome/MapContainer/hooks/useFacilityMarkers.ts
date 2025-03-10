@@ -35,7 +35,9 @@ export default function useFacilityMarkers({
 
   // 기존 마커 제거
   const clearMarkers = () => {
-    markers.forEach(marker => marker.setMap(null));
+    markers.forEach(marker => {
+      if (marker) marker.setMap(null);
+    });
     setMarkers([]);
   };
 
@@ -183,12 +185,12 @@ export default function useFacilityMarkers({
   useEffect(() => {
     if (!map) return;
 
+    clearMarkers(); // ✅ 기존 마커 제거 후 새 마커 추가
+
     if (facilities.length > 0) {
       renderMarkers();
-    } else {
-      clearMarkers();
     }
-  }, [map, facilities]); // toggle 제거 (toggle 변경은 시설 리스트가 업데이트될 때 자동 반영)
+  }, [map, facilities]);
 
   return { markers, resetSelectedMarker, clearMarkers };
 }

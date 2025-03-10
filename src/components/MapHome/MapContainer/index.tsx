@@ -134,11 +134,12 @@ export default function MapContainer() {
     [map, updateLocalCodeAndFetchFacilities, fetchFacilitiesBySport]
   );
 
-  // 토글 변경 시 기존 데이터 초기화 후 새로운 시설 요청
   useEffect(() => {
-    setFacilities([]); // 기존 시설 데이터 초기화
-    clearMarkers(); // 기존 마커 제거
-    fetchFacilitiesBySport(); // 새로운 시설 불러오기
+    clearMarkers(); // ✅ 기존 마커 제거
+    setFacilities([]); // ✅ 기존 시설 데이터 초기화
+    setSelectedFacility(null); // ✅ 선택된 시설 초기화
+
+    fetchFacilitiesBySport(); // ✅ 새로운 시설 불러오기
   }, [toggle]);
 
   useEffect(() => {
