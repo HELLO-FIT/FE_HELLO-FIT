@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/components/Layout/Header';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
-import useKakaoMap from './hooks/useMap';
 import { useRecoilValue } from 'recoil';
 import { toggleState } from '@/states/toggleState';
 import { useRouter } from 'next/router';
@@ -17,9 +16,9 @@ import useUpdateLocalCode from './hooks/useUpdateLocalCode';
 import useFacilityMarkers from './hooks/useFacilityMarkers';
 import usePositionButton from './hooks/usePositionButton';
 import useRegionSearch from './hooks/useRegionSearch';
+import useKakaoMap from './hooks/useMap';
 import useKakaoMapLoader from './hooks/useKakaoMapLoader';
 
-// ✅ KAKAO_MAP_KEY 추가
 const KAKAO_MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY!;
 
 export default function MapContainer() {
@@ -30,7 +29,7 @@ export default function MapContainer() {
   const [indicatorMode, setIndicatorMode] = useState<'sports' | 'facilityInfo'>(
     'sports'
   );
-  const [selectedRegion, setSelectedRegion] = useState('지역'); // ✅ 지역명 상태 추가
+  const [selectedRegion, setSelectedRegion] = useState('지역');
   const [userLocation, setUserLocation] = useState<kakao.maps.LatLng | null>(
     null
   );
@@ -40,20 +39,19 @@ export default function MapContainer() {
   const router = useRouter();
   const { openPopup } = usePopup();
 
-  // ✅ KAKAO_MAP_KEY를 인자로 전달
   const { map, setMap } = useKakaoMap(KAKAO_MAP_KEY, null);
 
-  // ✅ 지역명을 `setSelectedRegion`을 통해 업데이트하도록 훅 적용
+  // 지역명을 `setSelectedRegion`을 통해 업데이트하도록 훅 적용
   useKakaoMapLoader(setMap, setUserLocation, setSelectedRegion);
 
-  // ✅ 시설 데이터 가져오기
+  // 시설 데이터 가져오기
   const fetchFacilitiesBySport = useFetchFacilities(
     setFacilities,
     openPopup,
     toggle
   );
 
-  // ✅ 마커 관련 기능
+  // 마커 관련 기능
   const { resetSelectedMarker, clearMarkers } = useFacilityMarkers({
     map,
     facilities,
@@ -76,7 +74,7 @@ export default function MapContainer() {
     fetchFacilitiesBySport,
   });
 
-  // ✅ 지역 검색 기능 분리
+  // 지역 검색 기능 분리
   const { handleRegionSelect } = useRegionSearch(
     map,
     setFacilities,
@@ -110,7 +108,7 @@ export default function MapContainer() {
           }}
           mode={toggle}
           onRegionSelect={handleRegionSelect}
-          selectedRegion={selectedRegion} // ✅ 드롭다운에 지역 정보 반영
+          selectedRegion={selectedRegion}
         />
       ) : (
         selectedFacility && (
