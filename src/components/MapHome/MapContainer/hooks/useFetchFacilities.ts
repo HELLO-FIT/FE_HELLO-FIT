@@ -44,7 +44,7 @@ const useFetchFacilities: FetchFacilitiesHook = (
         }
       } catch (error) {
         if ((error as Error).name === 'AbortError') {
-          console.log('🔄 이전 요청이 취소되었습니다.');
+          console.log('이전 요청이 취소되었습니다.');
         } else {
           console.error('시설 데이터를 가져오는 중 오류 발생:', error);
         }

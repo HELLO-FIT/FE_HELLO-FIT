@@ -71,7 +71,6 @@ export default function useFacilityMarkers({
             lng: parseFloat(result[0].x),
           });
         } else {
-          console.error('주소 변환 실패:', facility.address);
           resolve(null);
         }
       });

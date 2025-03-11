@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import Header from '@/components/Layout/Header';
+import styles from './MapContainer.module.scss';
 import PopularSports from '@/components/MapHome/PopularSports';
 import FacilityInfo from '@/components/MapHome/FacilityInfo';
 import { toggleState } from '@/states/toggleState';
@@ -105,7 +106,9 @@ export default function MapContainer() {
       <div {...buttonProps} onClick={moveToUserLocation}>
         <img src={buttonProps.src} alt={buttonProps.alt} />
       </div>
-      <div id="map" style={{ width: '100%', height: '100vh' }}></div>
+      <div className={styles.mapContainer}>
+        <div id="map" className={styles.map}></div>
+      </div>
 
       {indicatorMode === 'sports' ? (
         <PopularSports

@@ -64,7 +64,7 @@ const useKakaoMapLoader = (
         });
       })
       .catch(console.error);
-  }, [setMap, setUserLocation, setSelectedRegion]); // ✅ setSelectedRegion 추가
+  }, [setMap, setUserLocation, setSelectedRegion]); 
 };
 
 export default useKakaoMapLoader;
