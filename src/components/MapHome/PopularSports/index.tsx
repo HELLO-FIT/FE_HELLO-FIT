@@ -97,19 +97,25 @@ export default function PopularSports({
     initialY.current = currentY;
   };
 
-  const handleDragEnd = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    setPosition(prevPosition =>
-      prevPosition < maxDragDistance / 2 ? maxDragDistance : 0
-    );
-  };
-
-  // 인디케이터 클릭 시 하단으로 이동/올라오기
+  // 인디케이터 클릭 시, 드래그 이벤트 방지 + 위치 토글
   const handleIndicatorClick = () => {
+    setIsDragging(false);
     setPosition(prevPosition =>
       prevPosition === maxDragDistance ? 0 : maxDragDistance
     );
+  };
+
+  // 드래그 종료 시, 인디케이터 클릭을 고려하여 위치 유지
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
+    setPosition(prevPosition => {
+      if (prevPosition === 0 || prevPosition === maxDragDistance) {
+        return prevPosition; // 이미 목표 위치에 도달한 경우 변경하지 않음
+      }
+      return prevPosition < maxDragDistance / 2 ? maxDragDistance : 0;
+    });
   };
 
   // 바텀시트 열림 상태 변경 핸들러
