@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { fetchFacilities } from '@/apis/get/facilitiesAPI';
 import { Facility } from '@/apis/get/getFacilities';
 
@@ -13,23 +13,41 @@ const useFetchFacilities: FetchFacilitiesHook = (
   openPopup,
   toggle
 ) => {
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   const fetchFacilitiesBySport = useCallback(
     async (sport: string | null = null) => {
+      // 기존 요청이 있다면 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      // 새로운 요청을 위한 AbortController 생성
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
       const localCode = localStorage.getItem('localCode') ?? '';
+      setFacilities([]); // 기존 시설 초기화
 
-      // 기존 시설을 즉시 초기화하여 중복 마커 방지
-      setFacilities([]);
+      try {
+        const data: Facility[] | null = await fetchFacilities({
+          localCode,
+          sport,
+          toggle,
+          signal: abortController.signal,
+        });
 
-      const data: Facility[] | null = await fetchFacilities(
-        localCode,
-        sport,
-        toggle
-      );
-
-      if (!data || data.length === 0) {
-        openPopup({ content: '등록된 시설이 없습니다.' });
-      } else {
-        setFacilities(data);
+        if (!data || data.length === 0) {
+          openPopup({ content: '등록된 시설이 없습니다.' });
+        } else {
+          setFacilities(data);
+        }
+      } catch (error) {
+        if ((error as Error).name === 'AbortError') {
+          console.log('🔄 이전 요청이 취소되었습니다.');
+        } else {
+          console.error('시설 데이터를 가져오는 중 오류 발생:', error);
+        }
       }
     },
     [toggle, setFacilities, openPopup]
